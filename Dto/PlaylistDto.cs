@@ -3,11 +3,11 @@ using FellaudioApp.Models;
 
 namespace FellaudioApp.Dto
 {
-    public class ContentDto
+    public class PlaylistDto
     {
         public int Id { get; set; }
-        public string Title { get; set; }
+        public string Name { get; set; }
         public string Description { get; set; }
-        public ContentStatus Status { get; set; }
+        public ListType Type { get; set; }
     }
 }

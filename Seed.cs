@@ -14,60 +14,76 @@ namespace FellaudioApp
         }
         public void SeedDataContext()
         {
-            if (!dataContext.Contents.Any())
+            if (!dataContext.Users.Any())
             {
-                var someUser = new User()
+                var users = new List<User>()
                 {
-                    Name = "Someone",
-                    Lastname = "Somefamily",
-                    Password = "",
-                    Email = "some@mail.com",
-                    CreatedAt = DateTime.Now
-                };
-
-                var userLists = new List<UserList>()
-                {
-                    new UserList()
+                    new User()
                     {
-                        Name = "Name",
-                        Description = "Description",
-                        CreatedAt = DateTime.Now,
-                        Type = ListType.Saved,
-                        ContentLists = new List<ContentList>()
+                        Firstname = "Abuba",
+                        Lastname = "Gamubabe",
+                        Email = "nail@mail.com",
+                        HashedPassword = "Password",
+                        Playlists = new List<Playlist>()
                         {
-                            new ContentList()
+                            new Playlist()
                             {
-                                Content = new Content()
+                                Name = "MyFirstPlaylist",
+                                Description = "mine!",
+                                CreatedAt = DateTime.Now,
+                                Type = ListType.Created,
+                                ContentPlaylists = new List<ContentPlaylist>()
                                 {
-                                   User = someUser,
-                                   CreatedAt = DateTime.Now,
-                                   Description = "Some description",
-                                   Status = ContentStatus.Unpublished,
-                                   Feed = new List<Comment>(){
-                                       new Comment()
-                                       {
-                                            Author = someUser,
-                                            Content = "Some Content",
-                                            CreatedAt = DateTime.Now,
-                                       }
-                                   },
-                                   Points = new List<Point>()
-                                   {
-                                       new Point()
-                                       {
-                                           Location = new Location(){ Latitude = 20, Longitude = 30, Name = "first" },
-                                           PreviousLocationId = -1,
-                                           NextLocationId = 1
-                                       }
-                                   },
-                                   Title = "Title",
-                                   TrackId = 1,
+                                    new ContentPlaylist()
+                                    {
+                                        Content = new Content()
+                                        {
+                                            Title = "My first one",
+                                            Description = "cool!",
+                                            AudioFile = new AudioFile()
+                                            {
+                                                FileExtension = "wav",
+                                                FileName = "prek",
+                                                FileSize = 15,
+                                                DurationInSeconds = 400
+                                            },
+                                            User = new User()
+                                            {
+                                                Firstname = "Akakii",
+                                                Lastname = "Anatolich",
+                                                Comments = null,
+                                                CreatedAt = DateTime.Now,
+                                                Email = "mail@mail.com",
+                                                HashedPassword = "sdhgkjwhjb2k",
+                                                Playlists = null
+                                            },
+                                            Comments = new List<Comment>()
+                                            {
+                                                new Comment()
+                                                {
+                                                    Text = "Uraa",
+                                                    User = new User()
+                                                    {
+                                                        Firstname = "Andrii",
+                                                        Lastname = "Smishniavkin",
+                                                        HashedPassword = "sfvdsbdfds",
+                                                        Email = "f@g.com"
+                                                    },
+                                                    CreatedAt = DateTime.Now
+                                                }
+                                            },
+                                            Status = ContentStatus.Editable,
+                                            CreatedAt = DateTime.Now
+                                        }
+                                    }
                                 }
                             }
-                        }
+                        },
+                        CreatedAt = DateTime.Now
                     }
                 };
-                dataContext.UserLists.AddRange(userLists);
+
+                dataContext.Users.AddRange(users);
                 dataContext.SaveChanges();
             }
         }

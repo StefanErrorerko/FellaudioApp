@@ -7,13 +7,14 @@ namespace FellaudioApp.Models
         public int Id { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
-        public ICollection<Point> Points { get; set; }
         public ContentStatus Status { get; set; }
         public DateTime CreatedAt { get; set; }
-        public int TrackId { get; set; }
+        
+        public int AudioFileId { get; set; }
+        public AudioFile AudioFile { get; set; }
         public User User { get; set; }
-        public ICollection<Comment> Feed { get; set; }
-        public ICollection<ContentList> ContentLists { get; set; }
-
+        public ICollection<Point> Points { get; set; }
+        public ICollection<Comment> Comments { get; set; }
+        public ICollection<ContentPlaylist> ContentPlaylists { get; set; }
     }
 }

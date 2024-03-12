@@ -7,5 +7,8 @@ namespace FellaudioApp.Interfaces
         public ICollection<Location> GetLocations();
         public Location GetLocation(int id);
         public bool LocationExists(int id);
+
+        public bool CreateLocation(Location location);
+        public bool Save();
     }
 }

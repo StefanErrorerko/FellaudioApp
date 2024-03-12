@@ -27,5 +27,17 @@ namespace FellaudioApp.Repository
         {
             return _context.Locations.Any(l => l.Id == id);
         }
+
+        public bool CreateLocation(Location location)
+        {
+            _context.Add(location);
+            return Save();
+        } 
+
+        public bool Save()
+        {
+            var saved = _context.SaveChanges();
+            return saved > 0 ? true : false;
+        }
     }
 }

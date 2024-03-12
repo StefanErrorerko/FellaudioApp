@@ -19,7 +19,7 @@ namespace FellaudioApp.Controllers
         }
 
         [HttpGet]
-        [ProducesResponseType(200, Type = typeof(IEnumerable<User>))]
+        [ProducesResponseType(200, Type = typeof(IEnumerable<UserDto>))]
         public IActionResult GetUsers()
         {
 
@@ -32,7 +32,7 @@ namespace FellaudioApp.Controllers
         }
 
         [HttpGet("{id}")]
-        [ProducesResponseType(200, Type = typeof(User))]
+        [ProducesResponseType(200, Type = typeof(UserDto))]
         [ProducesResponseType(400)]
         public IActionResult GetUser(int id)
         {
@@ -45,6 +45,40 @@ namespace FellaudioApp.Controllers
                 return BadRequest(ModelState);
 
             return Ok(user);
+        }
+
+        [HttpPost]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        public IActionResult CreateUser([FromBody] UserDto userCreate)
+        {
+            if (userCreate == null)
+                return BadRequest(ModelState);
+
+            var user = _userRepository.GetUsers()
+                .Where(u => u.Email == userCreate.Email)
+                .FirstOrDefault();
+
+            if(user != null)
+            {
+                ModelState.AddModelError("", "Something went wrong shile saving");
+                return StatusCode(422, ModelState);
+            }
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var userMap = _mapper.Map<User>(userCreate);
+            if(userMap.CreatedAt == DateTime.MinValue)
+                userMap.CreatedAt = DateTime.UtcNow;
+
+            if (!_userRepository.CreateUser(userMap))
+            {
+                ModelState.AddModelError("", "Something went wrong while saving");
+                return StatusCode(500, ModelState);
+            }
+
+            return Ok("Successfully created");
         }
     }
 }

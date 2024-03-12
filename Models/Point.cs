@@ -2,11 +2,12 @@
 {
     public class Point
     {
-        public int ContentId { get; set; }
-        public int LocationId { get; set; }
-        public Content Content { get; set; }
+        public int Id { get; set; }
         public Location Location { get; set; }
-        public int PreviousLocationId { get;set; }
-        public int NextLocationId { get; set; }
+
+        public Content Content { get; set; }
+        public int? PreviousPointId { get; set; }
+        public Point PreviousPoint { get; set; }
+        public Point NextPoint { get; set; }
     }
 }

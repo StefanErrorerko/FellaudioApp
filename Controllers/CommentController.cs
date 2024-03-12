@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using FellaudioApp.Dto;
 using FellaudioApp.Interfaces;
 using FellaudioApp.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -12,18 +13,22 @@ namespace FellaudioApp.Controllers
     {
         private readonly IUserRepository _userRepository;
         private readonly ICommentRepository _commentRepository;
+        private readonly IContentRepository _contentRepository;
+        private readonly IMapper _mapper;
 
-        public CommentController(ICommentRepository commentRepository, IUserRepository userRepository)
+        public CommentController(ICommentRepository commentRepository, IUserRepository userRepository, IMapper mapper, IContentRepository contentRepository)
         {
             _userRepository = userRepository;
             _commentRepository = commentRepository;
+            _mapper = mapper;
+            _contentRepository = contentRepository;
         }
 
         [HttpGet]
-        [ProducesResponseType(200, Type = typeof(IEnumerable<Comment>))]
+        [ProducesResponseType(200, Type = typeof(IEnumerable<CommentDto>))]
         public IActionResult GetComments()
         {
-            var comments = _commentRepository.GetComments();
+            var comments = _mapper.Map<List<CommentDto>>(_commentRepository.GetComments());
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -32,14 +37,14 @@ namespace FellaudioApp.Controllers
         }
 
         [HttpGet("{id}")]
-        [ProducesResponseType(200, Type = typeof(Comment))]
+        [ProducesResponseType(200, Type = typeof(CommentDto))]
         [ProducesResponseType(400)]
         public IActionResult GetComment(int id)
         {
             if (!_commentRepository.CommentExists(id))
                 return NotFound();
 
-            var comment = _commentRepository.GetComment(id);
+            var comment = _mapper.Map<CommentDto>(_commentRepository.GetComment(id));
 
             if(!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -50,14 +55,21 @@ namespace FellaudioApp.Controllers
         [HttpPost]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
-        public IActionResult CreateComment([FromQuery] int userId, [FromBody] Comment commentCreate)
+        public IActionResult CreateComment([FromQuery] int userId, [FromQuery] int contentId, [FromBody] CommentDto commentCreate)
         {
             if (commentCreate == null)
                 return BadRequest(ModelState);
 
-            commentCreate.Author = _userRepository.GetUser(userId);
+            var commentMap = _mapper.Map<Comment>(commentCreate);
 
-            if (!_commentRepository.CreateComment(commentCreate))
+            commentMap.User = _userRepository.GetUser(userId);
+            commentMap.Content = _contentRepository.GetContent(contentId);
+
+            // If createdAt filed was not defined
+            if (commentMap.CreatedAt == DateTime.MinValue)
+                commentMap.CreatedAt = DateTime.UtcNow;
+
+            if (!_commentRepository.CreateComment(commentMap))
             {
                 ModelState.AddModelError("", "Something went wrong while saving");
                 return StatusCode(500, ModelState);

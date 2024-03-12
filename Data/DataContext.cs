@@ -14,37 +14,48 @@ namespace FellaudioApp.Data
         public DbSet<Comment> Comments { get; set; }
         public DbSet<Content> Contents { get; set; }
         public DbSet<Location> Locations { get; set; }
-        public DbSet<ContentList> ContentLists { get; set; }
+        public DbSet<ContentPlaylist> ContentPlaylists { get; set; }
         public DbSet<Point> Points { get; set; }
-        public DbSet<UserList> UserLists { get; set; }
-
+        public DbSet<Playlist> Playlists { get; set; }
+        public DbSet<AudioFile> AudioFiles { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<ContentList>()
-                .HasKey(cl => new { cl.ContentId, cl.UserListId });
-            modelBuilder.Entity<ContentList>()
+            modelBuilder.Entity<ContentPlaylist>()
+                .HasKey(cp => new { cp.ContentId, cp.PlaylistId });
+
+            modelBuilder.Entity<ContentPlaylist>()
                 .HasOne(c => c.Content)
-                .WithMany(cl => cl.ContentLists)
+                .WithMany(cp => cp.ContentPlaylists)
                 .HasForeignKey(c => c.ContentId);
 
-            modelBuilder.Entity<ContentList>()
-                .HasOne(l => l.UserList)
-                .WithMany(cl => cl.ContentLists)
-                .HasForeignKey(l => l.UserListId);
+            modelBuilder.Entity<ContentPlaylist>()
+                .HasOne(p => p.Playlist)
+                .WithMany(cp => cp.ContentPlaylists)
+                .HasForeignKey(p => p.PlaylistId);
+
+            modelBuilder.Entity<AudioFile>()
+                .HasOne(a => a.Content)
+                .WithOne(c => c.AudioFile)
+                .HasForeignKey<Content>(c => c.AudioFileId);
+
+            modelBuilder.Entity<User>()
+                .HasMany(u => u.Comments)
+                .WithOne(c => c.User)
+                .OnDelete(DeleteBehavior.ClientSetNull);
+
+            modelBuilder.Entity<User>()
+                .HasMany(u => u.Contents)
+                .WithOne(c => c.User)
+                .OnDelete(DeleteBehavior.ClientSetNull);
 
             modelBuilder.Entity<Point>()
-                .HasKey(p => new { p.LocationId, p.ContentId });
-            modelBuilder.Entity<Point>()
-                .HasOne(l => l.Location)
-                .WithMany(p => p.Points)
-                .HasForeignKey(l => l.LocationId);
-
-            modelBuilder.Entity<Point>()
-                .HasOne(c => c.Content)
-                .WithMany(p => p.Points)
-                .HasForeignKey(c => c.ContentId);
+                .HasOne(pp => pp.NextPoint)
+                .WithOne(p => p.PreviousPoint)
+                .HasForeignKey<Point>(p => p.PreviousPointId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .IsRequired(false);
         }
     }
 }

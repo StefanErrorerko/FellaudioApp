@@ -1,10 +1,10 @@
 ﻿namespace FellaudioApp.Models
 {
-    public class ContentList
+    public class ContentPlaylist
     {
-        public int UserListId { get; set; }
+        public int PlaylistId { get; set; }
         public int ContentId { get; set; }
-        public UserList UserList { get; set; }
+        public Playlist Playlist { get; set; }
         public Content Content { get; set; } 
     }
 }

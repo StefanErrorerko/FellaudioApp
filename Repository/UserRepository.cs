@@ -11,6 +11,13 @@ namespace FellaudioApp.Repository
         {
             _context = context;
         }
+
+        public bool CreateUser(User user)
+        {
+            _context.Add(user);
+            return Save();
+        }
+
         public User GetUser(int id)
         {
             return _context.Users.Where(u => u.Id == id).FirstOrDefault();
@@ -19,6 +26,12 @@ namespace FellaudioApp.Repository
         public ICollection<User> GetUsers()
         {
             return _context.Users.OrderBy(u => u.Id).ToList();
+        }
+
+        public bool Save()
+        {
+            var saved = _context.SaveChanges();
+            return saved > 0 ? true : false;
         }
 
         public bool UserExists(int id)

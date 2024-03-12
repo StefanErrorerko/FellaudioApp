@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FellaudioApp.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240131123603_INitialCreate")]
-    partial class INitialCreate
+    [Migration("20240222212816_UpdStructure5")]
+    partial class UpdStructure5
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -24,6 +24,33 @@ namespace FellaudioApp.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
+            modelBuilder.Entity("FellaudioApp.Models.AudioFile", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("DurationInSeconds")
+                        .HasColumnType("int");
+
+                    b.Property<string>("FileExtension")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FileName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("FileSize")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("AudioFiles");
+                });
+
             modelBuilder.Entity("FellaudioApp.Models.Comment", b =>
                 {
                     b.Property<int>("Id")
@@ -32,24 +59,24 @@ namespace FellaudioApp.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int>("AuthorId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Content")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("ContentId")
+                    b.Property<int>("ContentId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("AuthorId");
-
                     b.HasIndex("ContentId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Comments");
                 });
@@ -61,6 +88,9 @@ namespace FellaudioApp.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("AudioFileId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -76,32 +106,32 @@ namespace FellaudioApp.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("TrackId")
-                        .HasColumnType("int");
-
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AudioFileId")
+                        .IsUnique();
 
                     b.HasIndex("UserId");
 
                     b.ToTable("Contents");
                 });
 
-            modelBuilder.Entity("FellaudioApp.Models.ContentList", b =>
+            modelBuilder.Entity("FellaudioApp.Models.ContentPlaylist", b =>
                 {
                     b.Property<int>("ContentId")
                         .HasColumnType("int");
 
-                    b.Property<int>("UserListId")
+                    b.Property<int>("PlaylistId")
                         .HasColumnType("int");
 
-                    b.HasKey("ContentId", "UserListId");
+                    b.HasKey("ContentId", "PlaylistId");
 
-                    b.HasIndex("UserListId");
+                    b.HasIndex("PlaylistId");
 
-                    b.ToTable("ContentLists");
+                    b.ToTable("ContentPlaylists");
                 });
 
             modelBuilder.Entity("FellaudioApp.Models.Location", b =>
@@ -127,60 +157,7 @@ namespace FellaudioApp.Migrations
                     b.ToTable("Locations");
                 });
 
-            modelBuilder.Entity("FellaudioApp.Models.Point", b =>
-                {
-                    b.Property<int>("LocationId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ContentId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("NextLocationId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("PreviousLocationId")
-                        .HasColumnType("int");
-
-                    b.HasKey("LocationId", "ContentId");
-
-                    b.HasIndex("ContentId");
-
-                    b.ToTable("Points");
-                });
-
-            modelBuilder.Entity("FellaudioApp.Models.User", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Lastname")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Users");
-                });
-
-            modelBuilder.Entity("FellaudioApp.Models.UserList", b =>
+            modelBuilder.Entity("FellaudioApp.Models.Playlist", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -202,58 +179,142 @@ namespace FellaudioApp.Migrations
                     b.Property<int>("Type")
                         .HasColumnType("int");
 
-                    b.Property<string>("UserId")
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Playlists");
+                });
+
+            modelBuilder.Entity("FellaudioApp.Models.Point", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("ContentId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("LocationId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("PreviousPointId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ContentId");
+
+                    b.HasIndex("LocationId");
+
+                    b.HasIndex("PreviousPointId")
+                        .IsUnique()
+                        .HasFilter("[PreviousPointId] IS NOT NULL");
+
+                    b.ToTable("Points");
+                });
+
+            modelBuilder.Entity("FellaudioApp.Models.User", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Firstname")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("HashedPassword")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Lastname")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("UserLists");
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("FellaudioApp.Models.Comment", b =>
                 {
-                    b.HasOne("FellaudioApp.Models.User", "Author")
-                        .WithMany()
-                        .HasForeignKey("AuthorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("FellaudioApp.Models.Content", null)
-                        .WithMany("Feed")
-                        .HasForeignKey("ContentId");
-
-                    b.Navigation("Author");
-                });
-
-            modelBuilder.Entity("FellaudioApp.Models.Content", b =>
-                {
-                    b.HasOne("FellaudioApp.Models.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("FellaudioApp.Models.ContentList", b =>
-                {
                     b.HasOne("FellaudioApp.Models.Content", "Content")
-                        .WithMany("ContentLists")
+                        .WithMany("Comments")
                         .HasForeignKey("ContentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("FellaudioApp.Models.UserList", "UserList")
-                        .WithMany("ContentLists")
-                        .HasForeignKey("UserListId")
+                    b.HasOne("FellaudioApp.Models.User", "User")
+                        .WithMany("Comments")
+                        .HasForeignKey("UserId")
+                        .IsRequired();
+
+                    b.Navigation("Content");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("FellaudioApp.Models.Content", b =>
+                {
+                    b.HasOne("FellaudioApp.Models.AudioFile", "AudioFile")
+                        .WithOne("Content")
+                        .HasForeignKey("FellaudioApp.Models.Content", "AudioFileId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("FellaudioApp.Models.User", "User")
+                        .WithMany("Contents")
+                        .HasForeignKey("UserId")
+                        .IsRequired();
+
+                    b.Navigation("AudioFile");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("FellaudioApp.Models.ContentPlaylist", b =>
+                {
+                    b.HasOne("FellaudioApp.Models.Content", "Content")
+                        .WithMany("ContentPlaylists")
+                        .HasForeignKey("ContentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("FellaudioApp.Models.Playlist", "Playlist")
+                        .WithMany("ContentPlaylists")
+                        .HasForeignKey("PlaylistId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Content");
 
-                    b.Navigation("UserList");
+                    b.Navigation("Playlist");
+                });
+
+            modelBuilder.Entity("FellaudioApp.Models.Playlist", b =>
+                {
+                    b.HasOne("FellaudioApp.Models.User", "User")
+                        .WithMany("Playlists")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("FellaudioApp.Models.Point", b =>
@@ -270,16 +331,28 @@ namespace FellaudioApp.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("FellaudioApp.Models.Point", "NextPoint")
+                        .WithOne("PreviousPoint")
+                        .HasForeignKey("FellaudioApp.Models.Point", "PreviousPointId");
+
                     b.Navigation("Content");
 
                     b.Navigation("Location");
+
+                    b.Navigation("NextPoint");
+                });
+
+            modelBuilder.Entity("FellaudioApp.Models.AudioFile", b =>
+                {
+                    b.Navigation("Content")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("FellaudioApp.Models.Content", b =>
                 {
-                    b.Navigation("ContentLists");
+                    b.Navigation("Comments");
 
-                    b.Navigation("Feed");
+                    b.Navigation("ContentPlaylists");
 
                     b.Navigation("Points");
                 });
@@ -289,9 +362,24 @@ namespace FellaudioApp.Migrations
                     b.Navigation("Points");
                 });
 
-            modelBuilder.Entity("FellaudioApp.Models.UserList", b =>
+            modelBuilder.Entity("FellaudioApp.Models.Playlist", b =>
                 {
-                    b.Navigation("ContentLists");
+                    b.Navigation("ContentPlaylists");
+                });
+
+            modelBuilder.Entity("FellaudioApp.Models.Point", b =>
+                {
+                    b.Navigation("PreviousPoint")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("FellaudioApp.Models.User", b =>
+                {
+                    b.Navigation("Comments");
+
+                    b.Navigation("Contents");
+
+                    b.Navigation("Playlists");
                 });
 #pragma warning restore 612, 618
         }
