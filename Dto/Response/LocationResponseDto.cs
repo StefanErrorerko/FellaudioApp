@@ -1,6 +1,6 @@
-﻿namespace FellaudioApp.Dto
+﻿namespace FellaudioApp.Dto.Response
 {
-    public class LocationDto
+    public class LocationResponseDto
     {
         public int Id { get; set; }
         public string Name { get; set; }

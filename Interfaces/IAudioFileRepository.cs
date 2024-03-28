@@ -8,6 +8,8 @@ namespace FellaudioApp.Interfaces
         AudioFile GetAudioFile(int id);
         bool AudioFileExists(int id);
         bool CreateAudioFile(AudioFile audioFile);
+        bool UpdateAudioFile(AudioFile audioFile);
+        bool DeleteAudioFile(AudioFile audioFile);
         bool Save();
     }
 }

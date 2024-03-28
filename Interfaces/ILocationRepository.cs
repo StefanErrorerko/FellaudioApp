@@ -4,11 +4,13 @@ namespace FellaudioApp.Interfaces
 {
     public interface ILocationRepository
     {
-        public ICollection<Location> GetLocations();
-        public Location GetLocation(int id);
-        public bool LocationExists(int id);
-
-        public bool CreateLocation(Location location);
-        public bool Save();
+        ICollection<Location> GetLocations();
+        Location GetLocation(int id);
+        //ICollection<Point> GetPointsByLocation(int locationId);
+        bool LocationExists(int id);
+        bool CreateLocation(Location location);
+        bool UpdateLocation(Location location);
+        bool DeleteLocation(Location location);
+        bool Save();
     }
 }

@@ -1,13 +1,15 @@
 ﻿using FellaudioApp.Models.Enums;
 using FellaudioApp.Models;
 
-namespace FellaudioApp.Dto
+namespace FellaudioApp.Dto.Request
 {
-    public class ContentDto
+    public class ContentPostRequestDto
     {
-        public int Id { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
+        // чи треба?
         public ContentStatus Status { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public int UserId { get; set; }
     }
 }

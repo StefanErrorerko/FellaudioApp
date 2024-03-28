@@ -1,7 +1,10 @@
 ﻿using AutoMapper;
 using FellaudioApp.Dto;
+using FellaudioApp.Dto.Request;
+using FellaudioApp.Dto.Response;
 using FellaudioApp.Interfaces;
 using FellaudioApp.Models;
+using FellaudioApp.Repository;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FellaudioApp.Controllers
@@ -26,10 +29,10 @@ namespace FellaudioApp.Controllers
         }
 
         [HttpGet]
-        [ProducesResponseType(200, Type = typeof(IEnumerable<PlaylistDto>))]
+        [ProducesResponseType(200, Type = typeof(IEnumerable<PlaylistResponseDto>))]
         public IActionResult GetPlaylists()
         {
-            var playlists = _mapper.Map<List<PlaylistDto>>(_playlistRepository.GetPlaylists());
+            var playlists = _mapper.Map<List<PlaylistResponseDto>>(_playlistRepository.GetPlaylists());
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -38,7 +41,7 @@ namespace FellaudioApp.Controllers
         }
 
         [HttpGet("{id}")]
-        [ProducesResponseType(200, Type = typeof(PlaylistDto))]
+        [ProducesResponseType(200, Type = typeof(PlaylistResponseDto))]
         [ProducesResponseType(400)]
         public IActionResult GetPlaylist(int id)
         {
@@ -54,14 +57,14 @@ namespace FellaudioApp.Controllers
         }
 
         [HttpGet("{playlistId}/content")]
-        [ProducesResponseType(200, Type = typeof(IEnumerable<ContentDto>))]
+        [ProducesResponseType(200, Type = typeof(IEnumerable<ContentResponseDto>))]
         [ProducesResponseType(400)]
-        public IActionResult GetContentByPlaylist(int playlistId)
+        public IActionResult GetContentsByPlaylist(int playlistId)
         {
             if(!_playlistRepository.PlaylistExists(playlistId))
                 return NotFound();
 
-            var contents = _mapper.Map<List<ContentDto>>(_playlistRepository.GetContentByPlaylist(playlistId));
+            var contents = _mapper.Map<List<ContentResponseDto>>(_playlistRepository.GetContentByPlaylist(playlistId));
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -72,15 +75,18 @@ namespace FellaudioApp.Controllers
         [HttpPost]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
-        public IActionResult CreatePlaylist([FromQuery] int contentId, [FromQuery] int userId, [FromBody] PlaylistDto playlistCreate)
+        public IActionResult CreatePlaylist([FromBody] PlaylistPostRequestDto playlistCreate)
         {
             if (playlistCreate == null)
                 return BadRequest(ModelState);
 
-            var user = _userRepository.GetUser(userId);
+            var userId = playlistCreate.UserId;
+
+            if (!_userRepository.UserExists(userId))
+                return NotFound();
 
             var playlist = _playlistRepository.GetPlaylists()
-                .Where(p => p.User == user && p.Name == playlistCreate.Name)
+                .Where(p => p.User.Id == userId && p.Name == playlistCreate.Name)
                 .FirstOrDefault();
 
             if(playlist != null)
@@ -90,7 +96,7 @@ namespace FellaudioApp.Controllers
             }
 
             playlist = _playlistRepository.GetPlaylists()
-                .Where(p => p.User == user && p.Type == Models.Enums.ListType.Saved)
+                .Where(p => p.User.Id == userId && p.Type == Models.Enums.ListType.Saved)
                 .FirstOrDefault();
 
             if(playlist != null && playlistCreate.Type == Models.Enums.ListType.Saved)
@@ -99,22 +105,92 @@ namespace FellaudioApp.Controllers
                 return StatusCode(422, ModelState);
             }
 
+            if(playlistCreate.Type == Models.Enums.ListType.Saved)
+            {
+                if(playlistCreate.Name != null)
+                {
+                    ModelState.AddModelError("", "Cannot create 'Saved' playlist with custom name");
+                    return StatusCode(422, ModelState);
+                }
+                playlistCreate.Name = "Saved";
+            }
+
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
             var playlistMap = _mapper.Map<Playlist>(playlistCreate);
+            playlistMap.User = _userRepository.GetUser(userId);
 
-            playlistMap.User = user;
             if(playlistMap.CreatedAt == DateTime.MinValue)
                 playlistMap.CreatedAt = DateTime.UtcNow;
 
-            if(!_playlistRepository.CreatePlaylist(contentId, playlistMap))
+            if(!_playlistRepository.CreatePlaylist(playlistMap))
             {
                 ModelState.AddModelError("", "Something went wrong");
                 return StatusCode(500, ModelState);
             }
 
             return Ok("Successfully Created");
+        }
+
+        [HttpPut("{id}")]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
+        public IActionResult UpdatePlaylist(int id, [FromBody] PlaylistPutRequestDto updatedPlaylist)
+        {
+            if (updatedPlaylist == null)
+                return BadRequest(ModelState);
+
+            if (!_playlistRepository.PlaylistExists(id))
+                return NotFound();
+
+            if (!ModelState.IsValid)
+                return BadRequest();
+
+            var playlistToUpdate = _playlistRepository.GetPlaylist(id);
+            var playlistMap = _mapper.Map(updatedPlaylist, playlistToUpdate);
+
+            var playlistSame = _playlistRepository.GetPlaylists()
+                .Where(p => p.User == playlistMap.User && p.Name == updatedPlaylist.Name && p.Id != id)
+                .FirstOrDefault();
+
+            if (playlistSame != null)
+            {
+                ModelState.AddModelError("", $"Playlist with name {playlistSame.Name} already exists");
+                return StatusCode(422, ModelState);
+            }
+
+            if (!_playlistRepository.UpdatePlaylist(playlistMap))
+            {
+                ModelState.AddModelError("", "Something went wrong updating owner");
+                return StatusCode(500, ModelState);
+            }
+
+            return NoContent();
+        }
+
+        [HttpDelete("{id}")]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(404)]
+        public IActionResult DeletePlaylist(int id)
+        {
+            if (!_playlistRepository.PlaylistExists(id))
+                return NotFound();
+
+            var playlistToDelete = _playlistRepository.GetPlaylist(id);
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            if (!_playlistRepository.DeletePlaylist(playlistToDelete))
+            {
+                ModelState.AddModelError("", "Something went wrong while deleting");
+                return StatusCode(500, ModelState);
+            }
+
+            return NoContent();
         }
     }
 }

@@ -8,6 +8,8 @@ namespace FellaudioApp.Interfaces
         Comment GetComment(int id);
         bool CommentExists(int id);
         bool CreateComment(Comment comment);
+        bool UpdateComment(Comment comment);
+        bool DeleteComment(Comment comment);
         bool Save();
     }
 }

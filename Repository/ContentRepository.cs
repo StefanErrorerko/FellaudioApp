@@ -1,6 +1,7 @@
 ﻿using FellaudioApp.Data;
 using FellaudioApp.Interfaces;
 using FellaudioApp.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace FellaudioApp.Repository
 {
@@ -16,7 +17,44 @@ namespace FellaudioApp.Repository
         {
             return _context.Contents.Any(c => c.Id == id);
         }
-
+        public Content GetContent(int id)
+        {
+            return _context.Contents
+                .Where(c => c.Id == id)
+                .Include(c => c.User)
+                .Include(c => c.Points)
+                .Include(c => c.AudioFile)
+                .Include(c => c.Comments)
+                .FirstOrDefault();
+        }
+        public ICollection<Content> GetContents()
+        {
+            return _context.Contents
+                .Include(c => c.User)
+                .Include(c => c.Points)
+                .Include(c => c.AudioFile)
+                .Include(c => c.Comments)
+                .OrderBy(c => c.Id)
+                .ToList();
+        }
+        public ICollection<Point> GetPointsByContent(int contentId)
+        {
+            return _context.Points
+                .Include(p => p.Location)
+                .Where(p => p.Content.Id == contentId)
+                .ToList();
+        }
+        public AudioFile GetAudioFileByContent(int contentId)
+        {
+            return _context.AudioFiles.Where(a => a.ContentId == contentId).FirstOrDefault();
+        }
+        public ICollection<Comment> GetCommentsByContent(int contentId)
+        {
+            return _context.Comments
+                .Include(c => c.User)
+                .Where(c => c.Content.Id == contentId)
+                .ToList();
+        }
         public bool CreateContent(Content content)
         {
             /*var userListEntity = _context.UserLists.Where(ul => ul.Id == userListId).FirstOrDefault();
@@ -33,17 +71,21 @@ namespace FellaudioApp.Repository
 
             return Save();
         }
-
-        public Content GetContent(int id)
+        public bool UpdateContent(Content content)
         {
-            return _context.Contents.Where(c => c.Id == id).FirstOrDefault();
-        }
+            // костиль
+            var existingContent = _context.Contents.Local.FirstOrDefault(c => c.Id == content.Id)
+                ?? _context.Contents.FirstOrDefault(c => c.Id == content.Id);
+            _context.Entry(existingContent).State = EntityState.Detached;
 
-        public ICollection<Content> GetContents()
+            _context.Update(content);
+            return Save();
+        }
+        public bool DeleteContent(Content content)
         {
-            return _context.Contents.OrderBy(c => c.Id).ToList();
+            _context.Remove(content);
+            return Save();
         }
-
         public bool Save()
         {
             var saved = _context.SaveChanges();

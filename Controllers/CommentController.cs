@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
-using FellaudioApp.Dto;
+using FellaudioApp.Dto.Request;
+using FellaudioApp.Dto.Response;
 using FellaudioApp.Interfaces;
 using FellaudioApp.Models;
 using Microsoft.AspNetCore.Mvc;
-using System.Reflection;
 
 namespace FellaudioApp.Controllers
 {
@@ -16,19 +16,20 @@ namespace FellaudioApp.Controllers
         private readonly IContentRepository _contentRepository;
         private readonly IMapper _mapper;
 
-        public CommentController(ICommentRepository commentRepository, IUserRepository userRepository, IMapper mapper, IContentRepository contentRepository)
+        public CommentController(ICommentRepository commentRepository, IUserRepository userRepository, 
+            IMapper mapper, IContentRepository contentRepository)
         {
             _userRepository = userRepository;
             _commentRepository = commentRepository;
-            _mapper = mapper;
             _contentRepository = contentRepository;
+            _mapper = mapper;
         }
 
         [HttpGet]
-        [ProducesResponseType(200, Type = typeof(IEnumerable<CommentDto>))]
+        [ProducesResponseType(200, Type = typeof(IEnumerable<CommentResponseDto>))]
         public IActionResult GetComments()
         {
-            var comments = _mapper.Map<List<CommentDto>>(_commentRepository.GetComments());
+            var comments = _mapper.Map<List<CommentResponseDto>>(_commentRepository.GetComments());
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -37,14 +38,14 @@ namespace FellaudioApp.Controllers
         }
 
         [HttpGet("{id}")]
-        [ProducesResponseType(200, Type = typeof(CommentDto))]
+        [ProducesResponseType(200, Type = typeof(CommentResponseDto))]
         [ProducesResponseType(400)]
         public IActionResult GetComment(int id)
         {
             if (!_commentRepository.CommentExists(id))
                 return NotFound();
 
-            var comment = _mapper.Map<CommentDto>(_commentRepository.GetComment(id));
+            var comment = _mapper.Map<CommentResponseDto>(_commentRepository.GetComment(id));
 
             if(!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -55,9 +56,21 @@ namespace FellaudioApp.Controllers
         [HttpPost]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
-        public IActionResult CreateComment([FromQuery] int userId, [FromQuery] int contentId, [FromBody] CommentDto commentCreate)
+        public IActionResult CreateComment([FromBody] CommentPostRequestDto commentCreate)
         {
             if (commentCreate == null)
+                return BadRequest(ModelState);
+
+            var userId = commentCreate.UserId;
+            var contentId = commentCreate.ContentId;
+
+            if (!_userRepository.UserExists(userId))
+                return NotFound();
+
+            if (!_contentRepository.ContentExists(contentId))
+                return NotFound();
+
+            if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
             var commentMap = _mapper.Map<Comment>(commentCreate);
@@ -65,7 +78,6 @@ namespace FellaudioApp.Controllers
             commentMap.User = _userRepository.GetUser(userId);
             commentMap.Content = _contentRepository.GetContent(contentId);
 
-            // If createdAt filed was not defined
             if (commentMap.CreatedAt == DateTime.MinValue)
                 commentMap.CreatedAt = DateTime.UtcNow;
 
@@ -76,6 +88,55 @@ namespace FellaudioApp.Controllers
             }
 
             return Ok("Successfully created");
+        }
+
+        [HttpPut("{id}")]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(404)]
+        public IActionResult UpdateComment(int id, [FromBody] CommentPutRequestDto updatedComment)
+        {
+            if (updatedComment == null)
+                return BadRequest(ModelState);
+
+            if (!_commentRepository.CommentExists(id))
+                return NotFound();
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var commentToUpdate = _commentRepository.GetComment(id);
+            var commentMap = _mapper.Map(updatedComment, commentToUpdate);
+
+            if (!_commentRepository.UpdateComment(commentMap))
+            {
+                ModelState.AddModelError("", "Something went wrong while updating");
+                return StatusCode(500, ModelState);
+            }
+            return NoContent();
+        }
+
+        [HttpDelete("{id}")]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(404)]
+        public IActionResult DeleteComment(int id)
+        {
+            if (!_commentRepository.CommentExists(id))
+                return NotFound();
+
+            var commentToDelete = _commentRepository.GetComment(id);
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            if (!_commentRepository.DeleteComment(commentToDelete))
+            {
+                ModelState.AddModelError("", "Something went wrong while deleting");
+                StatusCode(500, ModelState);
+            }
+
+            return NoContent();
         }
     }
 }

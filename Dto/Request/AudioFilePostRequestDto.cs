@@ -1,14 +1,11 @@
-﻿namespace FellaudioApp.Models
+﻿namespace FellaudioApp.Dto.Request
 {
-    public class AudioFile
+    public class AudioFilePostRequestDto
     {
-        public int Id { get; set; }
         public string FileName { get; set; }
         public string FileExtension { get; set; }
         public int FileSize { get; set; }
         public int DurationInSeconds { get; set; }
-
         public int ContentId { get; set; }
-        public Content Content { get; set; }
     }
 }

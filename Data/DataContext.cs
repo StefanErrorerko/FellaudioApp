@@ -35,26 +35,48 @@ namespace FellaudioApp.Data
                 .WithMany(cp => cp.ContentPlaylists)
                 .HasForeignKey(p => p.PlaylistId);
 
-            modelBuilder.Entity<AudioFile>()
-                .HasOne(a => a.Content)
-                .WithOne(c => c.AudioFile)
-                .HasForeignKey<Content>(c => c.AudioFileId);
+            modelBuilder.Entity<Content>()
+                .HasOne(c => c.AudioFile)
+                .WithOne(a => a.Content)
+                .HasForeignKey<AudioFile>(c => c.ContentId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<User>()
                 .HasMany(u => u.Comments)
                 .WithOne(c => c.User)
-                .OnDelete(DeleteBehavior.ClientSetNull);
+                .HasForeignKey("UserId")
+                .OnDelete(DeleteBehavior.SetNull)
+                .IsRequired(false);
 
             modelBuilder.Entity<User>()
                 .HasMany(u => u.Contents)
                 .WithOne(c => c.User)
-                .OnDelete(DeleteBehavior.ClientSetNull);
+                .HasForeignKey("UserId")
+                .OnDelete(DeleteBehavior.SetNull)
+                .IsRequired(false);
 
             modelBuilder.Entity<Point>()
                 .HasOne(pp => pp.NextPoint)
                 .WithOne(p => p.PreviousPoint)
                 .HasForeignKey<Point>(p => p.PreviousPointId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
+                .IsRequired(false);
+
+            modelBuilder.Entity<Comment>()
+                .HasOne(com => com.Content)
+                .WithMany(con => con.Comments)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Point>()
+                .HasOne(p => p.Content)
+                .WithMany(c => c.Points)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<User>()
+                .HasMany(u => u.Playlists)
+                .WithOne(p => p.User)
+                .HasForeignKey("UserId")
+                .OnDelete(DeleteBehavior.SetNull)
                 .IsRequired(false);
         }
     }

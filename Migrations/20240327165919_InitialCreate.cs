@@ -5,26 +5,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace FellaudioApp.Migrations
 {
-    public partial class UpdStructure4 : Migration
+    public partial class InitialCreate : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.CreateTable(
-                name: "AudioFiles",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    FileName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    FileExtension = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    FileSize = table.Column<int>(type: "int", nullable: false),
-                    DurationInSeconds = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AudioFiles", x => x.Id);
-                });
-
             migrationBuilder.CreateTable(
                 name: "Locations",
                 columns: table => new
@@ -67,23 +51,17 @@ namespace FellaudioApp.Migrations
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Status = table.Column<int>(type: "int", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    AudioFileId = table.Column<int>(type: "int", nullable: false),
                     UserId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Contents", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Contents_AudioFiles_AudioFileId",
-                        column: x => x.AudioFileId,
-                        principalTable: "AudioFiles",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
                         name: "FK_Contents_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -105,6 +83,28 @@ namespace FellaudioApp.Migrations
                         name: "FK_Playlists_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AudioFiles",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    FileName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FileExtension = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FileSize = table.Column<int>(type: "int", nullable: false),
+                    DurationInSeconds = table.Column<int>(type: "int", nullable: false),
+                    ContentId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AudioFiles", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AudioFiles_Contents_ContentId",
+                        column: x => x.ContentId,
+                        principalTable: "Contents",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -142,9 +142,9 @@ namespace FellaudioApp.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    ContentId = table.Column<int>(type: "int", nullable: false),
                     LocationId = table.Column<int>(type: "int", nullable: false),
-                    PreviousPointId = table.Column<int>(type: "int", nullable: false)
+                    ContentId = table.Column<int>(type: "int", nullable: false),
+                    PreviousPointId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -193,6 +193,12 @@ namespace FellaudioApp.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_AudioFiles_ContentId",
+                table: "AudioFiles",
+                column: "ContentId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Comments_ContentId",
                 table: "Comments",
                 column: "ContentId");
@@ -206,12 +212,6 @@ namespace FellaudioApp.Migrations
                 name: "IX_ContentPlaylists_PlaylistId",
                 table: "ContentPlaylists",
                 column: "PlaylistId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Contents_AudioFileId",
-                table: "Contents",
-                column: "AudioFileId",
-                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Contents_UserId",
@@ -237,11 +237,15 @@ namespace FellaudioApp.Migrations
                 name: "IX_Points_PreviousPointId",
                 table: "Points",
                 column: "PreviousPointId",
-                unique: true);
+                unique: true,
+                filter: "[PreviousPointId] IS NOT NULL");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "AudioFiles");
+
             migrationBuilder.DropTable(
                 name: "Comments");
 
@@ -259,9 +263,6 @@ namespace FellaudioApp.Migrations
 
             migrationBuilder.DropTable(
                 name: "Locations");
-
-            migrationBuilder.DropTable(
-                name: "AudioFiles");
 
             migrationBuilder.DropTable(
                 name: "Users");

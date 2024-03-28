@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using FellaudioApp.Dto;
+using FellaudioApp.Dto.Request;
+using FellaudioApp.Dto.Response;
 using FellaudioApp.Interfaces;
 using FellaudioApp.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -12,23 +14,22 @@ namespace FellaudioApp.Controllers
     {
         private readonly IContentRepository _contentRepository;
         private readonly IUserRepository _userRepository;
-        private readonly IAudioFileRepository _audioFileRepository;
         private readonly IMapper _mapper;   
 
         public ContentController(IContentRepository contentRepository, IMapper mapper, 
-            IUserRepository userRepository, IAudioFileRepository audioFileRepository)
+            IUserRepository userRepository)
         {
             _contentRepository = contentRepository;
             _userRepository = userRepository;
-            _audioFileRepository = audioFileRepository;
             _mapper = mapper;
         }
 
         [HttpGet]
-        [ProducesResponseType(200, Type = typeof(IEnumerable<ContentDto>))]
+        [ProducesResponseType(200, Type = typeof(IEnumerable<ContentResponseDto>))]
         public IActionResult GetContents()
         {
-            var contents = _mapper.Map<List<ContentDto>>(_contentRepository.GetContents());
+            var contents = _mapper.Map<List<ContentResponseDto>>(_contentRepository.GetContents());
+
             if(!ModelState.IsValid)
                 return BadRequest(ModelState);
 
@@ -36,14 +37,14 @@ namespace FellaudioApp.Controllers
         }
 
         [HttpGet("{id}")]
-        [ProducesResponseType(200, Type = typeof(ContentDto))]
+        [ProducesResponseType(200, Type = typeof(ContentResponseDto))]
         [ProducesResponseType(400)]
         public IActionResult GetContent(int id)
         {
             if (!_contentRepository.ContentExists(id))
                 return NotFound();
             
-            var content = _contentRepository.GetContent(id);
+            var content = _mapper.Map<ContentResponseDto>(_contentRepository.GetContent(id));
 
             if(!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -51,34 +52,77 @@ namespace FellaudioApp.Controllers
             return Ok(content);
         }
 
+        [HttpGet("{id}/audiofile")]
+        [ProducesResponseType(200, Type = typeof(AudioFile))]
+        [ProducesResponseType(400)]
+        public IActionResult GetAudioFileByContent(int id)
+        {
+            if(!_contentRepository.ContentExists(id))
+                return NotFound();
+
+            var audioFile = _mapper.Map<AudioFile>(_contentRepository.GetAudioFileByContent(id));
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            return Ok(audioFile);
+        }
+        
+        [HttpGet("{id}/points")]
+        [ProducesResponseType(200, Type = typeof(PointResponseDto))]
+        [ProducesResponseType(400)]
+        public IActionResult GetPointsByContent(int id)
+        {
+            if (!_contentRepository.ContentExists(id))
+                return NotFound();
+
+            var points = _mapper.Map<List<PointResponseDto>>(_contentRepository.GetPointsByContent(id));
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            return Ok(points);
+        }
+
+        [HttpGet("{contentId}/comments")]
+        [ProducesResponseType(200, Type = typeof(CommentResponseDto))]
+        [ProducesResponseType(400)]
+        public IActionResult GetCommentsByContent(int contentId)
+        {
+            if (!_contentRepository.ContentExists(contentId))
+                return NotFound();
+
+            var comments = _mapper.Map<List<CommentResponseDto>>(_contentRepository.GetCommentsByContent(contentId));
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            return Ok(comments);
+        }
+
         [HttpPost]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
-        public IActionResult CreateContent([FromQuery] int audiofileId, [FromQuery] int userId, [FromBody] ContentDto contentCreate)
+        public IActionResult CreateContent([FromBody] ContentPostRequestDto contentCreate)
         {
             if(contentCreate == null)
                 return BadRequest(ModelState);
 
+            var userId = contentCreate.UserId;
+
+            if (!_userRepository.UserExists(userId))
+                return NotFound();
+
             var user = _userRepository.GetUser(userId);
 
-            var content = _contentRepository.GetContents()
+            var contentSame = _contentRepository.GetContents()
                 .Where(c => c.Title.Trim().ToUpper() == contentCreate.Title.TrimEnd().ToUpper() 
                     && c.User == user)
                 .FirstOrDefault();
 
-            if(content != null)
+            if(contentSame != null)
             {
-                ModelState.AddModelError("", $"Content title '{content.Title}' is already exists");
-                return StatusCode(422, ModelState);
-            }
-
-            content = _contentRepository.GetContents()
-                .Where(c => c.AudioFileId == audiofileId)
-                .FirstOrDefault();
-
-            if(content != null)
-            {
-                ModelState.AddModelError("", "Content contains that audiofile is already exists");
+                ModelState.AddModelError("", $"Content title '{contentSame.Title}' is already exists");
                 return StatusCode(422, ModelState);
             }
 
@@ -86,9 +130,7 @@ namespace FellaudioApp.Controllers
                 return BadRequest(ModelState);
 
             var contentMap = _mapper.Map<Content>(contentCreate);
-
             contentMap.User = user;
-            contentMap.AudioFile = _audioFileRepository.GetAudioFile(audiofileId);
 
             if (contentMap.CreatedAt == DateTime.MinValue)
                 contentMap.CreatedAt = DateTime.UtcNow;
@@ -100,6 +142,57 @@ namespace FellaudioApp.Controllers
             }
 
             return Ok("Succesfully created");
+        }
+
+        [HttpPut("{id}")]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(404)]
+        public IActionResult UpdateContent(int id, [FromBody] ContentPutRequestDto updatedContent)
+        {
+            if(updatedContent == null)
+                return BadRequest(ModelState);
+
+            if (!_contentRepository.ContentExists(id))
+                return NotFound();
+
+            var contentToUpdate = _contentRepository.GetContent(id);
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var contentMap = _mapper.Map(updatedContent, contentToUpdate);
+
+            if (!_contentRepository.UpdateContent(contentMap))
+            {
+                ModelState.AddModelError("", "Something wentwrong while saving");
+                return StatusCode(500, ModelState);
+            }
+
+            return NoContent();
+        }
+
+        [HttpDelete("{id}")]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(404)]
+        public IActionResult DeleteContent(int id)
+        {
+            if (!_contentRepository.ContentExists(id))
+                return NotFound();
+
+            var contentToDelete = _contentRepository.GetContent(id);
+
+            if (!ModelState.IsValid) 
+                return BadRequest(ModelState);
+
+            if (!_contentRepository.DeleteContent(contentToDelete))
+            {
+                ModelState.AddModelError("", "Something went wrong while deleting");
+                return StatusCode(500, ModelState);
+            }
+
+            return NoContent();
         }
     }
 }

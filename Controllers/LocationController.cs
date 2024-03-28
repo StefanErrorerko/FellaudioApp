@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using FellaudioApp.Dto;
+using FellaudioApp.Dto.Request;
+using FellaudioApp.Dto.Response;
 using FellaudioApp.Interfaces;
 using FellaudioApp.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -10,8 +12,8 @@ namespace FellaudioApp.Controllers
     [Controller]
     public class LocationController : Controller
     {
-        private ILocationRepository _locationRepository;
-        private IMapper _mapper;
+        private readonly ILocationRepository _locationRepository;
+        private readonly IMapper _mapper;
         public LocationController(ILocationRepository locationRepository, IMapper mapper)
         {
             _locationRepository = locationRepository;
@@ -19,7 +21,7 @@ namespace FellaudioApp.Controllers
         }
 
         [HttpGet]
-        [ProducesResponseType(200, Type = typeof(IEnumerable<LocationDto>))]
+        [ProducesResponseType(200, Type = typeof(IEnumerable<LocationResponseDto>))]
         public IActionResult GetLocations()
         {
             var locations = _locationRepository.GetLocations();
@@ -30,14 +32,14 @@ namespace FellaudioApp.Controllers
         }
 
         [HttpGet("{id}")]
-        [ProducesResponseType(200, Type = typeof(LocationDto))]
+        [ProducesResponseType(200, Type = typeof(LocationResponseDto))]
         [ProducesResponseType(400)]
         public IActionResult GetLocation(int id) 
         {
             if (!_locationRepository.LocationExists(id))
                 return NotFound();
 
-            var location = _locationRepository.GetLocation(id);
+            var location = _mapper.Map<LocationResponseDto>(_locationRepository.GetLocation(id));
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -48,7 +50,7 @@ namespace FellaudioApp.Controllers
         [HttpPost]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
-        public IActionResult CreateLocation([FromBody] LocationDto locationCreate)
+        public IActionResult CreateLocation([FromBody] LocationPostRequestDto locationCreate)
         {
             if (locationCreate == null)
                 return BadRequest(ModelState);
@@ -75,6 +77,56 @@ namespace FellaudioApp.Controllers
             }
 
             return Ok("Successfully created");
+        }
+
+        [HttpPut("{id}")]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(404)]
+        public IActionResult UpdateLocation(int id, [FromBody] LocationPutRequestDto updatedLocation)
+        {
+            if (updatedLocation == null)
+                return BadRequest(ModelState);
+
+            if (!_locationRepository.LocationExists(id))
+                return NotFound();
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var locationToUpdate = _locationRepository.GetLocation(id);
+            var locationMap = _mapper.Map(updatedLocation, locationToUpdate);
+
+            if (!_locationRepository.UpdateLocation(locationMap))
+            {
+                ModelState.AddModelError("", "Something went wrong while updating");
+                return StatusCode(500, ModelState);
+            }
+
+            return NoContent();
+        }
+
+        [HttpDelete("{id}")]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(404)]
+        public IActionResult DeleteLocation(int id)
+        {
+            if (!_locationRepository.LocationExists(id))
+                return NotFound();
+
+            var locationToDelete = _locationRepository.GetLocation(id);
+
+            if(!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            if (!_locationRepository.DeleteLocation(locationToDelete))
+            {
+                ModelState.AddModelError("", "Something went wrong while deleting");
+                return StatusCode(500, ModelState);
+            }
+
+            return NoContent();
         }
     }
 }
