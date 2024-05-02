@@ -5,7 +5,10 @@ import Home from './pages/Home'
 //import Menu from './pages/Menu'
 import About from './pages/About'
 import Login from './pages/Login'
-import Content from './pages/Content';
+import Map from './pages/Map'
+import Content from './pages/Content'
+import Profile from './pages/Profile'
+import Playlist from './pages/Playlist'
 import {
   BrowserRouter as Router,
   Route,
@@ -22,6 +25,9 @@ function App() {
           <Route path='/about' element = {<About />} />
           <Route path='/login' element = {<Login />} />
           <Route path="/content" element={<Content />} />
+          <Route path="/map" element={<Map />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/playlist" element={<Playlist />} />
         </Routes>
       </Router>
     </div>

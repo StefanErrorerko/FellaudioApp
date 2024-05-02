@@ -1,0 +1,48 @@
+.playlistContainer {
+    width: 70vw;
+    margin: 0 auto; /* Center the container with 10% margin on left and right */
+  }
+  
+  .playlistItem {
+    width: 100%; /* Adjust width to fill the container */
+    margin-bottom: 20px;
+    border-radius: 15px;
+    box-shadow: 0px 3px 15px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+  }
+  
+  .icon {
+    width: 50px; /* Adjust icon width as needed */
+    height: 50px; /* Adjust icon height as needed */
+    background-color: #ccc; /* Placeholder color */
+    margin-right: 20px; /* Adjust margin between icon and text */
+  }
+  .text {
+    flex-grow: 1;
+  }
+  
+  .name {
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+  
+  .description {
+    color: #555; /* Adjust description text color */
+  }
+  
+  @media only screen and (max-width: 1300px) {
+    .playlistContainer {
+      width: 100%; /* Adjust width for smaller screens */
+    }
+  
+    .playlistItem {
+      width: calc(50% - 20px); /* Adjust width for two items in a row */
+    }
+  }
+  
+  @media only screen and (max-width: 800px) {
+    .playlistItem {
+      width: 100%; /* Adjust width for single item in a row */
+    }
+  }
+  
