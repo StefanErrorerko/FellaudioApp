@@ -2,7 +2,7 @@ import React from 'react'
 
 import '../styles/Login.css'
 
-function Contact() {
+function Login() {
   return (
     <div className='contact'>
       <div className='rightSide'>
@@ -24,4 +24,4 @@ function Contact() {
   )
 }
 
-export default Contact
+export default Login

@@ -1,7 +1,7 @@
 import './App.css';
 import NavBar from './components/Navbar';
-import Footer from './components/Footer'
-//import Home from './pages/Home.js'
+//import Footer from './components/Footer'
+import Home from './pages/Home'
 //import Menu from './pages/Menu'
 import About from './pages/About'
 import Login from './pages/Login'
@@ -15,14 +15,13 @@ function App() {
   return (
     <div className="App">
       <Router>
-        <NavBar/>
+        <NavBar />
         <Routes>
+          <Route path='/' element = {<Home />} />
           <Route path='/about' element = {<About />} />
-          <Route path='/login' element= {<Login />} />
+          <Route path='/login' element = {<Login />} />
         </Routes>
-        <Footer />
       </Router>
-
     </div>
   );
 }
