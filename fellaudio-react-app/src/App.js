@@ -5,6 +5,7 @@ import Home from './pages/Home'
 //import Menu from './pages/Menu'
 import About from './pages/About'
 import Login from './pages/Login'
+import Content from './pages/Content';
 import {
   BrowserRouter as Router,
   Route,
@@ -20,6 +21,7 @@ function App() {
           <Route path='/' element = {<Home />} />
           <Route path='/about' element = {<About />} />
           <Route path='/login' element = {<Login />} />
+          <Route path="/content" element={<Content />} />
         </Routes>
       </Router>
     </div>

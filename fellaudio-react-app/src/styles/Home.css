@@ -1,59 +1,77 @@
 .home {
-    padding: 20px;
-  }
-  
-  .searchArea {
-    margin-bottom: 20px;
-  }
-  
-  .searchArea input {
-    padding: 8px;
-    margin-right: 10px;
-  }
-  
-  .searchArea button {
-    padding: 8px 20px;
-    background-color: darkblue;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
+  width: 100%;
+  height: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.searchArea {
+  margin-bottom: 20px;
+}
+
+.searchArea input {
+  padding: 8px;
+  margin-right: 10px;
+}
+
+.searchArea button {
+  padding: 8px 20px;
+  background-color: darkblue;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.blocksContainer {
+  width: 70vw;
+  height: auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  place-items: center;
+}
+
+.contentItem {
+  border-radius: 15px;
+  width: 300px;
+  height: 350px;
+  margin: 20px;
+  box-shadow: 0px 3px 15px rgba(0, 0, 0, 0.2);
+  text-align: left;
+}
+.contentItem:hover {
+  box-shadow: 0px 3px 15px rgba(0, 0, 0, 0.5);
+  transition: 0.3s ease-in;
+  cursor: pointer;
+}
+
+.contentItem div {
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
+  width: 100%;
+  height: 200px;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.contentItem h1,
+.contentItem h2,
+.contentItem h3,
+.contentItem p {
+  margin-left: 20px;
+}
+
+@media only screen and (max-width: 1300px) {
   .blocksContainer {
-    display: flex;
-    flex-wrap: wrap;
+    grid-template-columns: 1fr 1fr;
   }
-  
-  .block {
-    width: calc(33.33% - 20px); /* Three blocks in a row */
-    margin-right: 20px;
-    margin-bottom: 20px;
+}
+
+@media only screen and (max-width: 800px) {
+  .blocksContainer {
+    grid-template-columns: 1fr;
   }
-  
-  .block:last-child {
-    margin-right: 0;
-  }
-  
-  .blockImage {
-    border-radius: 40px 40px 0 0; /* Rounded top corners */
-    overflow: hidden;
-  }
-  
-  .blockImage img {
-    width: 100%;
-    height: auto;
-  }
-  
-  .blockContent {
-    padding: 10px;
-    background-color: #f5f5f5;
-    border-radius: 0 0 40px 40px; /* Rounded bottom corners */
-  }
-  
-  .blockContent h1,
-  .blockContent h2,
-  .blockContent h3 {
-    margin: 0;
-  }
-  
+}
