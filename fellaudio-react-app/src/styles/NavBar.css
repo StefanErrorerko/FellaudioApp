@@ -1,0 +1,36 @@
+.navbar {
+    background-color: rgb(2, 2, 82); /* Set background color to dark blue */
+    color: white; /* Set text color to white */
+    display: flex;
+    justify-content: space-between; /* Align items to left and right */
+    align-items: center; /* Center items vertically */
+    padding: 10px 20px; /* Add padding for better spacing */
+  }
+  
+  .leftSide {
+    display: flex;
+    align-items: center; /* Center items vertically */
+  }
+  
+  .rightSide {
+    display: flex;
+  }
+  
+  .navbar img {
+    width: 50px; /* Set width for the logo */
+  }
+  
+  .hiddenLinks {
+    display: flex;
+  }
+  
+  .hiddenLinks a {
+    color: white; /* Set link text color to white */
+    text-decoration: none; /* Remove underline */
+    margin-left: 20px; /* Add margin for spacing between links */
+  }
+  
+  .rightSide {
+    margin-left: auto; /* Pushes the rightSide division to the rightmost side */
+  }
+  
