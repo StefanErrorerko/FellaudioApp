@@ -2,6 +2,12 @@ import React, { useEffect, useRef, useState } from "react";
 import { amber } from '@mui/material/colors';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import PauseIcon from '@mui/icons-material/Pause';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
+import ShareIcon from '@mui/icons-material/Share';
+import AddIcon from '@mui/icons-material/Add';
+import { Link } from 'react-router-dom'
+
 
 import WaveSurfer from "wavesurfer.js";
 
@@ -31,7 +37,8 @@ export default function Waveform({ url }) {
   const [volume, setVolume] = useState(1.0);
   const [totalDuration, setTotalDuration] = useState(0); 
   const [currentTime, setCurrentTime] = useState(0); 
-
+  const [popupVisible, setPopupVisible] = useState(false);
+  const [popupPosition, setPopupPosition] = useState({ x: 0, y: 0 });
 
   // create new WaveSurfer instance
   // On component mount and when url changes
@@ -74,6 +81,17 @@ export default function Waveform({ url }) {
     wavesurfer.current.playPause();
   };
 
+  const togglePopup = (event) => {
+    const buttonRect = event.target.getBoundingClientRect();
+    const popupWidth = 200; // Adjust as needed
+    const popupHeight = 100; // Adjust as needed
+    const popupX = buttonRect.left - popupWidth / 2 + buttonRect.width / 2;
+    const popupY = buttonRect.top + buttonRect.height + 10; // Adjust vertical spacing as needed
+    setPopupPosition({ x: popupX, y: popupY });
+    setPopupVisible(!popupVisible);
+  };
+  
+
   return (
     <div className="audioBlock">
       <div>
@@ -87,7 +105,24 @@ export default function Waveform({ url }) {
         <div className="duration">{formatTime(totalDuration)}</div>
         <div className="hover"></div>
       </div>
-      
+
+      <button onClick={togglePopup}>
+        <MoreVertIcon />
+      </button>
+
+      {popupVisible && (
+        <div className="floatingThreeDotsPopup" style={{ top: popupPosition.y + 20, left: popupPosition.x }}>
+            <div>
+                <ArrowDownwardIcon /> Download
+            </div>
+            <div>
+                <ShareIcon /> Share
+            </div>
+            <div>
+                <AddIcon /> Save
+            </div>
+        </div>
+      )}
     </div>
   );
 }
