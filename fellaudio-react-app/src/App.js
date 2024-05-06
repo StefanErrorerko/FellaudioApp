@@ -9,6 +9,7 @@ import Map from './pages/Map'
 import Content from './pages/Content'
 import Profile from './pages/Profile'
 import Playlist from './pages/Playlist'
+import Test from './pages/Test'
 import {
   BrowserRouter as Router,
   Route,
@@ -28,6 +29,7 @@ function App() {
           <Route path="/map" element={<Map />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/playlist" element={<Playlist />} />
+          <Route path="/test" element={<Test />} />
         </Routes>
       </Router>
     </div>
