@@ -5,12 +5,16 @@ import PauseIcon from '@mui/icons-material/Pause';
 
 import WaveSurfer from "wavesurfer.js";
 
+const formatTime = seconds => {
+    return new Date(seconds * 1000).toISOString().substr(11, 8);
+};
+
 const formWaveSurferOptions = ref => ({
   container: ref,
-  waveColor: "#eee",
-  progressColor: "OrangeRed",
-  cursorColor: "OrangeRed",
-  barWidth: 3,
+  waveColor: "#6693e6",
+  progressColor: "rgb(2, 2, 82)",
+  cursorColor: "rgb(4, 2, 70)",
+  barWidth: 2,
   barRadius: 3,
   responsive: true,
   height: 150,
@@ -25,6 +29,9 @@ export default function Waveform({ url }) {
   const wavesurfer = useRef(null);
   const [playing, setPlay] = useState(false);
   const [volume, setVolume] = useState(1.0);
+  const [totalDuration, setTotalDuration] = useState(0); 
+  const [currentTime, setCurrentTime] = useState(0); 
+
 
   // create new WaveSurfer instance
   // On component mount and when url changes
@@ -41,17 +48,21 @@ export default function Waveform({ url }) {
         console.error('Error loading audio file:', error);
       });
 
-    wavesurfer.current.on("ready", function() {
-      // https://wavesurfer-js.org/docs/methods.html
-      // wavesurfer.current.play();
-      // setPlay(true);
-
-      // make sure object stillavailable when file loaded
+    wavesurfer.current.on("ready", () => {
+      // make sure object still available when file loaded
       if (wavesurfer.current) {
         wavesurfer.current.setVolume(volume);
         setVolume(volume);
       }
     });
+
+    wavesurfer.current.on('interaction', () => {
+        //setPlay(!playing)
+        //wavesurfer.current.playPause()
+      })
+
+    wavesurfer.current.on('decode', (duration) => (setTotalDuration(duration)))
+    wavesurfer.current.on('timeupdate', (currentTime) => (setCurrentTime(currentTime)))
 
     // Removes events, elements and disconnects Web Audio nodes.
     // when component unmount
@@ -63,24 +74,20 @@ export default function Waveform({ url }) {
     wavesurfer.current.playPause();
   };
 
-  /*const onVolumeChange = e => {
-    const { target } = e;
-    const newVolume = +target.value;
-
-    if (newVolume) {
-      setVolume(newVolume);
-      wavesurfer.current.setVolume(newVolume || 1);
-    }
-  };*/
-
   return (
     <div className="audioBlock">
       <div>
-      <button onClick={handlePlayPause}>
-        {!playing ? <PlayArrowIcon sx={{ color: amber[50] }} /> : <PauseIcon sx={{ color: amber[50] }}/>}
-      </button>
+        <button onClick={handlePlayPause}>
+          {!playing ? <PlayArrowIcon /> : <PauseIcon />}
+        </button>
       </div>
-      <div id="waveform" ref={waveformRef} />
+      
+      <div id="waveform" ref={waveformRef} >
+        <div className="time">{formatTime(currentTime)}</div>
+        <div className="duration">{formatTime(totalDuration)}</div>
+        <div className="hover"></div>
+      </div>
+      
     </div>
   );
 }

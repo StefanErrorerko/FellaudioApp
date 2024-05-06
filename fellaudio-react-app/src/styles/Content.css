@@ -14,7 +14,7 @@
   
   .audioBlock {
     width: 100%;
-    background-color: #3b3b3b;
+    background-color: #eaeaea;
     border-radius: 25px;
     display: flex; /* Display children in a row */
     align-items: center; /* Optionally, vertically center the elements */
@@ -26,7 +26,7 @@
     width: 50px;
     height: 50px;
     border-radius: 50%;
-    background-color: OrangeRed;
+    background-color: transparent;
     overflow: hidden; /* Ensure the image doesn't overflow */
     border: none;
     cursor: pointer;
@@ -61,4 +61,47 @@
     background-color: #ccc;
     margin: 0 10px;
   }
+
+  #waveform {
+    position: relative;
+  }
+  
+  .time,
+  .duration {
+    position: absolute;
+    z-index: 11;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 11px;
+    pointer-events: none; 
+    background: rgba(0, 0, 0, 0.75);
+    padding: 2px;
+    color: #ddd;
+
+  }
+  
+  .time {
+    left: 0;
+  }
+  
+  .duration {
+    right: 0;
+  }
+  
+    .hover {
+      position: absolute;
+      left: 0;
+      top: 0;
+      z-index: 10;
+      pointer-events: none;
+      height: 100%;
+      width: 0;
+      mix-blend-mode: overlay;
+      background: rgba(255, 255, 255, 0.5);
+      opacity: 0;
+      transition: opacity 0.2s ease;
+    }
+    #waveform:hover .hover {
+      opacity: 1;
+    }
   
