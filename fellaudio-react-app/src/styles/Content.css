@@ -14,19 +14,33 @@
   
   .audioBlock {
     width: 100%;
-    height: 50px; /* Adjust as needed */
-    background-color: #f0f0f0; /* Placeholder color */
-    border-radius: 25px; /* Rounded border for the audio block */
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    background-color: #3b3b3b;
+    border-radius: 25px;
+    display: flex; /* Display children in a row */
+    align-items: center; /* Optionally, vertically center the elements */
+    padding: 20px; /* Add padding for spacing */
+    justify-content: space-between; /* Add this line to distribute space evenly */
   }
   
   .audioBlock button {
-    background-color: transparent;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: OrangeRed;
+    overflow: hidden; /* Ensure the image doesn't overflow */
     border: none;
-    font-size: 24px;
-    margin-right: 10px;
+    cursor: pointer;
+    margin: 10px 10px 10px 0px;
+  }
+  
+  .audioBlock button img {
+    width: 100%; /* Make the image fill the button */
+    height: 100%; /* Make the image fill the button */
+  }
+  
+
+  #waveform {
+    flex: 1; /* Make waveform fill remaining space */
   }
   
   .detailsRow {

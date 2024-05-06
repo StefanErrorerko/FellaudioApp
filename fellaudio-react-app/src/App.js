@@ -15,6 +15,7 @@ import Map from './pages/Map'
 import Content from './pages/Content'
 import Profile from './pages/Profile'
 import Playlist from './pages/Playlist'
+import Waveform from './components/Waveform';
 
 function App() {
   return (

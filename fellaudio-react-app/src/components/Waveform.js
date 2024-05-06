@@ -1,4 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
+import { amber } from '@mui/material/colors';
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import PauseIcon from '@mui/icons-material/Pause';
 
 import WaveSurfer from "wavesurfer.js";
 
@@ -21,7 +24,7 @@ export default function Waveform({ url }) {
   const waveformRef = useRef(null);
   const wavesurfer = useRef(null);
   const [playing, setPlay] = useState(false);
-  const [volume, setVolume] = useState(0.5);
+  const [volume, setVolume] = useState(1.0);
 
   // create new WaveSurfer instance
   // On component mount and when url changes
@@ -31,7 +34,12 @@ export default function Waveform({ url }) {
     const options = formWaveSurferOptions(waveformRef.current);
     wavesurfer.current = WaveSurfer.create(options);
 
-    wavesurfer.current.load(url);
+    wavesurfer.current.load(url).then(() => {
+        console.log("successfully loaded")
+      })
+      .catch(error => {
+        console.error('Error loading audio file:', error);
+      });
 
     wavesurfer.current.on("ready", function() {
       // https://wavesurfer-js.org/docs/methods.html
@@ -55,7 +63,7 @@ export default function Waveform({ url }) {
     wavesurfer.current.playPause();
   };
 
-  const onVolumeChange = e => {
+  /*const onVolumeChange = e => {
     const { target } = e;
     const newVolume = +target.value;
 
@@ -63,27 +71,16 @@ export default function Waveform({ url }) {
       setVolume(newVolume);
       wavesurfer.current.setVolume(newVolume || 1);
     }
-  };
+  };*/
 
   return (
-    <div>
-      <div id="waveform" ref={waveformRef} />
-      <div className="controls">
-        <button onClick={handlePlayPause}>{!playing ? "Play" : "Pause"}</button>
-        <input
-          type="range"
-          id="volume"
-          name="volume"
-          // waveSurfer recognize value of `0` same as `1`
-          //  so we need to set some zero-ish value for silence
-          min="0.01"
-          max="1"
-          step=".025"
-          onChange={onVolumeChange}
-          defaultValue={volume}
-        />
-        <label htmlFor="volume">Volume</label>
+    <div className="audioBlock">
+      <div>
+      <button onClick={handlePlayPause}>
+        {!playing ? <PlayArrowIcon sx={{ color: amber[50] }} /> : <PauseIcon sx={{ color: amber[50] }}/>}
+      </button>
       </div>
+      <div id="waveform" ref={waveformRef} />
     </div>
   );
 }

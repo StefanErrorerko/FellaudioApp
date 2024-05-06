@@ -1,6 +1,7 @@
 import React from 'react';
 import '../styles/Content.css';
 import { ContentList } from '../helpers/contentList';
+import Waveform from "../components/Waveform";
 
 function Content() {
   var content = ContentList[0]; // Assuming you are displaying the first item for now
@@ -11,8 +12,8 @@ function Content() {
         <img src={content.image} alt={content.name} className="contentImage" />
       </div>
       <h1>{content.name}</h1>
-      <div className="audioBlock">
-        {/* Your audio player component */}
+      <div>
+        <Waveform url="https://www.mfiles.co.uk/mp3-downloads/brahms-st-anthony-chorale-theme-two-pianos.mp3" />
       </div>
       <p>{content.description}</p>
       <div className="detailsRow">
