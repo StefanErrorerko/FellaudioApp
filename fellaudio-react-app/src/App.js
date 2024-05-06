@@ -5,9 +5,10 @@ import {
   Routes
 } from 'react-router-dom'
 
-import NavBar from './components/NavBar'
+import NavBar from './components/Navbar';
 //import Footer from './components/Footer'
 import Home from './pages/Home'
+//import Menu from './pages/Menu'
 import About from './pages/About'
 import Login from './pages/Login'
 import Map from './pages/Map'
@@ -18,8 +19,8 @@ import Playlist from './pages/Playlist'
 function App() {
   return (
     <div className="App">
-      <NavBar />
       <Router>
+        <NavBar />
         <Routes>
           <Route path='/' element = {<Home />} />
           <Route path='/about' element = {<About />} />
