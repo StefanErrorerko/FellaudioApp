@@ -17,9 +17,9 @@ const formatTime = seconds => {
 
 const formWaveSurferOptions = ref => ({
   container: ref,
-  waveColor: "#6693e6",
-  progressColor: "rgb(2, 2, 82)",
-  cursorColor: "rgb(4, 2, 70)",
+  waveColor: "#bbb",
+  progressColor: "OrangeRed",
+  cursorColor: "OrangeRed", 
   barWidth: 2,
   barRadius: 3,
   responsive: true,
@@ -28,7 +28,7 @@ const formWaveSurferOptions = ref => ({
   normalize: true,
   // Use the PeakCache to improve rendering speed of large waveforms.
   partialRender: true
-});
+})
 
 export default function Waveform({ url }) {
   const waveformRef = useRef(null);
