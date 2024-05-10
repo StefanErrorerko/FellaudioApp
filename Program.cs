@@ -5,9 +5,20 @@ using FellaudioApp.Repository;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
 
+var AllowSpecificOrigins = "_allowSpecificOrigins";
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
+builder.Services.AddCors(opt =>
+{
+    opt.AddPolicy(name: AllowSpecificOrigins,
+        policy =>
+        {
+            policy.WithOrigins("http://localhost:3000");
+        });
+});
 
 builder.Services.AddControllers();
 builder.Services.AddTransient<Seed>();
@@ -53,6 +64,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors(AllowSpecificOrigins);
 
 app.UseAuthorization();
 

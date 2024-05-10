@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.33516.290
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FellaudioApp", "FellaudioApp.csproj", "{427D85A3-637D-4A10-815D-D26F337499EC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FellaudioApp", "FellaudioApp.csproj", "{427D85A3-637D-4A10-815D-D26F337499EC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FellaudioApp.Tests", "..\FellaudioApp.Tests\FellaudioApp.Tests.csproj", "{F7A3C02A-476D-4F33-BEB9-AC11A38E72AD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{427D85A3-637D-4A10-815D-D26F337499EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{427D85A3-637D-4A10-815D-D26F337499EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{427D85A3-637D-4A10-815D-D26F337499EC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F7A3C02A-476D-4F33-BEB9-AC11A38E72AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F7A3C02A-476D-4F33-BEB9-AC11A38E72AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F7A3C02A-476D-4F33-BEB9-AC11A38E72AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F7A3C02A-476D-4F33-BEB9-AC11A38E72AD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
