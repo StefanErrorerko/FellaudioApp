@@ -3,6 +3,8 @@ import ContentItem from '../components/ContentItem'; // Assuming you have a Bloc
 import '../styles/Home.css';
 //import { getContents } from '../services/ContentApiClient.js'
 import { useState, useEffect, useRef } from "react"
+import DummyImage from '../assets/dummy.jpg'
+import { useNavigate } from 'react-router-dom';
 
 const ApiUrl = process.env.REACT_APP_API_URL
 
@@ -12,7 +14,13 @@ function Home() {
   const [contents, setContent] = useState([])
   const [page, setPage] = useState(0)
   
+  const navigate = useNavigate()
+  
   const abortControllerRef = useRef(null)
+
+  const handleContentItemClick = (contentId) => {
+    navigate(`/content/${contentId}`)
+  }
 
   useEffect(() => {
     const fetchContents = async () => {
@@ -26,6 +34,7 @@ function Home() {
           signal: abortControllerRef.current.signal
         })
         const contents = await response.json()
+        console.log(contents)
         setContent(contents)
       } 
       catch (err) {
@@ -59,16 +68,17 @@ function Home() {
         <input type='text' placeholder='Search...' />
         <button>Search</button>
       </div>
-
       <div className='blocksContainer'>
         {contents.map((contentItem, key) => (
-          <ContentItem
-            key={key}
-            image={contentItem.image}
-            name={contentItem.title}
-            location={contentItem.location}
-            time={contentItem.time}
-          />
+          <div onClick={() => handleContentItemClick(contentItem.id)}>
+            <ContentItem
+              key={key}
+              image={DummyImage}
+              name={contentItem.title}
+              location={contentItem.description}
+              time={contentItem.audioFile !== null ? contentItem.audioFile.durationInSeconds : 0}
+            />
+          </div>
         ))}
       </div>
     </div>
