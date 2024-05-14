@@ -18,6 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Assets\AudioFiles\" />
     <Folder Include="Migrations\" />
   </ItemGroup>
 
