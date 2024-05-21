@@ -5,6 +5,7 @@ import '../styles/Home.css';
 import { useState, useEffect, useRef } from "react"
 import DummyImage from '../assets/dummy.jpg'
 import { useNavigate } from 'react-router-dom';
+import HomeFiller1 from '../assets/home_filler4.png'
 
 const ApiUrl = process.env.REACT_APP_API_URL
 
@@ -13,6 +14,7 @@ function Home() {
   const [isLoading, setIsLoading] = useState(false)
   const [contents, setContent] = useState([])
   const [page, setPage] = useState(0)
+  const searchAreaRef = useRef(null);
   
   const navigate = useNavigate()
   
@@ -20,6 +22,11 @@ function Home() {
 
   const handleContentItemClick = (contentId) => {
     navigate(`/content/${contentId}`)
+  }
+
+  const handleButtonClick = () => {
+     if(searchAreaRef.current)
+      searchAreaRef.current.scrollIntoView({behavior: 'smooth', block: 'start'})
   }
 
   useEffect(() => {
@@ -64,9 +71,16 @@ function Home() {
 
   return (
     <div className='home'>
-      <div className='searchArea'>
-        <input type='text' placeholder='Search...' />
-        <button>Search</button>
+      <div className="topContainer">
+        <img src={HomeFiller1} />
+        <div className="textOverlay">
+          Місце, де ти знайдеш історію для себе
+        </div>
+        <button className="buttonOverlay" onClick={handleButtonClick}>РОЗПОЧАТИ</button>
+      </div>
+      <div className='searchArea' ref={searchAreaRef}>
+        <input type='text' placeholder='Уведіть запит...' />
+        <button>ПОШУК</button>
       </div>
       <div className='blocksContainer'>
         {contents.map((contentItem, key) => (

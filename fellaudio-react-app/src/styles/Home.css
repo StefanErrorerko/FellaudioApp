@@ -1,68 +1,115 @@
+
+
+@font-face {
+  font-family: 'FuturaDemiC';
+  src: url('/public/fonts/FuturaDemiC.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
 .home {
     width: 100%;
+    background: #ECE3CE;
     height: auto;
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
   }
+
+  .topContainer {
+    width: 100%;
+  flex: 1; /* Allow the image to take up remaining space */
+  display: flex;
+  position: relative; /* Add relative positioning to the container */
+  }
+
+  .topContainer img {
+    width: 100%;
+  height: 620px; /* Fixed height for demonstration purposes */
+  object-fit: cover; /* Ensure the image covers the area */
+  flex: 1;
+  }
+
+  .textOverlay {
+    position: absolute;
+    top: 80px; /* Adjust as needed */
+    left: 50px; /* Adjust as needed */
+    right: 50%;
+    text-align: left;
+    color: #ffedd5; /* Tailwind color for text-orange-100 */
+    font-size: 2.25rem; /* Equivalent to text-4xl */
+    font-weight: 600; /* Equivalent to font-semibold */
+    max-width: 100%; /* Equivalent to max-md:max-w-full */
+    @media (min-width: 768px) {
+      font-size: 4.5rem; /* Equivalent to text-7xl for larger screens */
+    }
+  }
+  
+  .buttonOverlay {
+    position: absolute;
+    font-size: x-large;
+    font-weight: bold;
+    color: #3A4D39;
+    bottom: 50px; /* Adjust as needed */
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    justify-content: center;
+    padding: 1.0rem 4rem; /* Equivalent to py-5 pr-20 pl-20 */
+    background-color: #ffedd5; /* Tailwind color for bg-orange-100 */
+    border-radius: 33.419px;
+    cursor: pointer;
+    box-shadow: 0px 3px 15px rgba(0, 0, 0, 0.2);
+
+    border-color: transparent;
+    @media (max-width: 768px) {
+      padding: 1.25rem 2rem; /* Equivalent to max-md:px-8 for smaller screens */
+    }
+  }
   
   .searchArea {
     margin-bottom: 20px;
+    
   }
   
   .searchArea input {
-    padding: 8px;
+    padding: 10px;
+    padding-left: 20px;
+    margin-top: 20px;
     margin-right: 10px;
+    border-radius: 50px;
+    border: 1px black solid;
+    width: 820px;
+    background-color: transparent;
+    font-family: 'FuturaDemiC', sans-serif;
+    font-size: 22px;
   }
+
   
   .searchArea button {
     padding: 8px 20px;
-    background-color: darkblue;
-    color: white;
+    background-color: #4F6F52;
+    color: #ECE3CE;
     border: none;
-    border-radius: 5px;
+    border-radius: 50px;
     cursor: pointer;
+    padding: 10px 45px 10px 45px;
+    font-size: 22px;
+    font-family: 'FuturaDemiC', sans-serif;   
   }
   
   .blocksContainer {
-    width: 70vw;
-    height: auto;
+    width: calc(100% - 40px);
+    max-width: 100%;
+    flex-wrap: wrap; /* Allow items to wrap to the next line */
+    justify-content: space-between; /* Distribute items along the main axis with equal space between them */
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     place-items: center;
   }
   
-  .contentItem {
-    border-radius: 15px;
-    width: 320px;
-    height: 420px;
-    margin: 20px;
-    box-shadow: 0px 3px 15px rgba(0, 0, 0, 0.2);
-    text-align: left;
-  }
-  .contentItem:hover {
-    box-shadow: 0px 3px 15px rgba(0, 0, 0, 0.5);
-    transition: 0.3s ease-in;
-    cursor: pointer;
-  }
   
-  .contentItem div {
-    border-top-left-radius: 15px;
-    border-top-right-radius: 15px;
-    width: 100%;
-    height: 200px;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
-  }
-  
-  .contentItem h1,
-  .contentItem h2,
-  .contentItem h3,
-  .contentItem p {
-    margin-left: 20px;
-  }
   
   @media only screen and (max-width: 1300px) {
     .blocksContainer {

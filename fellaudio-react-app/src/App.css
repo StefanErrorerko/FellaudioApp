@@ -13,6 +13,18 @@
   }
 }
 
+@font-face {
+  font-family: 'FuturaDemiC';
+  src: url('/public/fonts/FuturaDemiC.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+body {
+  font-family: 'FuturaDemiC', sans-serif;
+  margin: 0px;
+}
+
 .App-header {
   background-color: #282c34;
   min-height: 100vh;

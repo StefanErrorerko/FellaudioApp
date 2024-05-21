@@ -14,8 +14,8 @@ function NavBar() {
         </div>
         <div className='rightSide'>
             <div className='hiddenLinks'>
-              <Link to="/about"> About </Link>
-              <Link to="/login"> Login </Link>
+              <Link to="/about"> ПРО НАС </Link>
+              <Link to="/login"> УВІЙТИ </Link>
             </div>
         </div>
     </div>
