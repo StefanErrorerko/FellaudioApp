@@ -4,6 +4,9 @@ import { ContentList } from '../helpers/contentList';
 import Waveform from "../components/Waveform";
 import { useParams } from 'react-router-dom';
 import DummyImage from '../assets/dummy.jpg'
+import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
+import ShareIcon from '@mui/icons-material/Share';
+import AddIcon from '@mui/icons-material/Add';
 
 const ApiUrl = process.env.REACT_APP_API_URL
 
@@ -64,9 +67,16 @@ function Content() {
       <div className="imageContainer">
         <img src={DummyImage} alt={content.name} className="contentImage" />
       </div>
-      <h1>{content.title}</h1>
-      <div>
+      <div className='contentTitle'>
+        <h1>{content.title}</h1>
+      </div>
+      <div className='contentAudio'>
         <Waveform url="https://www.mfiles.co.uk/mp3-downloads/brahms-st-anthony-chorale-theme-two-pianos.mp3" />
+      </div>
+      <div className='contentActions'>
+        <button><ArrowDownwardIcon /><p>Завантажити</p></button>
+        <button><AddIcon /><p>Зберегти</p></button>
+        <button><ShareIcon /><p>Поділитись</p></button>
       </div>
       <p>{content.description}</p>
       <div className="detailsRow">

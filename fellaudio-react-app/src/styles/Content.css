@@ -1,9 +1,9 @@
 .content {
-    padding: 20px;
+  position: relative;
   }
   
   .imageContainer {
-    height: 20%;
+    height: calc(100vh - 90px)
   }
   
   .contentImage {
@@ -11,15 +11,25 @@
     height: 100%;
     object-fit: cover; /* Ensure the image covers the entire container */
   }
+
+  .contentTitle {
+    position: absolute;
+    margin-top: -150px;
+    margin-left: 55px;
+    font-size: xx-large;
+  }
+
+  .contentAudio {
+    padding: 30px 30px 10px 30px;
+  }
   
   .audioBlock {
-    width: 100%;
-    background-color: #eaeaea;
-    border-radius: 25px;
+    
     display: flex; /* Display children in a row */
     align-items: center; /* Optionally, vertically center the elements */
-    padding: 20px; /* Add padding for spacing */
+    padding: 20px 20px 0px 20px; /* Add padding for spacing */
     justify-content: space-between; /* Add this line to distribute space evenly */
+    border-bottom: 1px solid gray;
   }
   
   .audioBlock button {
@@ -48,6 +58,35 @@
     align-items: flex-start;
     margin-top: 20px;
   }
+
+  .contentActions{
+    display: flex;
+    justify-content: flex-end; /* Align all elements to the right */
+    align-items: center;
+    gap: 15px;
+    margin: 0px 20px 0px 20px;
+  }
+
+  .contentActions button {
+    background-color: #4F6F52; /* Green background */
+    color: #ECE3CE; /* Text color */
+    padding: 0px 12px; /* Padding for size */
+    font-size: 16px; /* Font size */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: background-color 0.3s, color 0.3s; /* Smooth transition for background and color */
+    border-radius: 30px; /* Rounded corners */
+    border: 1px solid transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Hover effect for the button */
+.contentActions button:hover {
+    background-color: #ECE3CE; /* Background color changes to light */
+    color: #4F6F52; /* Text color changes to green */
+    border: 1px solid #4F6F52;
+}
   
   .commentsBlock,
   .mapBlock {
@@ -86,6 +125,10 @@
   
   .duration {
     right: 0;
+  }
+
+  .threeDots{
+    position: relative;
   }
 
   .floatingThreeDotsPopup {

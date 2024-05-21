@@ -20,10 +20,13 @@ const formWaveSurferOptions = ref => ({
   waveColor: "#bbb",
   progressColor: "OrangeRed",
   cursorColor: "OrangeRed", 
-  barWidth: 2,
-  barRadius: 3,
+  dragToSeek: true,
+  barAlign: "bottom",
+  barWidth: 5,
+  barRadius: 0,
+  barGap: 1,
   responsive: true,
-  height: 150,
+  height: 120,
   // If true, normalize by the maximum peak instead of 1.0.
   normalize: true,
   // Use the PeakCache to improve rendering speed of large waveforms.
@@ -106,9 +109,11 @@ export default function Waveform({ url }) {
         <div className="hover"></div>
       </div>
 
-      <button onClick={togglePopup}>
-        <MoreVertIcon />
-      </button>
+      <div className="threeDots">
+        <button onClick={togglePopup}>
+          <MoreVertIcon />
+        </button>
+      </div>
 
       {popupVisible && (
         <div className="floatingThreeDotsPopup" style={{ top: popupPosition.y + 20, left: popupPosition.x }}>
