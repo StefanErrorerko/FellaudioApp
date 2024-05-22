@@ -60,11 +60,16 @@
     border-radius: 33.419px;
     cursor: pointer;
     box-shadow: 0px 3px 15px rgba(0, 0, 0, 0.2);
-
+    transition: background-color 0.3s, color 0.3s; /* Smooth transition for background and color */
     border-color: transparent;
     @media (max-width: 768px) {
       padding: 1.25rem 2rem; /* Equivalent to max-md:px-8 for smaller screens */
     }
+  }
+
+  .buttonOverlay:hover {
+    color: #ECE3CE; /* Background color changes to light */
+    background-color: #4F6F52; /* Text color changes to green */
   }
   
   .searchArea {
@@ -96,6 +101,14 @@
     padding: 10px 45px 10px 45px;
     font-size: 22px;
     font-family: 'FuturaDemiC', sans-serif;   
+    transition: background-color 0.3s, color 0.3s; /* Smooth transition for background and color */
+  }
+
+  .searchArea button:hover {
+    background-color: #ECE3CE; /* Background color changes to light */
+    color: #4F6F52; /* Text color changes to green */
+    border: 1px solid #4F6F52;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3);
   }
   
   .blocksContainer {

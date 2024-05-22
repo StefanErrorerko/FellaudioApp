@@ -68,24 +68,34 @@ function Content() {
         <img src={DummyImage} alt={content.name} className="contentImage" />
       </div>
       <div className='contentTitle'>
+        <div></div>
         <h1>{content.title}</h1>
       </div>
-      <div className='contentAudio'>
-        <Waveform url="https://www.mfiles.co.uk/mp3-downloads/brahms-st-anthony-chorale-theme-two-pianos.mp3" />
-      </div>
-      <div className='contentActions'>
-        <button><ArrowDownwardIcon /><p>Завантажити</p></button>
-        <button><AddIcon /><p>Зберегти</p></button>
-        <button><ShareIcon /><p>Поділитись</p></button>
-      </div>
-      <p>{content.description}</p>
-      <div className="detailsRow">
-        <div className="commentsBlock">
-          {/* Your comments component */}
+      <div className='contentContainer'>
+        <div className='contentAudio'>
+          <Waveform url="https://www.mfiles.co.uk/mp3-downloads/brahms-st-anthony-chorale-theme-two-pianos.mp3" />
         </div>
-        <div className="divider"></div>
-        <div className="mapBlock">
-          {/* Your map component */}
+        <div className='contentActions'>
+          <button><ArrowDownwardIcon /><p>Завантажити</p></button>
+          <button><AddIcon /><p>Зберегти</p></button>
+          <button><ShareIcon /><p>Поділитись</p></button>
+        </div>
+        <div className='contentDescription'>
+          <p>{content.description}</p>
+        </div>
+        <div className="detailsRow">
+          <div className="commentsBlock">
+          {content.comments?.map(comment => (
+                <div key={comment.id}>
+                    {comment.text}
+                    {comment.user?.firstname} {comment.user?.lastname}
+                </div>
+            ))}
+          </div>
+          <div className="divider"></div>
+          <div className="mapBlock">
+            {/* Your map component */}
+          </div>
         </div>
       </div>
     </div>

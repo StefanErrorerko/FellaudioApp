@@ -19,6 +19,10 @@
     font-size: xx-large;
   }
 
+  .contentContainer {
+    padding: 0px 25px
+  }
+
   .contentAudio {
     padding: 30px 30px 10px 30px;
   }
@@ -86,6 +90,11 @@
     background-color: #ECE3CE; /* Background color changes to light */
     color: #4F6F52; /* Text color changes to green */
     border: 1px solid #4F6F52;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.contentDescription {
+  text-align: left;
 }
   
   .commentsBlock,
