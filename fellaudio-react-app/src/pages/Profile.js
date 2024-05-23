@@ -1,21 +1,88 @@
-import React from 'react';
-import { UserList } from '../helpers/userList';
+import {useRef, useState, useEffect} from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import '../styles/Profile.css';
+import ProfileDummyImage from '../assets/profile-dummy.jpg'
+import ContentContainer from '../components/ContentContainer';
+
+const ApiUrl = process.env.REACT_APP_API_URL
 
 function Profile() {
-  // Assume we're using the first user for demonstration
-  const user = UserList[0];
+  const { userId } = useParams()
+
+  const [error, setError] = useState()
+  const [isLoading, setIsLoading] = useState(false)
+  const [user, setUser] = useState([])
+  const [contents, setContents] = useState([])
+
+  //const navigate = useNavigate()
+  
+  const abortControllerRef = useRef(null)
+
+  /*const handleContentItemClick = (contentId) => {
+    navigate(`/content/${contentId}`)
+  }
+
+  const handleButtonClick = () => {
+     if(searchAreaRef.current)
+      searchAreaRef.current.scrollIntoView({behavior: 'smooth', block: 'start'})
+  }*/
+
+  useEffect(() => {
+    const fetchContent = async () => {
+      abortControllerRef.current?.abort();
+      abortControllerRef.current = new AbortController();
+
+      setIsLoading(true);
+      
+      try {
+        const response = await fetch(`${ApiUrl}/User/${userId}`, {
+          signal: abortControllerRef.current.signal
+        });
+        const userData = await response.json();
+
+        const responseContents = await fetch(`${ApiUrl}/User/${userId}/contents`);
+        const contentData = await responseContents.json();
+
+        setUser({ ...userData, contents: contentData });
+        setContents(contentData)
+        console.log(contentData)
+      } 
+      catch (err) {
+        if (err.name === 'AbortError') {
+          console.log("Aborted");
+          return;
+        }
+        
+        setError(err);
+      } 
+      finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchContent();
+  }, [userId]);  
+
+  if (isLoading) {
+    return <div>Loading...</div>
+  }
+
+  if (error) {
+    return <div>Something went wrong. Please try again</div>
+  }  
 
   return (
     <div className="profileContainer">
       {/* First row */}
       <div className="profileRow">
         {/* Profile image block (square, empty) */}
-        <div className="profileImage"></div>
+        <div className="profileImage">
+          <img src={ProfileDummyImage} alt='Profile Image' />
+        </div>
         {/* Details block */}
         <div className="detailsBlock">
           <div className="detailsRow">
-            <h1>{user.firstname} {user.surname}</h1>
+            <h1>{user.firstname} {user.lastname}</h1>
           </div>
           <div className="detailsRow">
             <p>{user.description}</p>
@@ -28,17 +95,9 @@ function Profile() {
 
       {/* Second row */}
       <div className="contentsRow">
-        <div className="contentsContainer">
-            <div className="contentsTitle">
-            <h2>Contents</h2>
-            </div>
-            <div className="contentBlocks">
-            {/* Three empty blocks */}
-            <div className="contentBlock"></div>
-            <div className="contentBlock"></div>
-            <div className="contentBlock"></div>
-            </div>
-        </div>
+        <ContentContainer
+          contents = {contents}
+        />
       </div>
     </div>
   );

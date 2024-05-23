@@ -6,14 +6,14 @@
   .profileRow {
     display: flex;
     align-items: flex-start;
-    margin-bottom: 20px;
+    margin: 20px 0px;
   }
   
-  .profileImage {
-    width: 150px; /* Adjust as needed */
-    height: 150px; /* Adjust as needed */
-    border-radius: 10px;
-    background-color: #ccc; /* Placeholder color */
+  .profileImage img{
+    width: 250px;
+    height: 250px;
+    border-radius: 20%;
+    border: 0.1em solid #595959;
   }
   
   .detailsBlock {

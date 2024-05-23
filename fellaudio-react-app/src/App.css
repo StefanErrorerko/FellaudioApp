@@ -20,6 +20,13 @@
   font-style: normal;
 }
 
+@font-face {
+  font-family: 'AvantGardeGothicC';
+  src: url('/public/fonts/AvantGardeGothicC.otf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
 body {
   font-family: 'FuturaDemiC', sans-serif;
   margin: 0px;

@@ -16,11 +16,13 @@ import Content from './pages/Content'
 import Profile from './pages/Profile'
 import Playlist from './pages/Playlist'
 import Waveform from './components/Waveform';
+import ScrollToTop from './components/ScrollToTop';
 
 function App() {
   return (
     <div className="App">
       <Router>
+        <ScrollToTop />
         <NavBar />
         <Routes>
           <Route path='/' element = {<Home />} />
@@ -28,7 +30,7 @@ function App() {
           <Route path='/login' element = {<Login />} />
           <Route path="/content/:contentId" element={<Content />} />
           <Route path="/map" element={<Map />} />
-          <Route path="/profile" element={<Profile />} />
+          <Route path="/profile/:userId" element={<Profile />} />
           <Route path="/playlist" element={<Playlist />} />
         </Routes>
       </Router>

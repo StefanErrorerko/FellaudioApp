@@ -4,8 +4,8 @@ import '../styles/Home.css';
 //import { getContents } from '../services/ContentApiClient.js'
 import { useState, useEffect, useRef } from "react"
 import DummyImage from '../assets/dummy.jpg'
-import { useNavigate } from 'react-router-dom';
 import HomeFiller1 from '../assets/home_filler4.png'
+import ContentContainer from '../components/ContentContainer';
 
 const ApiUrl = process.env.REACT_APP_API_URL
 
@@ -15,14 +15,10 @@ function Home() {
   const [contents, setContent] = useState([])
   const [page, setPage] = useState(0)
   const searchAreaRef = useRef(null);
-  
-  const navigate = useNavigate()
-  
+    
   const abortControllerRef = useRef(null)
 
-  const handleContentItemClick = (contentId) => {
-    navigate(`/content/${contentId}`)
-  }
+  
 
   const handleButtonClick = () => {
      if(searchAreaRef.current)
@@ -82,19 +78,9 @@ function Home() {
         <input type='text' placeholder='Уведіть запит...' />
         <button>ПОШУК</button>
       </div>
-      <div className='blocksContainer'>
-        {contents.map((contentItem, key) => (
-          <div onClick={() => handleContentItemClick(contentItem.id)}>
-            <ContentItem
-              key={key}
-              image={DummyImage}
-              name={contentItem.title}
-              location={contentItem.description}
-              time={contentItem.audioFile !== null ? contentItem.audioFile.durationInSeconds : 0}
-            />
-          </div>
-        ))}
-      </div>
+      <ContentContainer
+        contents ={contents}
+      />
     </div>
   );
 }
