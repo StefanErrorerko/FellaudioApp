@@ -27,6 +27,23 @@ function Profile() {
       searchAreaRef.current.scrollIntoView({behavior: 'smooth', block: 'start'})
   }*/
 
+  const formatInfoAboutContent = (contents) => {
+    let outputMessage = 'Ще не створено жодного контенту'
+
+    if(contents === null || contents === undefined || contents.length === 0)
+      return outputMessage
+
+    outputMessage = `Створено ${contents.length} `
+
+    if(contents.length === 1)
+      return outputMessage + 'контент'
+
+    if([2, 3, 4].includes(contents.length))
+      return outputMessage + 'контенти'
+
+    return outputMessage + 'контентів'
+  }
+
   useEffect(() => {
     const fetchContent = async () => {
       abortControllerRef.current?.abort();
@@ -89,6 +106,9 @@ function Profile() {
           </div>
           <div className="detailsRow">
             <p>{user.email}</p>
+          </div>
+          <div className='detailsRow'>
+            <p>{formatInfoAboutContent(contents)}</p>
           </div>
         </div>
       </div>
