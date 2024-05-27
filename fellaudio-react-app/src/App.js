@@ -90,6 +90,9 @@ function App() {
         console.error("Fetch error: ", err);
         setError(err.message);
       }
+      finally{
+        window.location.reload()
+      }
     };
 
     fetchContents()
@@ -111,6 +114,7 @@ function App() {
     localStorage.removeItem('user');
     setIsAuthenticated(false);
     setUser(null);
+    window.location.reload()
   };
 
   const toggleLoginPage = () => {

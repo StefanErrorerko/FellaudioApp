@@ -23,7 +23,7 @@ function NavBar({ isAuthenticated, toggleLoginPage, handleLogout }) {
       setUser(parsedUser)
       console.log(parsedUser)
     }
-  }, [])
+  }, [isAuthenticated])
 
   return (
     <div className='navbar'>
