@@ -1,40 +1,14 @@
-.contact {
-    width: 100%;
-    height: 90vh;
-    display: flex;
-  }
+form {
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
   
-  .contact .leftSide {
-    height: 100%;
-    flex: 50%;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
-  }
-  
-  .contact .rightSide {
-    height: 100%;
-    flex: 50%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-  }
-  
-  .contact .rightSide h1 {
-    font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
-      "Lucida Sans", Arial, sans-serif;
-    font-weight: 10;
-    font-size: 50px;
-    margin-left: 30px;
-  }
-  
-  form {
-    display: flex;
-    flex-direction: column;
-    width: auto;
-    height: auto;
-    padding: 30px;
-  }
+  width: auto;
+  height: auto;
+  padding: 30px;
+}
   
   form input {
     height: 40px;
@@ -42,6 +16,7 @@
     border: none;
     border-bottom: 1px solid #121619;
     color: black;
+    
   }
   
   form textarea {
@@ -69,12 +44,18 @@
   }
   
   form button {
-    margin-top: 40px;
-    width: 140px;
-    height: 40px;
-    border: none;
-    background-color: #121619;
-    color: whitesmoke;
-    font-size: 15px;
+    margin: 25px 0px 0px 0px;
+    color: white; /* Set link text color to black for better contrast with the background */
+    width: 140px; /* Set the width of the buttons */
+    height: 50px; /* Set the height of the buttons */
+    background: #5d5c5c; /* Set the background color */
+    border-radius: 33.419px;
+    display: flex;
+    align-items: center; /* Center items vertically */
+    justify-content: center; /* Center items horizontally */
+    position: relative;
+    border: 0px transparent;
+    font-size: 18px;
+    font-family: 'FuturaDemiC', sans-serif;
     cursor: pointer;
   }

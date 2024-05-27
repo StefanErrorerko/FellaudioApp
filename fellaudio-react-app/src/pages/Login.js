@@ -1,27 +1,45 @@
-import React from 'react'
+import React, { useState } from 'react';
+import '../styles/Login.css'; // Add necessary styles
 
-import '../styles/Login.css'
+const Login = ({ onLogin }) => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
 
-function Login() {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const success = await onLogin(email, password);
+    if (!success) {
+      setError('Invalid email or password');
+    }
+  };
+
   return (
-    <div className='contact'>
-      <div className='rightSide'>
-        <h1>Contact us</h1>
-        <form id = "contact-form" method='POST'>
-            <label htmlFor='name'>Full Name</label>
-            <input name='name' placeholder='Enter the full name...' type='text' />
-
-            <label htmlFor='email'>Email</label>
-            <input name='email' placeholder='Enter the email...' type='text' />
-
-            <label>Message</label>
-            <textarea rows='6' placeholder='Enter the message...' name='message' required></textarea>
-
-            <button type='submit'>Send Message</button>
-        </form>
-      </div>
+    <div className="login-container">
+      <form onSubmit={handleSubmit}>
+        <div>
+          <label>Email:</label>
+          <input
+            type="text"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+        </div>
+        <div>
+          <label>Password:</label>
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+        </div>
+        {error && <div className="error">{error}</div>}
+        <button type="submit">Login</button>
+      </form>
     </div>
-  )
-}
+  );
+};
 
-export default Login
+export default Login;

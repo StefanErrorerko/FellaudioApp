@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import Logo from '../assets/logo.jpg'
 import { Link } from 'react-router-dom'
 import ReorderIcon from '@mui/icons-material/Reorder';
@@ -8,12 +8,22 @@ import AddIcon from '@mui/icons-material/Add';
 import VideoLibraryIcon from '@mui/icons-material/VideoLibrary';
 import "../styles/NavBar.css"
 
-function NavBar() {
-  const [isVisible, setIsVisible] = useState(false);
+function NavBar({ isAuthenticated, toggleLoginPage, handleLogout }) {
+  const [isMenuVisible, setIsMenuVisible] = useState(false);
+  const [user, setUser] = useState()
 
   const toggleVisibility = () => {
-    setIsVisible(!isVisible); 
+    setIsMenuVisible(!isMenuVisible); 
   };
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem('user')
+    if(storedUser){
+      const parsedUser = JSON.parse(storedUser)
+      setUser(parsedUser)
+      console.log(parsedUser)
+    }
+  }, [])
 
   return (
     <div className='navbar'>
@@ -25,17 +35,21 @@ function NavBar() {
         <div className='rightSide'>
             <div className='hiddenLinks'>
               <Link to="/about"> ПРО НАС </Link>
-              <Link to="/login"> УВІЙТИ </Link>
+              {isAuthenticated ? (
+                <button onClick={handleLogout}> ВИЙТИ </button>
+              ) : (
+                <button onClick={toggleLoginPage}> УВІЙТИ </button>
+              )}
             </div>
         </div>
         <div className='floatingMenuContainer'>
           <button className='floatingMenuReorderButton' onClick={toggleVisibility}>
             <ReorderIcon />
           </button>
-            <div className={`floatingMenu ${isVisible ? "visible" : "hidden"}`}>
-              <button className='floatingMenuTabButton'>
+            <div className={`floatingMenu ${isMenuVisible ? "visible" : "hidden"}`}>
+              <Link to={`profile/${user?.id}`} className='floatingMenuTabButton'>
                 <PersonOutlineIcon />
-              </button>
+              </Link>
               <button className='floatingMenuTabButton'>
                 <PlaceIcon />
               </button>

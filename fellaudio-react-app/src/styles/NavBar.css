@@ -31,12 +31,20 @@
   padding: 5px 0px 5px 20px;
 }
 
+@font-face {
+  font-family: 'FuturaDemiC';
+  src: url('/public/fonts/FuturaDemiC.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
 .hiddenLinks {
   display: flex;
   position: relative;
+  margin-right: 15px;
 }
 
-.hiddenLinks a {
+.hiddenLinks a, button {
   color: #000; /* Set link text color to black for better contrast with the background */
   text-decoration: none; /* Remove underline */
   margin-left: 20px; /* Add margin for spacing between links */
@@ -48,6 +56,10 @@
   align-items: center; /* Center items vertically */
   justify-content: center; /* Center items horizontally */
   position: relative;
+  border: 0px transparent;
+  font-size: 15px;
+  font-family: 'FuturaDemiC', sans-serif;
+  cursor: pointer;
 }
 
 .hiddenLinks a:first-child {
@@ -91,6 +103,7 @@
   height: 0;
   overflow: hidden;
   transition: opacity 0.5s ease, height 0.5s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow outside the div */
 }
 
 .floatingMenu.visible {
