@@ -57,3 +57,66 @@
 .hiddenLinks a:last-child {
   right: 25px;
 }
+
+.floatingMenuContainer {
+  top: 90px;
+  position: absolute;
+}
+
+.floatingMenuReorderButton {
+  border-radius: 100%;
+  border: 0px transparent;
+  opacity: 85%;
+  background-color: #5d5c5c;
+  color: #ECE3CE;
+  width: 50px;
+  height: 50px;
+  margin: 15px;
+  cursor: pointer;
+}
+
+.floatingMenu {
+  background-color: #ECE3CE;
+  border-radius: 0% 30px 30px 0%;
+  gap: 15px;
+  padding-top: 15px;
+  padding-bottom: 15px;
+
+  display: flex;
+  justify-content: center; /* Horizontally center */
+  align-items: center; /* Vertically center */
+  flex-direction: column; /* Stack children vertically */
+
+  opacity: 0;
+  height: 0;
+  overflow: hidden;
+  transition: opacity 0.5s ease, height 0.5s ease;
+}
+
+.floatingMenu.visible {
+  opacity: 1;
+  height: 100%;
+}
+
+.floatingMenu.hidden {
+  opacity: 0;
+}
+
+.floatingMenuReorderButton:hover {
+  opacity: 75%;
+}
+
+.floatingMenuTabButton {
+  border-radius: 100%;
+  border: 0px transparent;
+  width: 50px;
+  height: 50px;
+  color: #5d5c5c;
+  background-color: transparent;
+  cursor: pointer;
+}
+
+.floatingMenuTabButton svg {
+  height: 35px;
+  width: 35px;
+}

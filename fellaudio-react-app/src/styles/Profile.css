@@ -21,8 +21,12 @@
     margin-left: 20px;
   }
   
-  .detailsRow {
+  .contentDetailsRow,
+  .emailRow,
+  .descriptionRow,
+  .fullnameRow {
     margin-bottom: 10px;
+    text-align: left;
   }
   
   .contentsRow {

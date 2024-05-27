@@ -98,16 +98,16 @@ function Profile() {
         </div>
         {/* Details block */}
         <div className="detailsBlock">
-          <div className="detailsRow">
+          <div className="fullnameRow">
             <h1>{user.firstname} {user.lastname}</h1>
           </div>
-          <div className="detailsRow">
+          <div className="descriptionRow">
             <p>{user.description}</p>
           </div>
-          <div className="detailsRow">
+          <div className="emailRow">
             <p>{user.email}</p>
           </div>
-          <div className='detailsRow'>
+          <div className='contentDetailsRow'>
             <p>{formatInfoAboutContent(contents)}</p>
           </div>
         </div>
