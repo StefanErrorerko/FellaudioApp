@@ -97,7 +97,7 @@ function Home() {
         <div className="mapContainer">
           <GoogleMap 
           markers={[
-            {lat: 50.45, lng: 30.47, name:"m"},
+            {lat: 50.45, lng: 30.47, title:"m"},
             {lat: 50.43, lng: 30.46},
             {lat: 50.42, lng: 30.47},
             {lat: 50.45, lng: 30.46}

@@ -181,7 +181,15 @@ function Content() {
           <div className="divider"></div>
           <div className="mapBlock"> 
             <GoogleMap 
-            markers={[{lat: firstPoint.latitude, lng: firstPoint.longitude}]}
+            markers={[
+              {
+                lat: firstPoint.latitude, 
+                lng: firstPoint.longitude,
+                title: content.title,
+                location: content.description,
+                time: content.audioFile !== null ? content.audioFile?.durationInSeconds : 0
+              }
+            ]}
             height="400px"
             />        
           </div>

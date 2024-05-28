@@ -19,6 +19,8 @@ const GoogleMap = ({ markers, height }) => {
       document.head.appendChild(script);
     };
 
+    console.log("data", markers)
+
     const initializeMap = () => {
       const map = new window.google.maps.Map(mapRef.current, {
         zoom: 14,
@@ -31,7 +33,7 @@ const GoogleMap = ({ markers, height }) => {
             <ContentItemLittle
               key={index}
               image={marker.image}
-              name={marker.name}
+              name={marker.title}
               location={marker.location}
               time={marker.time}
             />
@@ -57,7 +59,6 @@ const GoogleMap = ({ markers, height }) => {
         googleMarker.addListener('click', () => {
           closeAllInfoWindowsExcept(newInfoWindows);
           infoWindow.open(map, googleMarker);
-          
         });
     
         return { marker: googleMarker, infoWindow };
