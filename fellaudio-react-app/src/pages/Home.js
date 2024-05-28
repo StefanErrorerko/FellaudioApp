@@ -6,6 +6,8 @@ import { useState, useEffect, useRef } from "react"
 import DummyImage from '../assets/dummy.jpg'
 import HomeFiller1 from '../assets/home_filler4.png'
 import ContentContainer from '../components/ContentContainer';
+import MapSwitch from '../components/Switch'
+import GoogleMap from '../components/Map';
 
 const ApiUrl = process.env.REACT_APP_API_URL
 
@@ -15,6 +17,7 @@ function Home() {
   const [contents, setContent] = useState([])
   const [page, setPage] = useState(0)
   const searchAreaRef = useRef(null);
+  const [isSwitchOn, setIsSwitchOn] = useState(true);
     
   const abortControllerRef = useRef(null)
 
@@ -23,6 +26,10 @@ function Home() {
   const handleButtonClick = () => {
      if(searchAreaRef.current)
       searchAreaRef.current.scrollIntoView({behavior: 'smooth', block: 'start'})
+  }
+
+  const handleSwitchChange = (checked) => {
+    setIsSwitchOn(checked);
   }
 
   useEffect(() => {
@@ -77,10 +84,29 @@ function Home() {
       <div className='searchArea' ref={searchAreaRef}>
         <input type='text' placeholder='Уведіть запит...' />
         <button>ПОШУК</button>
+        <MapSwitch 
+          isSwitchOn={isSwitchOn}
+          handleSwitchChange={handleSwitchChange}
+        />
       </div>
-      <ContentContainer
+      {isSwitchOn ? (
+        <ContentContainer
         contents ={contents}
       />
+      ) : (
+        <div className="mapContainer">
+          <GoogleMap 
+          markers={[
+            {lat: 50.45, lng: 30.47, name:"m"},
+            {lat: 50.43, lng: 30.46},
+            {lat: 50.42, lng: 30.47},
+            {lat: 50.45, lng: 30.46}
+          ]}
+          height="800px"
+          />
+        </div>
+      )}
+      
     </div>
   );
 }

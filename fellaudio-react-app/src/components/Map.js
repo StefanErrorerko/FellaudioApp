@@ -1,9 +1,13 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import ContentItemLittle from './ContentItemLittle';
+import DummyImage from '../assets/dummy.jpg';
+import { renderToString } from 'react-dom/server';
 
-const apiKey = process.env.REACT_APP_MAP_API_KEY
+const apiKey = process.env.REACT_APP_MAP_API_KEY;
 
-const GoogleMap = ({lat, lng}) => {
+const GoogleMap = ({ markers, height }) => {
   const mapRef = useRef(null);
+  const [infoWindows, setInfoWindows] = useState([]);
 
   useEffect(() => {
     const loadGoogleMapScript = () => {
@@ -16,16 +20,56 @@ const GoogleMap = ({lat, lng}) => {
     };
 
     const initializeMap = () => {
-      const customPoint = { lat: lat, lng: lng };
       const map = new window.google.maps.Map(mapRef.current, {
         zoom: 14,
-        center: customPoint
+        center: markers?.length ? { lat: markers[0].lat, lng: markers[0].lng } : { lat: 50.45, lng: 30.47 }
       });
+    
+      const newInfoWindows = markers?.map((marker, index) => {
+        const infoWindow = new window.google.maps.InfoWindow({
+          content: renderToString(
+            <ContentItemLittle
+              key={index}
+              image={marker.image}
+              name={marker.name}
+              location={marker.location}
+              time={marker.time}
+            />
+          )
+        });
 
-      new window.google.maps.Marker({
-        position: customPoint,
-        map: map,
-        title: 'Custom Point',
+        const markerIcon = {
+          path: window.google.maps.SymbolPath.CIRCLE, // Use predefined symbol for a circle
+          scale: 8, // Adjust the size of the circle
+          fillColor: '#ECE3CE', // Fill color of the circle
+          fillOpacity: 1, // Opacity of the circle
+          strokeWeight: 3, // No border
+          strokeColor: '#4F6F52'
+        };
+    
+        const googleMarker = new window.google.maps.Marker({
+          position: { lat: marker.lat, lng: marker.lng }, // Use current marker's position
+          map: map,
+          title: marker.name,
+          icon: markerIcon
+        });
+    
+        googleMarker.addListener('click', () => {
+          closeAllInfoWindowsExcept(newInfoWindows);
+          infoWindow.open(map, googleMarker);
+          
+        });
+    
+        return { marker: googleMarker, infoWindow };
+      });
+    
+      setInfoWindows(newInfoWindows);
+    };
+    
+
+    const closeAllInfoWindowsExcept = (newInfoWindows) => {
+      newInfoWindows.forEach(({ infoWindow }) => {
+          infoWindow.close();
       });
     };
 
@@ -34,11 +78,11 @@ const GoogleMap = ({lat, lng}) => {
     return () => {
       // Cleanup (if needed)
     };
-  }, [lat, lng]);
+  }, [markers]);
 
   return (
-    <div>
-      <div ref={mapRef} style={{ height: '400px', width: '100%' }}></div>
+    <div className='map'>
+      <div ref={mapRef} style={{ height: height, width: '100%' }}></div>
     </div>
   );
 };

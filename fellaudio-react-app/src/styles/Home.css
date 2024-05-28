@@ -74,13 +74,13 @@
   
   .searchArea {
     margin-bottom: 20px;
-    
+    display: flex;
+    margin-top: 20px;
   }
   
   .searchArea input {
     padding: 10px;
     padding-left: 20px;
-    margin-top: 20px;
     margin-right: 10px;
     border-radius: 50px;
     border: 1px black solid;
@@ -90,6 +90,32 @@
     font-size: 22px;
   }
 
+  .switchContainer {
+    display: flex;
+    align-items: center;
+    margin-left: 10px;
+  }
+  
+  .switchContainer label {
+    display: flex;
+    align-items: center;
+
+  }
+  
+  .switchContainer .react-switch-handle {
+    outline: none;
+    box-shadow: none;
+  }
+  
+  .switchContainer .react-switch-handle:focus {
+    outline: none;
+    box-shadow: none;
+  }
+  
+
+  .switchState {
+    
+  }
   
   .searchArea button {
     padding: 8px 20px;
@@ -121,7 +147,10 @@
     place-items: center;
   }
   
-  
+  .mapContainer .map {
+    width: 80%;
+    height: 100px;
+  }
   
   @media only screen and (max-width: 1300px) {
     .blocksContainer {

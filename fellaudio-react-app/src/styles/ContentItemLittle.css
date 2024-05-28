@@ -1,0 +1,29 @@
+.contentItemLittle {
+    width: 100px;
+    height: 100px;
+    color: #262424;
+    text-align: left;
+    margin: 8px;
+  }
+  .contentItemLittle:hover {
+    cursor: pointer;
+  }
+  
+  .contentItemLittle div {
+    width: 100%;
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+
+  .contentTextLittle {
+    letter-spacing: 1px;
+    max-width: calc(100% - 40px); /* Adjust margin */
+
+    font-size: 20px;
+  }
+
+  .contentDataLittle {
+    font-size: 12px;
+  }
+
+

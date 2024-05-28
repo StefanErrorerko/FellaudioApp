@@ -181,8 +181,8 @@ function Content() {
           <div className="divider"></div>
           <div className="mapBlock"> 
             <GoogleMap 
-            lat = {firstPoint.latitude}
-            lng={firstPoint.longitude}
+            markers={[{lat: firstPoint.latitude, lng: firstPoint.longitude}]}
+            height="400px"
             />        
           </div>
           
