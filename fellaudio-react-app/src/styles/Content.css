@@ -11,12 +11,25 @@
     height: 100%;
     object-fit: cover; /* Ensure the image covers the entire container */
   }
+  
 
   .contentTitle {
     position: absolute;
     margin-top: -150px;
-    margin-left: 55px;
+    padding-left: 55px;
     font-size: xx-large;
+    text-align: left;
+    width: 100%;
+    color: #282828;
+  }
+
+  .contentTitleBackground  {
+    position: absolute;
+    margin-top: -135px;
+    background-color: #ECE3CE;
+    opacity: 50%;
+    height: 135px;
+    width: 100%;
   }
 
   .contentContainer {
@@ -71,7 +84,7 @@
     margin: 0px 20px 0px 20px;
   }
 
-  .contentActions button {
+  .contentActions .unclickedButton {
     background-color: #4F6F52; /* Green background */
     color: #ECE3CE; /* Text color */
     padding: 0px 12px; /* Padding for size */
@@ -80,13 +93,29 @@
     transition: background-color 0.3s, color 0.3s; /* Smooth transition for background and color */
     border-radius: 30px; /* Rounded corners */
     border: 1px solid transparent;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+}
+
+.contentActions .clickedButton {
+  background-color: #ECE3CE; /* Background color changes to light */
+  color: #4F6F52; /* Text color changes to green */
+  padding: 0px 12px; /* Padding for size */
+  font-size: 16px; /* Font size */
+  cursor: pointer; /* Pointer cursor on hover */
+  transition: background-color 0.3s, color 0.3s; /* Smooth transition for background and color */
+  border-radius: 30px; /* Rounded corners */  
+  border: 1px solid #4F6F52;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.contentActions button div {
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
 }
 
 /* Hover effect for the button */
-.contentActions button:hover {
+.contentActions .unclickedButton:hover {
     background-color: #ECE3CE; /* Background color changes to light */
     color: #4F6F52; /* Text color changes to green */
     border: 1px solid #4F6F52;

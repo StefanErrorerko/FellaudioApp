@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect, useContext} from 'react'
 import Logo from '../assets/logo.jpg'
 import { Link } from 'react-router-dom'
 import ReorderIcon from '@mui/icons-material/Reorder';
@@ -6,24 +6,16 @@ import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 import PlaceIcon from '@mui/icons-material/Place';
 import AddIcon from '@mui/icons-material/Add';
 import VideoLibraryIcon from '@mui/icons-material/VideoLibrary';
+import { UserContext } from '../context/UserContext';
 import "../styles/NavBar.css"
 
 function NavBar({ isAuthenticated, toggleLoginPage, handleLogout }) {
   const [isMenuVisible, setIsMenuVisible] = useState(false);
-  const [user, setUser] = useState()
+  const { user } = useContext(UserContext);
 
   const toggleVisibility = () => {
     setIsMenuVisible(!isMenuVisible); 
   };
-
-  useEffect(() => {
-    const storedUser = localStorage.getItem('user')
-    if(storedUser){
-      const parsedUser = JSON.parse(storedUser)
-      setUser(parsedUser)
-      console.log(parsedUser)
-    }
-  }, [isAuthenticated])
 
   return (
     <div className='navbar'>

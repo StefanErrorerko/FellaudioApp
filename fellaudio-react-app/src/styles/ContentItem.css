@@ -37,7 +37,9 @@
   .contentText {
     letter-spacing: 1px;
     max-width: calc(100% - 40px); /* Adjust margin */
-
+    white-space: nowrap; /* Prevents text from wrapping to the next line */
+    overflow: hidden;    /* Ensures that overflowing text is hidden */
+    text-overflow: ellipsis; /* Adds ellipses (...) at the end of the overflowing text */
     font-size: 30px;
     margin: 20px 20px 20px 20px;
   }

@@ -14,6 +14,7 @@
     height: 250px;
     border-radius: 20%;
     border: 0.1em solid #595959;
+    object-fit: cover; /* This will crop the image to fit the container */
   }
   
   .detailsBlock {
@@ -27,6 +28,12 @@
   .fullnameRow {
     margin-bottom: 10px;
     text-align: left;
+  }
+
+  .contentDetailsRow span,
+  .emailRow span,
+  .descriptionRow span {
+    font-family: 'AvantGardeGothicC';
   }
   
   .contentsRow {

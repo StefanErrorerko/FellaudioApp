@@ -8,13 +8,14 @@ import HomeFiller1 from '../assets/home_filler4.png'
 import ContentContainer from '../components/ContentContainer';
 import MapSwitch from '../components/Switch'
 import GoogleMap from '../components/Map';
+import { FillContentWithImages } from '../utils/tempUtil';
 
 const ApiUrl = process.env.REACT_APP_API_URL
 
 function Home() {
   const [error, setError] = useState()
   const [isLoading, setIsLoading] = useState(false)
-  const [contents, setContent] = useState([])
+  const [contents, setContents] = useState([])
   const [page, setPage] = useState(0)
   const searchAreaRef = useRef(null);
   const [isSwitchOn, setIsSwitchOn] = useState(true);
@@ -44,8 +45,9 @@ function Home() {
           signal: abortControllerRef.current.signal
         })
         const contents = await response.json()
+        FillContentWithImages(contents)
         console.log(contents)
-        setContent(contents)
+        setContents(contents)
       } 
       catch (err) {
         if(err.name === 'AbortError'){
@@ -97,10 +99,11 @@ function Home() {
         <div className="mapContainer">
           <GoogleMap 
           markers={[
-            {lat: 50.45, lng: 30.47, title:"m"},
-            {lat: 50.43, lng: 30.46},
-            {lat: 50.42, lng: 30.47},
-            {lat: 50.45, lng: 30.46}
+            {lat: 50.4610985, lng: 30.4816667, title:"Блакитна прогулянка", location: 'Лук\'янівська', time: 889  },
+            {lat: 50.456442, lng: 30.4931728, title:"Фотографії на Січових", location: 'Лук\'янівська', time: 2788},
+            {lat: 50.3991807, lng: 30.5367587, title:"Цеглина Лисогірського форту", location: 'Деміївка', time: 3785},
+            {lat: 50.4642107, lng: 30.5073132, title:"Таємниці Щекавиці", location: 'Лук\'янівська', time: 3750},
+            {lat: 50.440184, lng: 30.54942, title:"Салют", location: 'Арсенальна', time: 2864},
           ]}
           height="800px"
           />

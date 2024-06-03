@@ -108,26 +108,6 @@ export default function Waveform({ url }) {
         <div className="duration">{formatTime(totalDuration)}</div>
         <div className="hover"></div>
       </div>
-
-      <div className="threeDots">
-        <button onClick={togglePopup}>
-          <MoreVertIcon />
-        </button>
-      </div>
-
-      {popupVisible && (
-        <div className="floatingThreeDotsPopup" style={{ top: popupPosition.y + 20, left: popupPosition.x }}>
-            <div>
-                <ArrowDownwardIcon /> Download
-            </div>
-            <div>
-                <ShareIcon /> Share
-            </div>
-            <div>
-                <AddIcon /> Save
-            </div>
-        </div>
-      )}
     </div>
   );
 }

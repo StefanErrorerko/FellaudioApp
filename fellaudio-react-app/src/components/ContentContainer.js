@@ -16,7 +16,7 @@ const ContentContainer = ({contents}) =>{
           <div onClick={() => handleContentItemClick(contentItem.id)}>
             <ContentItem
               key={key}
-              image={DummyImage}
+              image={contentItem.image ? contentItem.image : DummyImage}
               name={contentItem.title}
               location={contentItem.description}
               time={contentItem.audioFile !== null ? contentItem.audioFile.durationInSeconds : 0}
