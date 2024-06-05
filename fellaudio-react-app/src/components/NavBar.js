@@ -12,6 +12,7 @@ import "../styles/NavBar.css"
 function NavBar({ isAuthenticated, toggleLoginPage, handleLogout }) {
   const [isMenuVisible, setIsMenuVisible] = useState(false);
   const { user } = useContext(UserContext);
+  console.log(user)
 
   const toggleVisibility = () => {
     setIsMenuVisible(!isMenuVisible); 
@@ -34,7 +35,8 @@ function NavBar({ isAuthenticated, toggleLoginPage, handleLogout }) {
               )}
             </div>
         </div>
-        <div className='floatingMenuContainer'>
+        {user && (
+        <div className='floatingMenuContainer' >
           <button className='floatingMenuReorderButton' onClick={toggleVisibility}>
             <ReorderIcon />
           </button>
@@ -42,18 +44,17 @@ function NavBar({ isAuthenticated, toggleLoginPage, handleLogout }) {
               <Link to={`profile/${user?.id}`} className='floatingMenuTabButton'>
                 <PersonOutlineIcon />
               </Link>
-              <button className='floatingMenuTabButton'>
-                <PlaceIcon />
-              </button>
-              <button className='floatingMenuTabButton'>
+              <Link to={`profile/${user?.id}`} className='floatingMenuTabButton'>
                 <AddIcon />
-              </button>
-              <button className='floatingMenuTabButton'>
+              </Link>
+              <Link to={`playlist`} className='floatingMenuTabButton'>
                 <VideoLibraryIcon />
-              </button>
+              </Link>
             </div>
         </div>
+        )}
     </div>
+    
   )
 }
 

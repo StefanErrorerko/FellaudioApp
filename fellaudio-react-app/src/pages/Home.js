@@ -44,10 +44,10 @@ function Home() {
         const response = await fetch(`${ApiUrl}/Content`, {
           signal: abortControllerRef.current.signal
         })
-        const contents = await response.json()
-        FillContentWithImages(contents)
-        console.log(contents)
-        setContents(contents)
+        const contentsData = await response.json()
+        FillContentWithImages(contentsData)
+        console.log(contentsData)
+        setContents(contentsData)
       } 
       catch (err) {
         if(err.name === 'AbortError'){

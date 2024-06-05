@@ -1,21 +1,65 @@
-import React from 'react';
-import { PlaylistList } from '../helpers/playlistList';
+import React, { useContext, useState, useEffect, useRef } from 'react';
 import '../styles/Playlist.css';
+import { UserContext } from '../context/UserContext';
+import PlaylistContainer from '../components/PlaylistContainer';
+
+const ApiUrl = process.env.REACT_APP_API_URL
 
 function Playlist() {
+  const [playlists, setPlaylists] = useState([])
+  const [error, setError] = useState()
+  const [isLoading, setIsLoading] = useState(false)
+  
+  const abortControllerRef = useRef(null)
+  
+  const {user} = useContext(UserContext)
+
+  useEffect(() => {
+    const fetchContents = async () => {
+      abortControllerRef.current?.abort()
+      abortControllerRef.current = new AbortController()
+
+      setIsLoading(true)
+      
+      try {
+        const response = await fetch(`${ApiUrl}/User/${user?.id}/playlists`, {
+          signal: abortControllerRef.current.signal
+        })
+        const playlistsData = await response.json()
+        console.log("playlistsdata", playlistsData)
+        setPlaylists(playlistsData)
+      } 
+      catch (err) {
+        if(err.name === 'AbortError'){
+          console.log("Aborted")
+          return
+        }
+        
+        setError(err)
+      } 
+      finally {
+        setIsLoading(false)
+      }
+      
+    }
+
+    fetchContents()
+  }, [user, isLoading])  
+
+  if (isLoading) {
+    return <div>Loading...</div>
+  }
+
+  if (error) {
+    console.log("err", error)
+    return <div>Something went wrong. Please try again</div>
+  }
+
   return (
     <div className='playlistContainer'>
-      {PlaylistList.map((playlist, index) => (
-        <div key={index} className='playlistItem'>
-          {/* Square icon on the left */}
-          <div className='icon'></div>
-          {/* Text div on the right */}
-          <div className='text'>
-            <div className='name'>{playlist.name}</div>
-            <div className='description'>{playlist.description}</div>
-          </div>
-        </div>
-      ))}
+      <PlaylistContainer
+        playlists ={playlists}
+      />
     </div>
   );
 }

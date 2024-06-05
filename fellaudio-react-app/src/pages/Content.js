@@ -1,6 +1,5 @@
 import React, {useState, useRef, useEffect, useContext} from 'react';
 import '../styles/Content.css';
-import { ContentList } from '../helpers/contentList';
 import Waveform from "../components/Waveform";
 import { useNavigate, useParams } from 'react-router-dom';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
