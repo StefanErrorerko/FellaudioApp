@@ -16,7 +16,7 @@
   position: sticky;
 }
 
-.leftSide {
+.navbar .leftSide {
   display: flex;
   align-items: center; /* Center items vertically */
 }

@@ -1,5 +1,3 @@
-import { ContentList } from '../helpers/contentList'; // Assuming you have a blockList file with data
-import ContentItem from '../components/ContentItem'; // Assuming you have a BlockItem component
 import '../styles/Home.css';
 //import { getContents } from '../services/ContentApiClient.js'
 import { useState, useEffect, useRef } from "react"
@@ -21,8 +19,6 @@ function Home() {
   const [isSwitchOn, setIsSwitchOn] = useState(true);
     
   const abortControllerRef = useRef(null)
-
-  
 
   const handleButtonClick = () => {
      if(searchAreaRef.current)

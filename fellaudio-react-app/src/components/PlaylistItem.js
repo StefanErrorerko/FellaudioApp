@@ -15,9 +15,7 @@ function PlaylistItem({ name, description, type }) {
             <div>
                 <h1>{name}</h1>
             </div>
-            
         )}
-        
     </div>
   );
 }

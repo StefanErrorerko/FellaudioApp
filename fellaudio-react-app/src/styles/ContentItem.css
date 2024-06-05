@@ -50,9 +50,6 @@
     margin: 10px 0px 0px 0px;
   }
 
-  .contentData div:first-child {
-  }
-
   .contentData div:last-child {
     text-align: right;
     margin-right: 5px;

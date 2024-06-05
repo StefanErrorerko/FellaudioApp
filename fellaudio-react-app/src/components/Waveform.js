@@ -1,13 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
-import { amber } from '@mui/material/colors';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import PauseIcon from '@mui/icons-material/Pause';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
-import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
-import ShareIcon from '@mui/icons-material/Share';
-import AddIcon from '@mui/icons-material/Add';
-import { Link } from 'react-router-dom'
-
 
 import WaveSurfer from "wavesurfer.js";
 
@@ -83,17 +76,6 @@ export default function Waveform({ url }) {
     setPlay(!playing);
     wavesurfer.current.playPause();
   };
-
-  const togglePopup = (event) => {
-    const buttonRect = event.target.getBoundingClientRect();
-    const popupWidth = 200; // Adjust as needed
-    const popupHeight = 100; // Adjust as needed
-    const popupX = buttonRect.left - popupWidth / 2 + buttonRect.width / 2;
-    const popupY = buttonRect.top + buttonRect.height + 10; // Adjust vertical spacing as needed
-    setPopupPosition({ x: popupX, y: popupY });
-    setPopupVisible(!popupVisible);
-  };
-  
 
   return (
     <div className="audioBlock">

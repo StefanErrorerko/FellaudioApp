@@ -1,18 +1,10 @@
 import React from 'react';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import PlaceIcon from '@mui/icons-material/Place';
-import '../styles/ContentItemLittle.css'
+import '../styles/ContentItemForMap.css'
+import { formatDurationTime } from '../utils/timeFormat';
 
-const formatDurationTime = (timeInSeconds) => {
-  const hours = Math.floor(timeInSeconds / 3600)
-  const minutes = Math.floor((timeInSeconds % 3600) / 60)
-  if(hours !== 0)
-    return `${hours} год ${minutes} хв`
-
-  return `${minutes} хв`
-}
-
-function ContentItemLittle({ image, name, location, time }) {
+function ContentItemForMap({ image, name, location, time }) {
     return (
         <div className='contentItemLittle'>    
           <div className='contentTextLittle'>
@@ -27,4 +19,4 @@ function ContentItemLittle({ image, name, location, time }) {
       );
 }
 
-export default ContentItemLittle;
+export default ContentItemForMap;

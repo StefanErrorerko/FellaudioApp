@@ -6,7 +6,7 @@ function PlaylistContainer({playlists}) {
     const navigate = useNavigate()
 
     const handlePlaylistItemClick = (playlistId) => {
-        navigate(`/playlists/${playlistId}`)
+        navigate(`/playlist/${playlistId}`)
       }
 
     return(

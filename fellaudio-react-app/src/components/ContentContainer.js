@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import ContentItem from "./ContentItem";
 import { useNavigate } from "react-router-dom";
 import DummyImage from '../assets/dummy.jpg'

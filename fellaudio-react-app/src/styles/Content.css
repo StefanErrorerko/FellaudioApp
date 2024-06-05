@@ -126,69 +126,7 @@
   text-align: left;
 }
   
-  .commentsContainer,
-  .mapBlock {
-    width: calc(50% - 2px); /* Subtract 2px to account for border */
-    box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.2);
-    border: 1px solid #ccc;
-  }
-
-  .commentBlock {
-    display: flex;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    margin-bottom: 10px;
-  }
   
-  .commentLeftSide {
-    margin-right: 10px;
-    display: block;
-  }
-  
-  .profileImageSmall {
-    width: 50px;
-    height: 50px;
-    color: #4F6F52;
-    border-radius: 50%;
-    border: 0.1em solid #595959;
-    cursor: pointer;
-  }
-  
-  .commentRightSide {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .commentHeader {
-    display: flex;
-    gap: 20px;
-    align-items: center;
-    font-weight: bold;
-    margin-bottom: 5px;
-    cursor: pointer;
-  }
-  
-  .commentHeader span {
-    text-decoration: none;
-    
-  }
-  
-  .commentHeader span:hover {
-    text-decoration: underline;
-  }
-  
-  .commentDate {
-    font-size: 0.8em;
-    color: #6f6f6f;
-  }
-  
-  .commentBody {
-    font-size: 1em;
-    text-align: left;
-    font-family: 'AvantGardeGothicC';
-  }
   
   .divider {
     width: 2px;
@@ -221,34 +159,6 @@
   .duration {
     right: 0;
   }
-
-  .threeDots{
-    position: relative;
-  }
-
-  .floatingThreeDotsPopup {
-    position: absolute;
-    z-index: 1000; /* Ensure it's above other content */
-    background-color: #fff;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    padding: 10px;
-  }
-  
-  .floatingThreeDotsPopup div {
-    margin-bottom: 5px;
-    display:flex;
-  }
-  
-  .floatingThreeDotsPopup div:last-child {
-    margin-bottom: 0;
-  }
-  
-  .floatingThreeDotsPopup div:hover {
-      background-color: #f0f0f0;
-      cursor: pointer;
-    }
     
   .hover {
       left: 0;

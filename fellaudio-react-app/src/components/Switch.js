@@ -15,8 +15,8 @@ function MapSwitch({isSwitchOn, handleSwitchChange}) {
               offHandleColor="#4F6F52"
               onHandleColor="#4F6F52"
               box-shadow='inset 0 2px 5px rgba(0, 0, 0, 0.3)'
-              height={40}  // Set height of the switch
-              width={80}   // Set width of the switch
+              height={40} 
+              width={80} 
               activeBoxShadow='0 0 2px 3px #aaaaaa'
               
               uncheckedIcon={

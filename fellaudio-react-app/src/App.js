@@ -4,19 +4,17 @@ import {
   Route,
   Routes
 } from 'react-router-dom';
-
 import React, { useState, useEffect, useRef } from 'react';
-import CryptoJS from 'crypto-js'
 
 import NavBar from './components/Navbar';
 import Home from './pages/Home';
 import About from './pages/About';
 import Login from './pages/Login';
-import Map from './pages/Map';
 import Content from './pages/Content';
 import Profile from './pages/Profile';
+import Library from './pages/Library';
+import ScrollToTop from './utils/ScrollToTop';
 import Playlist from './pages/Playlist';
-import ScrollToTop from './components/ScrollToTop';
 
 const ApiUrl = process.env.REACT_APP_API_URL
 
@@ -142,9 +140,9 @@ function App() {
             <Route path='/about' element={<About />} />
             <Route path='/login' element={<Login onLogin={handleLogin} />} />
             <Route path="/content/:contentId" element={<Content />} />
-            <Route path="/map" element={<Map />} />
             <Route path="/profile/:userId" element={<Profile />} />
-            <Route path="/playlist" element={<Playlist />} />
+            <Route path="/library" element={<Library />} />
+            <Route path="/playlist/:playlistId" element={<Playlist />} />
           </Routes>
         </div>
       </Router>

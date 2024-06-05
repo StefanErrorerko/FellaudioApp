@@ -11,7 +11,6 @@ function RecommenderContainer() {
     const [isLoading, setIsLoading] = useState(false)
     const [error, setError] = useState(false)
 
-
     useEffect(() => {
         const fetchContent = async () => {    
           setIsLoading(true);

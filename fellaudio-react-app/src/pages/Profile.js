@@ -15,19 +15,8 @@ function Profile() {
   const [isLoading, setIsLoading] = useState(false)
   const [user, setUser] = useState([])
   const [contents, setContents] = useState([])
-
-  //const navigate = useNavigate()
   
   const abortControllerRef = useRef(null)
-
-  /*const handleContentItemClick = (contentId) => {
-    navigate(`/content/${contentId}`)
-  }
-
-  const handleButtonClick = () => {
-     if(searchAreaRef.current)
-      searchAreaRef.current.scrollIntoView({behavior: 'smooth', block: 'start'})
-  }*/
 
   const formatInfoAboutContent = (contents) => {
     let outputMessage = 'Ще не створено жодного контенту'

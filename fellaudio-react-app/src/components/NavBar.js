@@ -3,7 +3,6 @@ import Logo from '../assets/logo.jpg'
 import { Link } from 'react-router-dom'
 import ReorderIcon from '@mui/icons-material/Reorder';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
-import PlaceIcon from '@mui/icons-material/Place';
 import AddIcon from '@mui/icons-material/Add';
 import VideoLibraryIcon from '@mui/icons-material/VideoLibrary';
 import { UserContext } from '../context/UserContext';
@@ -47,16 +46,14 @@ function NavBar({ isAuthenticated, toggleLoginPage, handleLogout }) {
               <Link to={`profile/${user?.id}`} className='floatingMenuTabButton'>
                 <AddIcon />
               </Link>
-              <Link to={`playlist`} className='floatingMenuTabButton'>
+              <Link to={`library`} className='floatingMenuTabButton'>
                 <VideoLibraryIcon />
               </Link>
             </div>
         </div>
         )}
     </div>
-    
   )
 }
-
 
 export default NavBar

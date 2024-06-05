@@ -18,7 +18,7 @@ const Login = ({ onLogin }) => {
     <div className="login-container">
       <form onSubmit={handleSubmit}>
         <div>
-          <label>Email:</label>
+          <label>Пошта:</label>
           <input
             type="text"
             value={email}
@@ -27,7 +27,7 @@ const Login = ({ onLogin }) => {
           />
         </div>
         <div>
-          <label>Password:</label>
+          <label>Пароль:</label>
           <input
             type="password"
             value={password}
@@ -36,7 +36,7 @@ const Login = ({ onLogin }) => {
           />
         </div>
         {error && <div className="error">{error}</div>}
-        <button type="submit">Login</button>
+        <button type="submit">Увійти</button>
       </form>
     </div>
   );

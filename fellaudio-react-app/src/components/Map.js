@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import ContentItemLittle from './ContentItemLittle';
-import DummyImage from '../assets/dummy.jpg';
+import ContentItemLittle from './ContentItemForMap';
 import { renderToString } from 'react-dom/server';
 
 const apiKey = process.env.REACT_APP_MAP_API_KEY;
@@ -18,8 +17,6 @@ const GoogleMap = ({ markers, height }) => {
       script.onload = initializeMap;
       document.head.appendChild(script);
     };
-
-    console.log("data", markers)
 
     const initializeMap = () => {
       const map = new window.google.maps.Map(mapRef.current, {
@@ -41,16 +38,16 @@ const GoogleMap = ({ markers, height }) => {
         });
 
         const markerIcon = {
-          path: window.google.maps.SymbolPath.CIRCLE, // Use predefined symbol for a circle
-          scale: 8, // Adjust the size of the circle
-          fillColor: '#ECE3CE', // Fill color of the circle
-          fillOpacity: 1, // Opacity of the circle
-          strokeWeight: 3, // No border
+          path: window.google.maps.SymbolPath.CIRCLE, 
+          scale: 8, 
+          fillColor: '#ECE3CE', 
+          fillOpacity: 1,
+          strokeWeight: 3, 
           strokeColor: '#4F6F52'
         };
     
         const googleMarker = new window.google.maps.Marker({
-          position: { lat: marker.lat, lng: marker.lng }, // Use current marker's position
+          position: { lat: marker.lat, lng: marker.lng },
           map: map,
           title: marker.name,
           icon: markerIcon

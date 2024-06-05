@@ -1,27 +1,25 @@
 import React, {useState, useRef, useEffect, useContext} from 'react';
+import { useParams } from 'react-router-dom';
 import '../styles/Content.css';
-import Waveform from "../components/Waveform";
-import { useNavigate, useParams } from 'react-router-dom';
+
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import ShareIcon from '@mui/icons-material/Share';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
-import ProfileDummyImage from '../assets/profile-dummy.jpg'
-import GoogleMap from '../components/Map'
 import DummyImage from '../assets/dummy.jpg'
+
+import Waveform from "../components/Waveform";
+import GoogleMap from '../components/Map'
 import RecommenderContainer from '../components/RecommenderContainer';
 import { UserContext } from '../context/UserContext';
 import { FillContentWithImages } from '../utils/tempUtil';
+import CommentBlock from '../components/CommentContainer';
 
 const ApiUrl = process.env.REACT_APP_API_URL
-
 
 function Content() {
   const { contentId } = useParams()
   const {user} = useContext(UserContext)
-  console.log("ddasdf", user)
-
-  //var content = ContentList[0]; // Assuming you are displaying the first item for now
 
   const [error, setError] = useState()
   const [isLoading, setIsLoading] = useState(false)
@@ -34,15 +32,6 @@ function Content() {
   const [isLiked, setIsLiked] = useState(false);
   const [isDownloaded, setIsDownloaded] = useState(false);
 
-  
-  const navigate = useNavigate()
-
-
-  const handleCommentClick = (userId) => {
-    if(userId !== undefined)
-      navigate(`/profile/${userId}`)
-  }
-
   const handleLikeClick = () => {
     setIsLiked(!isLiked)
   }
@@ -52,54 +41,6 @@ function Content() {
   }
   
   const abortControllerRef = useRef(null)
-  
-  function formatDate(dateString) {
-    const now = new Date();
-    const date = new Date(dateString);
-    const diffInSeconds = Math.floor((now - date) / 1000);
-  
-    const secondsInMinute = 60;
-    const secondsInHour = secondsInMinute * 60;
-    const secondsInDay = secondsInHour * 24;
-    const secondsInMonth = secondsInDay * 30;
-    const secondsInYear = secondsInDay * 365;
-  
-    if (diffInSeconds >= secondsInYear) {
-      const years = Math.floor(diffInSeconds / secondsInYear);
-      return `${years}y. ago`;
-    } else if (diffInSeconds >= secondsInMonth) {
-      const months = Math.floor(diffInSeconds / secondsInMonth);
-      return `${months}m. ago`;
-    } else if (diffInSeconds >= secondsInDay) {
-      const days = Math.floor(diffInSeconds / secondsInDay);
-      if (days === 1) {
-        return 'yesterday';
-      }
-      return `${days}d. ago`;
-    } else if (diffInSeconds >= secondsInHour) {
-      const hours = Math.floor(diffInSeconds / secondsInHour);
-      return `${hours}h. ago`;
-    } else if (diffInSeconds >= secondsInMinute) {
-      const minutes = Math.floor(diffInSeconds / secondsInMinute);
-      return `${minutes}min ago`;
-    } else {
-      return `${diffInSeconds}sec ago`;
-    }
-  }
-
-  function sortPoints(points) {
-    const pointMap = new Map(points.map(point => [point.id, point]));
-    
-    const sortedPoints = [];
-    let currentPoint = points.find(point => point.previousPointId === 0);
-    
-    while (currentPoint) {
-      sortedPoints.push(currentPoint);
-      currentPoint = pointMap.get(currentPoint.id);
-    }
-    
-    return sortedPoints;
-  }
 
   useEffect(() => {
     const fetchContent = async () => {
@@ -158,7 +99,6 @@ function Content() {
       </div>
       <div className='contentTitleBackground'></div>
       <div className='contentTitle'>
-        
         <h1>{content.title}</h1>
       </div>
       <div className='contentContainer'>
@@ -188,22 +128,10 @@ function Content() {
         <div className="detailsRow">
           <div className="commentsContainer">
           {content.comments?.map((comment, key) => (
-            <div className="commentBlock">
-              <div className="commentLeftSide" >
-                  <img className='profileImageSmall' src={ProfileDummyImage} alt='User Profile Image' onClick={() => handleCommentClick(comment.user?.id)}/>
-              </div>
-              <div className="commentRightSide">
-                <div className="commentHeader" onClick={() => handleCommentClick(comment.user?.id)}>
-                  <span>{comment.user ? comment.user.firstname : 'Deleted User'} {comment.user?.lastname}</span>
-                  <span className="commentDate">{
-                    comment.user?.createdAt ? formatDate(comment.user?.createdAt) : ''
-                  }</span>
-                </div>
-                <div className="commentBody">
-                  {comment.text}
-                </div>
-              </div>
-            </div>  
+             <CommentBlock 
+              key={key}
+              comment={comment}
+             />
             ))}
           </div>
           <div className="divider"></div>
@@ -221,7 +149,6 @@ function Content() {
             height="400px"
             />        
           </div>
-          
         </div>
       </div>
       <hr className="solid" />
