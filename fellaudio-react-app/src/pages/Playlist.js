@@ -27,7 +27,7 @@ function Playlist() {
             const playlistResponse = await fetch(`${ApiUrl}/Playlist/${playlistId}`, {
                 signal: abortControllerRef.current.signal
               })
-            const playlistData = playlistResponse.json()
+            const playlistData = await playlistResponse.json()
             
             const contentResponse = await fetch(`${ApiUrl}/Playlist/${playlistId}/content`, {
               signal: abortControllerRef.current.signal
