@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import ContentItemLittle from './ContentItemForMap';
 import { renderToString } from 'react-dom/server';
+import '../styles/Map.css'
 
 const apiKey = process.env.REACT_APP_MAP_API_KEY;
 

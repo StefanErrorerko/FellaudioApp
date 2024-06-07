@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useContext} from 'react'
+import React, {useState, useRef, useEffect, useContext} from 'react'
 import Logo from '../assets/logo.jpg'
 import { Link } from 'react-router-dom'
 import ReorderIcon from '@mui/icons-material/Reorder';
@@ -11,11 +11,25 @@ import "../styles/NavBar.css"
 function NavBar({ isAuthenticated, toggleLoginPage, handleLogout }) {
   const [isMenuVisible, setIsMenuVisible] = useState(false);
   const { user } = useContext(UserContext);
-  console.log(user)
+  const menuRef = useRef(null);
 
   const toggleVisibility = () => {
     setIsMenuVisible(!isMenuVisible); 
   };
+
+  const handleClickOutside = (event) => {
+    if (menuRef.current && !menuRef.current.contains(event.target)) {
+      setIsMenuVisible(false);
+    }
+  };
+
+  useEffect(() => {
+    console.log("nu")
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   return (
     <div className='navbar'>
@@ -35,7 +49,7 @@ function NavBar({ isAuthenticated, toggleLoginPage, handleLogout }) {
             </div>
         </div>
         {user && (
-        <div className='floatingMenuContainer' >
+        <div className='floatingMenuContainer' ref={menuRef}>
           <button className='floatingMenuReorderButton' onClick={toggleVisibility}>
             <ReorderIcon />
           </button>

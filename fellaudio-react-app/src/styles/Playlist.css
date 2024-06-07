@@ -36,3 +36,10 @@
     font-family: 'AvantGardeGothicC';
     font-size: large;
 }
+
+.playlistData input.playlistDescription {
+    background-color: #739072;
+    width: 100%;
+    border-radius: 7px;
+    color: #dedede;
+}

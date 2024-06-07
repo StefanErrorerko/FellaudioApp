@@ -14,7 +14,7 @@ import Content from './pages/Content';
 import Profile from './pages/Profile';
 import Library from './pages/Library';
 import ScrollToTop from './utils/ScrollToTop';
-import Playlist from './pages/Playlist';
+import Playlist from './pages/playlist/Playlist';
 
 const ApiUrl = process.env.REACT_APP_API_URL
 
