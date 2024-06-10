@@ -33,6 +33,7 @@
 }
 
 .playlistData .playlistDescription {
+    margin: 20px 0px;
     font-family: 'AvantGardeGothicC';
     font-size: large;
 }

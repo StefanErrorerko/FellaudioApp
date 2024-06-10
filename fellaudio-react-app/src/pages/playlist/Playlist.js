@@ -25,6 +25,7 @@ function Playlist() {
     const handleEditClick = () => {
       if(isEditing)
         saveChanges()
+
       setIsEditing(!isEditing)
     }
 
@@ -49,14 +50,33 @@ function Playlist() {
         if (!response.ok) {
           throw new Error('Failed to update playlist')
         }
-        
+
+        window.location.reload();        
       } catch (err) {
         setError(err)
       }
     }
 
-    const deleteContent = (playlistToDelete) => {
-      console.log(playlistToDelete.name)
+    const deleteContent = async (contentId) => {
+      try {
+        const response = await fetch(`${ApiUrl}/Playlist/${playlist.id}/content/${contentId}`, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+  
+        if (response.status !== 204) {
+          throw new Error('Failed to delete content from playlist');
+        }
+        console.log('Content successfully deleted from playlist');
+      } catch (err) {
+        if(err.name === 'AbortError'){
+          console.log("Aborted")
+          return
+        }
+        setError(err)
+      }
     }
 
     useEffect(() => {
@@ -95,8 +115,6 @@ function Playlist() {
             setIsLoading(false)
           }
         }
-
-       
     
         fetchContents()
       }, [playlistId])  

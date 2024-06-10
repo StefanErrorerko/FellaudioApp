@@ -32,8 +32,48 @@ function Content() {
   const [isLiked, setIsLiked] = useState(false);
   const [isDownloaded, setIsDownloaded] = useState(false);
 
-  const handleLikeClick = () => {
+  const handleLikeClick = async () => {
     setIsLiked(!isLiked)
+
+    try {
+      const playlistResponse = await fetch(`${ApiUrl}/User/${user.id}/playlist/saved`)
+      const playlistSaved =  await playlistResponse.json()
+
+      if(playlistSaved === null){
+
+        const playlistCreateResponse = await fetch(`${ApiUrl}/Playlist`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            description: 'Ваш плейлист вподобаного',
+            type: 'Saved',
+            userId: user.Id
+          })
+        })
+
+        playlistSaved = await playlistCreateResponse.json()
+      }
+      
+      const response = await fetch(`${ApiUrl}/Playlist/add/content`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          playlistId: playlistSaved.id,
+          contentId: content.id,
+        }),
+      })
+
+      if (response.status !== 204) {
+        throw new Error('Failed to update playlist')
+      }
+      
+    } catch (err) {
+      setError(err)
+    }
   }
 
   const handleDownloadClick = () => {

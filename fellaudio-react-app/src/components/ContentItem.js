@@ -1,16 +1,19 @@
-import React from 'react';
+import React, { useState } from 'react';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import PlaceIcon from '@mui/icons-material/Place';
 import CancelIcon from '@mui/icons-material/Cancel';
 import '../styles/ContentItem.css'
 import { formatDurationTime } from '../utils/timeFormat';
 
+function ContentItem({ contentId=null, image, name, location, time, isEdited=false, onEditAction=null }) {
+  const [isDeleted, setIsDeleted] = useState(false)
 
-
-function ContentItem({ image, name, location, time, isEdited=false, playlist=null, onEditAction=null }) {
-  const handleDeleteClick = (e) => {
+  const handleDeleteClick = async (e) => {
     e.stopPropagation();
-    onEditAction(playlist)
+    if (onEditAction && contentId) {
+      onEditAction(contentId);
+      setIsDeleted(true)
+    }
   }
 
   return (
@@ -26,11 +29,15 @@ function ContentItem({ image, name, location, time, isEdited=false, playlist=nul
         </div>
       </div>
 
-      {isEdited &&(
+      {isEdited && !isDeleted &&(
         <button className='deleteButton' onClick={handleDeleteClick}>
         <CancelIcon />
       </button>
       )}
+
+      <div className={`contentDeletedArea ${isDeleted ? "visible" : "hidden"}`}>
+        Контент видалено
+      </div>
     </div>
   );
 }

@@ -140,6 +140,7 @@
   .blocksContainer {
     width: calc(100% - 40px);
     max-width: 100%;
+    margin: 20px;
     flex-wrap: wrap; /* Allow items to wrap to the next line */
     justify-content: space-between; /* Distribute items along the main axis with equal space between them */
     display: grid;

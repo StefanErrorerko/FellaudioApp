@@ -79,5 +79,24 @@
     background-color: darkred;
   }
 
+  .contentDeletedArea.hidden {
+    opacity: 0;
+  }
+
+  .contentDeletedArea.visible {
+    background-color: grey;
+    color: whitesmoke;
+    position: absolute;
+    border-radius: 15px;
+    width: 379px;
+    height: 379px;
+    opacity: 75%;
+    bottom: 0px;
+    justify-content: center;
+    text-align: center;
+    align-content: center;
+    font-size: xx-large;
+  }
+
 
 
