@@ -8,8 +8,10 @@ export const UserProvider = ({ children }) => {
 
   useEffect(() => {
     const storedUser = localStorage.getItem('user');
+    const storedPlaylistSaved = localStorage.getItem('playlistSaved');
     if (storedUser) {
       const parsedUser = JSON.parse(storedUser);
+      parsedUser.playlistSaved = JSON.parse(storedPlaylistSaved)
       setUser(parsedUser);
     }
   }, []);

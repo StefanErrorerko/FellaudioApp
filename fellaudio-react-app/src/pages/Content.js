@@ -33,8 +33,14 @@ function Content() {
   const [isDownloaded, setIsDownloaded] = useState(false);
 
   const handleLikeClick = async () => {
+    if(isLiked)
+      await dislikeContent()
+    if(!isLiked)
+      await likeContent()
     setIsLiked(!isLiked)
+  }
 
+  const likeContent = async ( ) => {
     try {
       const playlistResponse = await fetch(`${ApiUrl}/User/${user.id}/playlist/saved`)
       const playlistSaved =  await playlistResponse.json()
@@ -76,6 +82,35 @@ function Content() {
     }
   }
 
+  const dislikeContent = async () => {
+    try {
+      const playlistResponse = await fetch(`${ApiUrl}/User/${user.id}/playlist/saved`)
+      const playlistSaved =  await playlistResponse.json()
+
+      try {
+        const response = await fetch(`${ApiUrl}/Playlist/${playlistSaved.id}/content/${contentId}`, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+  
+        if (response.status !== 204) {
+          throw new Error('Failed to delete content from playlist');
+        }
+        console.log('Content successfully deleted from playlist');
+      } catch (err) {
+        if(err.name === 'AbortError'){
+          console.log("Aborted")
+          return
+        }
+        setError(err)
+      }
+    } catch(err) {
+      setError(err)
+    }
+  }
+
   const handleDownloadClick = () => {
     setIsDownloaded(!isDownloaded)
   }
@@ -107,6 +142,7 @@ function Content() {
             longitude: sortedPoints[2].location.longitude,
           });
         }
+
       } 
       catch (err) {
         if (err.name === 'AbortError') {

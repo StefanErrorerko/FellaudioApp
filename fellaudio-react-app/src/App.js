@@ -22,6 +22,7 @@ function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [error, setError] = useState()
   const [user, setUser] = useState(null);
+  const [playlistSaved, setPlaylistSaved] = useState(null)
   const [isLoginPageVisible, setIsLoginPageVisible] = useState(false);
   const abortControllerRef = useRef(null)
 
@@ -59,7 +60,7 @@ function App() {
       console.log("form", formData);
 
       try {
-        const response = await fetch(`${ApiUrl}/User/check`, {
+        const responseUser = await fetch(`${ApiUrl}/User/check`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -68,18 +69,29 @@ function App() {
           signal: abortControllerRef.current.signal
         });
 
-        if (!response.ok) {
-          throw new Error(`Error: ${response.status} ${response.statusText}`);
+        if (!responseUser.ok) {
+          throw new Error(`Error: ${responseUser.status} ${responseUser.statusText}`);
         }
-        console.log("response", response);
-
-        const user = await response.json();
-        console.log("response", response);
+        const user = await responseUser.json();
+        console.log("response", responseUser);
         setUser(user);
+        console.log("user", user)
+        const responsePlaylist = await fetch(`${ApiUrl}/User/${user?.id}/playlist/saved`, {
+          signal: abortControllerRef.current.signal
+        })
+
+        if (!responsePlaylist.ok) {
+          throw new Error(`Error: ${responsePlaylist.status} ${responsePlaylist.statusText}`);
+        }
+
+        const playlist = await responsePlaylist.json()
+        setPlaylistSaved(playlist)
+
         setIsAuthenticated(true);
         setIsLoginPageVisible(false);
         localStorage.setItem('token', 'mockToken');
         localStorage.setItem('user', JSON.stringify(user));
+        localStorage.setItem('playlistSaved', JSON.stringify(playlist));
       } catch (err) {
         if (err.name === 'AbortError') {
           console.log("Aborted");
@@ -110,8 +122,10 @@ function App() {
   const handleLogout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
+    localStorage.removeItem('playlistSaved');
     setIsAuthenticated(false);
     setUser(null);
+    setPlaylistSaved(null)
     window.location.reload()
   };
 
