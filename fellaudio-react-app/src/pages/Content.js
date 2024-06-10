@@ -143,6 +143,17 @@ function Content() {
           });
         }
 
+        const playlistResponse = await fetch(`${ApiUrl}/User/${user.id}/playlist/saved`, {
+          signal: abortControllerRef.current.signal
+        })
+      const playlistData = await playlistResponse.json()
+      
+      const contentResponse = await fetch(`${ApiUrl}/Playlist/${playlistData.id}/content`, {
+        signal: abortControllerRef.current.signal
+      })
+      const contentsData = await contentResponse.json()
+
+      setIsLiked(contentsData.some(c => c.id == contentData.id))
       } 
       catch (err) {
         if (err.name === 'AbortError') {
