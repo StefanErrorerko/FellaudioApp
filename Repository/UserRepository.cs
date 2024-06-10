@@ -18,6 +18,15 @@ namespace FellaudioApp.Repository
         {
             return _context.Users.Any(u => u.Id == id);
         }
+        public ICollection<Content> GetContentFromUserPlaylists(int userId)
+        {
+            return _context.Contents
+            .Where(c => _context.ContentPlaylists
+                .Any(cp => cp.ContentId == c.Id &&
+                           _context.Playlists
+                               .Any(p => p.Id == cp.PlaylistId && p.User.Id == userId)))
+            .ToList();
+        }
         public ICollection<Comment> GetCommentsByUser(int userId)
         {
             return _context.Comments
@@ -39,9 +48,20 @@ namespace FellaudioApp.Repository
                 .Include(p => p.User)
                 .Where(p => p.User.Id == userId).ToList();
         }
+        public Playlist GetPlaylistSavedByUser(int userId)
+        {
+            return _context.Playlists
+                .Include(p => p.User)
+                .Where(p => p.User.Id == userId && p.Type == Models.Enums.ListType.Saved)
+                .FirstOrDefault();
+        }
         public User GetUser(int id)
         {
             return _context.Users.Where(u => u.Id == id).FirstOrDefault();
+        }
+        public User GetUserByEmailAndPassword(string email, string hashedPassword)
+        {
+            return _context.Users.Where(u => u.Email == email && u.HashedPassword == hashedPassword).FirstOrDefault();
         }
         public ICollection<User> GetUsers()
         {

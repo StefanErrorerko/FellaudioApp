@@ -19,11 +19,11 @@ namespace FellaudioApp.Repository
         {
             return _context.Playlists.Any(p => p.Id == id);
         }
-        public ICollection<Content> GetContentByPlaylist(int playlistId)
+        public ICollection<Content> GetContentsByPlaylist(int playlistId)
         {
-            return _context.ContentPlaylists
-                .Where(cp => cp.Playlist.Id == playlistId)
-                .Select(cp => cp.Content)
+            return _context.Contents
+                .Where(c => c.ContentPlaylists
+                .Any(cp => cp.PlaylistId == playlistId))
                 .Include(c => c.User)
                 .Include(c => c.Points)
                 .Include(c => c.AudioFile)
@@ -68,12 +68,30 @@ namespace FellaudioApp.Repository
 
             _context.Update(playlist);
             return Save();
-        }
+        } 
         public bool DeletePlaylist(Playlist playlist)
         {
             _context.Remove(playlist); 
             return Save();
         }
+         public ContentPlaylist GetContentPlaylist(int playlistId, int contentId)
+        {
+            return _context.ContentPlaylists
+                           .FirstOrDefault(cp => cp.PlaylistId == playlistId && cp.ContentId == contentId);
+        }
+
+        public bool RemoveContentFromPlaylist(ContentPlaylist contentPlaylist)
+        {
+            _context.Remove(contentPlaylist);
+            return Save();
+        }
+
+        public bool AddContentToPlaylist(ContentPlaylist contentPlaylist)
+        {
+            _context.Add(contentPlaylist);
+            return Save();
+        }
+        
         public bool Save()
         {
             var saved = _context.SaveChanges();

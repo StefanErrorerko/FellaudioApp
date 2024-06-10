@@ -18,7 +18,7 @@ namespace FellaudioApp.Controllers
         private readonly IContentRepository _contentRepository;
         private readonly IMapper _mapper;
 
-        public PlaylistController(IPlaylistRepository playlistRepository, IUserRepository userRepository, 
+        public PlaylistController(IPlaylistRepository playlistRepository, IUserRepository userRepository,
             IMapper mapper, IContentRepository contentRepository)
         {
             _playlistRepository = playlistRepository;
@@ -48,9 +48,9 @@ namespace FellaudioApp.Controllers
             if (!_playlistRepository.PlaylistExists(id))
                 return NotFound();
 
-            var playlist = _mapper.Map<Playlist>(_playlistRepository.GetPlaylist(id));
+            var playlist = _mapper.Map<PlaylistResponseDto>(_playlistRepository.GetPlaylist(id));
 
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
             return Ok(playlist);
@@ -61,10 +61,10 @@ namespace FellaudioApp.Controllers
         [ProducesResponseType(400)]
         public IActionResult GetContentsByPlaylist(int playlistId)
         {
-            if(!_playlistRepository.PlaylistExists(playlistId))
+            if (!_playlistRepository.PlaylistExists(playlistId))
                 return NotFound();
 
-            var contents = _mapper.Map<List<ContentResponseDto>>(_playlistRepository.GetContentByPlaylist(playlistId));
+            var contents = _mapper.Map<List<ContentResponseDto>>(_playlistRepository.GetContentsByPlaylist(playlistId));
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -75,6 +75,7 @@ namespace FellaudioApp.Controllers
         [HttpPost]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
+        [ProducesResponseType(422)]
         public IActionResult CreatePlaylist([FromBody] PlaylistPostRequestDto playlistCreate)
         {
             if (playlistCreate == null)
@@ -89,7 +90,7 @@ namespace FellaudioApp.Controllers
                 .Where(p => p.User.Id == userId && p.Name == playlistCreate.Name)
                 .FirstOrDefault();
 
-            if(playlist != null)
+            if (playlist != null)
             {
                 ModelState.AddModelError("", $"Playlist with name {playlist.Name} already exists");
                 return StatusCode(422, ModelState);
@@ -99,15 +100,15 @@ namespace FellaudioApp.Controllers
                 .Where(p => p.User.Id == userId && p.Type == Models.Enums.ListType.Saved)
                 .FirstOrDefault();
 
-            if(playlist != null && playlistCreate.Type == Models.Enums.ListType.Saved)
+            if (playlist != null && playlistCreate.Type == Models.Enums.ListType.Saved)
             {
                 ModelState.AddModelError("", "Cannot create one more Saved playlist");
                 return StatusCode(422, ModelState);
             }
 
-            if(playlistCreate.Type == Models.Enums.ListType.Saved)
+            if (playlistCreate.Type == Models.Enums.ListType.Saved)
             {
-                if(playlistCreate.Name != null)
+                if (playlistCreate.Name != null)
                 {
                     ModelState.AddModelError("", "Cannot create 'Saved' playlist with custom name");
                     return StatusCode(422, ModelState);
@@ -121,10 +122,10 @@ namespace FellaudioApp.Controllers
             var playlistMap = _mapper.Map<Playlist>(playlistCreate);
             playlistMap.User = _userRepository.GetUser(userId);
 
-            if(playlistMap.CreatedAt == DateTime.MinValue)
+            if (playlistMap.CreatedAt == DateTime.MinValue)
                 playlistMap.CreatedAt = DateTime.UtcNow;
 
-            if(!_playlistRepository.CreatePlaylist(playlistMap))
+            if (!_playlistRepository.CreatePlaylist(playlistMap))
             {
                 ModelState.AddModelError("", "Something went wrong");
                 return StatusCode(500, ModelState);
@@ -133,10 +134,51 @@ namespace FellaudioApp.Controllers
             return Ok("Successfully Created");
         }
 
+        [HttpPut("add/content")]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(422)]
+        public IActionResult AddContentToPlaylist([FromBody] ContentPlaylistRequestDto contentPlaylistCreate)
+        {
+            if (contentPlaylistCreate == null)
+                return BadRequest(ModelState);
+
+            var contentId = contentPlaylistCreate.ContentId;
+            var playlistId = contentPlaylistCreate.PlaylistId;
+
+            if (!_playlistRepository.PlaylistExists(playlistId))
+                return NotFound("Playlist not found");
+
+            if (!_contentRepository.ContentExists(contentId))
+                return NotFound("Content not found");
+
+            if (_playlistRepository.GetContentPlaylist(playlistId, contentId) != null)
+            {
+                ModelState.AddModelError("", "Cannot add that content to playlist twice");
+                return StatusCode(422, ModelState);
+            }
+
+            var contentPlaylistMap = _mapper.Map<ContentPlaylist>(contentPlaylistCreate);
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            if (!_playlistRepository.AddContentToPlaylist(contentPlaylistMap))
+            {
+                ModelState.AddModelError("", "Something went wrong while creating relation between the content and playlist");
+                return StatusCode(500, ModelState);
+            }
+
+            return NoContent();
+        }
+
+
         [HttpPut("{id}")]
         [ProducesResponseType(400)]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
+        [ProducesResponseType(422)]
         public IActionResult UpdatePlaylist(int id, [FromBody] PlaylistPutRequestDto updatedPlaylist)
         {
             if (updatedPlaylist == null)
@@ -161,9 +203,48 @@ namespace FellaudioApp.Controllers
                 return StatusCode(422, ModelState);
             }
 
+            if (playlistToUpdate.Type == Models.Enums.ListType.Saved)
+            {
+                if (updatedPlaylist.Name != null)
+                {
+                    ModelState.AddModelError("", "Cannot create 'Saved' playlist with custom name");
+                    return StatusCode(422, ModelState);
+                }
+                playlistToUpdate.Name = "Saved";
+            }
+
             if (!_playlistRepository.UpdatePlaylist(playlistMap))
             {
                 ModelState.AddModelError("", "Something went wrong updating owner");
+                return StatusCode(500, ModelState);
+            }
+
+            return NoContent();
+        }
+
+        [HttpDelete("{playlistId}/content/{contentId}")]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(404)]
+        public IActionResult RemoveContentFromPlaylist(int playlistId, int contentId)
+        {
+            if (!_playlistRepository.PlaylistExists(playlistId))
+                return NotFound("Playlist not found");
+
+            if (!_contentRepository.ContentExists(contentId))
+                return NotFound("Content not found");
+
+            var contentPlaylist = _playlistRepository.GetContentPlaylist(playlistId, contentId);
+
+            if (contentPlaylist == null)
+                return NotFound("Relation between these playlist and content not found");
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            if (!_playlistRepository.RemoveContentFromPlaylist(contentPlaylist))
+            {
+                ModelState.AddModelError("", "Something went wrong while deleting content from playlist");
                 return StatusCode(500, ModelState);
             }
 

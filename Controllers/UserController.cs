@@ -4,8 +4,10 @@ using FellaudioApp.Dto.Request;
 using FellaudioApp.Dto.Response;
 using FellaudioApp.Interfaces;
 using FellaudioApp.Models;
+using FellaudioApp.RecommenderSystem;
 using FellaudioApp.Repository;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 
 namespace FellaudioApp.Controllers
 {
@@ -14,10 +16,12 @@ namespace FellaudioApp.Controllers
     public class UserController : Controller
     {
         private readonly IUserRepository _userRepository;
+        private readonly IContentRepository _contentRepository;
         private readonly IMapper _mapper;
-        public UserController(IUserRepository userRepository, IMapper mapper)
+        public UserController(IUserRepository userRepository, IContentRepository contentRepository, IMapper mapper)
         {
             _userRepository = userRepository;
+            _contentRepository = contentRepository;
             _mapper = mapper;
         }
 
@@ -34,6 +38,22 @@ namespace FellaudioApp.Controllers
             return Ok(users);
         }
 
+        [HttpPost("check")]
+        [ProducesResponseType(200, Type = typeof(UserResponseDto))]
+        [ProducesResponseType(400)]
+        public IActionResult GetUserByEmailAndPassword([FromBody] LoginRequestDto loginRequest)
+        {
+            var user = _mapper.Map<UserResponseDto>(_userRepository.GetUserByEmailAndPassword(loginRequest.Email, loginRequest.HashedPassword));
+
+            if (user == null)
+                return NotFound();
+
+            if(!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            return Ok(user);
+        }
+
         [HttpGet("{id}")]
         [ProducesResponseType(200, Type = typeof(UserResponseDto))]
         [ProducesResponseType(400)]
@@ -44,11 +64,12 @@ namespace FellaudioApp.Controllers
 
             var user = _mapper.Map<UserResponseDto>(_userRepository.GetUser(id));
 
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
             return Ok(user);
         }
+
 
         [HttpGet("{userId}/playlists")]
         [ProducesResponseType(200, Type = typeof(PlaylistResponseDto))]
@@ -64,6 +85,22 @@ namespace FellaudioApp.Controllers
                 return BadRequest();
 
             return Ok(playlists);
+        }
+
+        [HttpGet("{userId}/playlist/saved")]
+        [ProducesResponseType(200, Type = typeof(PlaylistResponseDto))]
+        [ProducesResponseType(400)]
+        public IActionResult GetPlaylistSavedByUser(int userId)
+        {
+            if (!_userRepository.UserExists(userId))
+                return NotFound();
+
+            var playlistSaved = _mapper.Map<PlaylistResponseDto>(_userRepository.GetPlaylistSavedByUser(userId));
+
+            if (!ModelState.IsValid)
+                return BadRequest();
+
+            return Ok(playlistSaved);
         }
 
         [HttpGet("{userId}/comments")]
@@ -182,5 +219,43 @@ namespace FellaudioApp.Controllers
 
             return NoContent();
         }
+
+        [HttpGet("{userId}/recommendations")]
+        [ProducesResponseType(200, Type = typeof(ContentResponseDto))]
+        [ProducesResponseType(400)]
+        public IActionResult GetContentsByUserRecommendations(int userId)
+        {
+            if (!_userRepository.UserExists(userId))
+                return NotFound();
+
+            var users = _userRepository.GetUsers();
+
+            var userRatings = new Dictionary<int, Dictionary<int, int>>();
+            var contentsAdded = new List<Content>();
+
+            foreach (var user in users) 
+            {
+                contentsAdded = _userRepository.GetContentFromUserPlaylists(user.Id).ToList();
+                if(contentsAdded.Count != 0)
+                    userRatings.Add(user.Id, contentsAdded.ToDictionary(c => c.Id, _ => 1));
+            }
+
+            Console.Write(userRatings);
+
+            var contents = _contentRepository.GetContents();
+
+            if (userRatings.Count == 0 || !userRatings.ContainsKey(userId))
+                return Ok(_mapper.Map < List < ContentResponseDto >>(contents));
+
+            var filter = ContentCollaborativeFilter.GetRecommendations(userRatings, userId);
+
+            var recommendedContents = _mapper.Map<List<ContentResponseDto>>(contents.Where(c => filter.Contains(c.Id)));
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            return Ok(recommendedContents);
+        }
+
     }
 }

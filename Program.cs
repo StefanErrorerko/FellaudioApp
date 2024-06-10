@@ -16,7 +16,10 @@ builder.Services.AddCors(opt =>
     opt.AddPolicy(name: AllowSpecificOrigins,
         policy =>
         {
-            policy.WithOrigins("http://localhost:3000");
+            policy.WithOrigins("http://localhost:3000")
+                  .AllowAnyHeader()
+                  .AllowAnyMethod()
+                  .AllowCredentials();
         });
 });
 
@@ -41,6 +44,7 @@ builder.Services.AddControllers().AddJsonOptions(x =>
 {
     // serialize enums as strings in api responses (e.g. Role)
     x.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+  //  x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
 });
 
 var app = builder.Build();
