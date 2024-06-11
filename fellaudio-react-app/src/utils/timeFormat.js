@@ -38,10 +38,12 @@ export function formatDateTimeIntoAgoDate(dateString) {
 }
 
 export function formatDurationTime(timeInSeconds) {
-  const hours = Math.floor(timeInSeconds / 3600)
-  const minutes = Math.floor((timeInSeconds % 3600) / 60)
-  if(hours !== 0)
-    return `${hours} год ${minutes} хв`
+  if(timeInSeconds){
+    const hours = Math.floor(timeInSeconds / 3600)
+    const minutes = Math.floor((timeInSeconds % 3600) / 60)
+    if(hours !== 0)
+      return `${hours} год ${minutes} хв`
 
-  return `${minutes} хв`
+    return `${minutes} хв`
+  }
 }

@@ -15,7 +15,7 @@ const formWaveSurferOptions = ref => ({
   cursorColor: "OrangeRed", 
   dragToSeek: true,
   barAlign: "bottom",
-  barWidth: 5,
+  barWidth: 1,
   barRadius: 0,
   barGap: 1,
   responsive: true,
@@ -26,7 +26,7 @@ const formWaveSurferOptions = ref => ({
   partialRender: true
 })
 
-export default function Waveform({ url }) {
+export default function Waveform({ audioFile }) {
   const waveformRef = useRef(null);
   const wavesurfer = useRef(null);
   const [playing, setPlay] = useState(false);
@@ -35,20 +35,26 @@ export default function Waveform({ url }) {
   const [currentTime, setCurrentTime] = useState(0); 
   const [popupVisible, setPopupVisible] = useState(false);
   const [popupPosition, setPopupPosition] = useState({ x: 0, y: 0 });
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState(null)
 
   // create new WaveSurfer instance
   // On component mount and when url changes
   useEffect(() => {
     setPlay(false);
 
+    console.log("nue", audioFile)
+
     const options = formWaveSurferOptions(waveformRef.current);
     wavesurfer.current = WaveSurfer.create(options);
 
-    wavesurfer.current.load(url).then(() => {
+    wavesurfer.current.load(audioFile).then(() => {
         console.log("successfully loaded")
+        setIsLoading(false)
       })
-      .catch(error => {
-        console.error('Error loading audio file:', error);
+      .catch(err => {
+        console.error('Error loading audio file:', err);
+        setError(err)
       });
 
     wavesurfer.current.on("ready", () => {
@@ -70,7 +76,7 @@ export default function Waveform({ url }) {
     // Removes events, elements and disconnects Web Audio nodes.
     // when component unmount
     return () => wavesurfer.current.destroy();
-  }, [url]);
+  }, [audioFile]);
 
   const handlePlayPause = () => {
     setPlay(!playing);
@@ -79,16 +85,21 @@ export default function Waveform({ url }) {
 
   return (
     <div className="audioBlock">
-      <div>
-        <button onClick={handlePlayPause}>
-          {!playing ? <PlayArrowIcon /> : <PauseIcon />}
-        </button>
-      </div>
+      <div className={`loadingBlock ${isLoading ? "visible" : "hidden"}`}>
+        <span>Аудіофайл завантажується</span>
+        </div>
+      <div className={`waveformBlock ${isLoading ? "hidden" : "visible"}`}>
+        <div>
+          <button onClick={handlePlayPause}>
+            {!playing ? <PlayArrowIcon /> : <PauseIcon />}
+          </button>
+        </div>
       
-      <div id="waveform" ref={waveformRef} >
-        <div className="time">{formatTime(currentTime)}</div>
-        <div className="duration">{formatTime(totalDuration)}</div>
-        <div className="hover"></div>
+        <div id="waveform" ref={waveformRef} >
+          <div className="time">{formatTime(currentTime)}</div>
+          <div className="duration">{formatTime(totalDuration)}</div>
+          <div className="hover"></div>
+        </div>
       </div>
     </div>
   );

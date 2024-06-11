@@ -3,8 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import '../styles/Profile.css';
 import ProfileDummyImage from '../assets/profile-dummy.jpg'
 import ContentContainer from '../components/ContentContainer';
-import Man1 from '../assets/man1.jpg'
-import { FillContentWithImages } from '../utils/tempUtil';
+import { FillContentWithImages, FillContentWithMedia, FillProfileWithImages } from '../utils/tempUtil';
 
 const ApiUrl = process.env.REACT_APP_API_URL
 
@@ -47,12 +46,13 @@ function Profile() {
           signal: abortControllerRef.current.signal
         });
         const userData = await response.json();
+        FillProfileWithImages([userData])
 
         const responseContents = await fetch(`${ApiUrl}/User/${userId}/contents`);
         const contentData = await responseContents.json();
 
         setUser({ ...userData, contents: contentData });
-        FillContentWithImages(contentData)
+        FillContentWithMedia(contentData)
         setContents(contentData)
         console.log(contentData)
       } 
@@ -86,7 +86,7 @@ function Profile() {
       <div className="profileRow">
         {/* Profile image block (square, empty) */}
         <div className="profileImage">
-          <img src={Man1} alt='Profile Image' />
+          <img src={user.image ? user.image : ProfileDummyImage} alt='Profile Image' />
         </div>
         {/* Details block */}
         <div className="detailsBlock">

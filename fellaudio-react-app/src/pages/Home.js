@@ -6,7 +6,7 @@ import HomeFiller1 from '../assets/home_filler4.png'
 import ContentContainer from '../components/ContentContainer';
 import MapSwitch from '../components/Switch'
 import GoogleMap from '../components/Map';
-import { FillContentWithImages } from '../utils/tempUtil';
+import { FillContentWithImages, FillContentWithMedia } from '../utils/tempUtil';
 
 const ApiUrl = process.env.REACT_APP_API_URL
 
@@ -41,7 +41,7 @@ function Home() {
           signal: abortControllerRef.current.signal
         })
         const contentsData = await response.json()
-        FillContentWithImages(contentsData)
+        await FillContentWithMedia(contentsData)
         console.log(contentsData)
         setContents(contentsData)
       } 

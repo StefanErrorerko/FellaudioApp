@@ -27,3 +27,53 @@
     box-shadow: 0px 8px 12px rgba(0, 0, 0, 0.2);
 
   }
+
+  .commentInput {
+    width: 100%;
+    min-height: 30px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    resize: vertical; /* Allow vertical resizing */
+    font-size: 16px;
+    line-height: 1.5;
+    background-color: #ede3cb;
+    box-shadow: inset 0 0 2px rgba(0, 0, 0, 0.2);
+    font-family: 'AvantGardeGothicC';
+
+  }
+  
+  .commentInput:focus {
+    outline: none;
+    border-color: #739072;
+  }
+  
+  .commentButton {
+    font-family: 'FuturaDemiC';
+    margin-top: 10px;
+    padding: 8px 16px;
+    background-color: #4F6F52;
+    color: #ECE3CE;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 40px; /* Set fixed width for circular button */
+    height: 40px; /* Set fixed height for circular button */
+    border-radius: 50%; /* Make button circular */
+
+  }
+  
+  .commentButton:hover {
+    background-color: #3A4D39;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .commentInputContainer {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%; /* Set width to 100% */
+
+  }

@@ -41,7 +41,12 @@
   }
   
   .audioBlock {
+    position: relative;
     
+  }
+
+  .waveformBlock {
+    width: 100%;
     display: flex; /* Display children in a row */
     align-items: center; /* Optionally, vertically center the elements */
     padding: 20px 20px 0px 20px; /* Add padding for spacing */
@@ -49,7 +54,7 @@
     border-bottom: 1px solid gray;
   }
   
-  .audioBlock button {
+  .waveformBlock button {
     width: 50px;
     height: 50px;
     border-radius: 50%;
@@ -60,14 +65,36 @@
     margin: 10px 10px 10px 0px;
   }
   
-  .audioBlock button img {
+  .waveformBlock button img {
     width: 100%; /* Make the image fill the button */
     height: 100%; /* Make the image fill the button */
   }
   
+  .loadingBlock {
+    position: absolute;
+    width: 100%;
+    height: 100%;  
+    display: flex;
+    justify-content: center; /* Center horizontally */
+    align-items: center;    /* Center vertically */
+    border: 1px solid gray;
+    border-radius: 25px;    
+
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.3);
+  }
 
   #waveform {
     flex: 1; /* Make waveform fill remaining space */
+  }
+
+  .loadingBlock.hidden,
+  .waveformBlock.hidden {
+    opacity: 0
+  }
+
+  .loadingBlock.visible,
+  .waveformBlock.visible {
+    opacity: 1;
   }
   
   .detailsRow {

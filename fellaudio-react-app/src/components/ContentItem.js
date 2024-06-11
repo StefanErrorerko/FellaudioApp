@@ -23,9 +23,9 @@ function ContentItem({ contentId=null, image, name, location, time, isEdited=fal
       <div className='contentText'>
         {name}
         <div className='contentData'>
-          <div>
+          <div className='contentLocation'>
             <PlaceIcon />{location}</div>
-          <div><AccessTimeIcon /> {formatDurationTime(time)}</div>
+          { time && <div className='contentDuration'><AccessTimeIcon /> {formatDurationTime(time)}</div>}
         </div>
       </div>
 

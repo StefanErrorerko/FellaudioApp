@@ -1,6 +1,7 @@
 import React, {useState, useRef, useEffect, useContext} from 'react';
 import { useParams } from 'react-router-dom';
 import '../styles/Content.css';
+import tempAudio from '../assets/contentAudios/7.mp3'
 
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import ShareIcon from '@mui/icons-material/Share';
@@ -12,8 +13,9 @@ import Waveform from "../components/Waveform";
 import GoogleMap from '../components/Map'
 import RecommenderContainer from '../components/RecommenderContainer';
 import { UserContext } from '../context/UserContext';
-import { FillContentWithImages } from '../utils/tempUtil';
-import CommentBlock from '../components/CommentContainer';
+import { FillContentWithImages, FillContentWithMedia, GetAudioFiles } from '../utils/tempUtil';
+import CommentBlock from '../components/Comment/CommentContainer';
+import CommentForm from '../components/Comment/CommentForm';
 
 const ApiUrl = process.env.REACT_APP_API_URL
 
@@ -31,6 +33,7 @@ function Content() {
   })
   const [isLiked, setIsLiked] = useState(false);
   const [isDownloaded, setIsDownloaded] = useState(false);
+  const [audiofile, setAudiofile] = useState(null);
 
   const handleLikeClick = async () => {
     if(isLiked)
@@ -114,6 +117,31 @@ function Content() {
   const handleDownloadClick = () => {
     setIsDownloaded(!isDownloaded)
   }
+
+  const handleCommentSubmit = async (text) => {
+    try {
+      let body = {
+        text: text,
+        userId: user.id,
+        contentId: content.id
+      }
+      console.log("check", body)
+
+      const response = await fetch(`${ApiUrl}/Comment`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(body),
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to POST comment')
+      }
+    } catch (err) {
+      setError(err)
+    }
+  };
   
   const abortControllerRef = useRef(null)
 
@@ -129,13 +157,15 @@ function Content() {
           signal: abortControllerRef.current.signal
         });
         const contentData = await response.json();
+        console.log(contentData.comments)
 
         const responsePoints = await fetch(`${ApiUrl}/Content/${contentId}/points`);
         const pointsData = await responsePoints.json();
-        FillContentWithImages([contentData])
-        const sortedPoints = pointsData
-        setContent({ ...contentData, points: sortedPoints });
+        const contentsWithMedia = await FillContentWithMedia([contentData]);
+        setContent(contentsWithMedia[0]);
 
+        const sortedPoints = pointsData
+        setContent(contentData)
         if (sortedPoints.length > 0) {
           setFirstPoint({
             latitude: sortedPoints[2].location.latitude,
@@ -176,8 +206,11 @@ function Content() {
   }
 
   if (error) {
+    console.log(error)
     return <div>Something went wrong. Please try again</div>
   }
+
+  console.log(content)
 
   return (
     <div className="content">
@@ -190,7 +223,7 @@ function Content() {
       </div>
       <div className='contentContainer'>
         <div className='contentAudio'>
-          <Waveform url="https://www.mfiles.co.uk/mp3-downloads/brahms-st-anthony-chorale-theme-two-pianos.mp3" />
+        {content.audioFile && <Waveform audioFile={content.audioFile.data} />}
         </div>
         <div className='contentActions'>
           <button className={isDownloaded ? 'clickedButton' : 'unclickedButton'} onClick={() => handleDownloadClick()}>
@@ -220,6 +253,9 @@ function Content() {
               comment={comment}
              />
             ))}
+          <CommentForm 
+            onSubmit={handleCommentSubmit}
+          />
           </div>
           <div className="divider"></div>
           <div className="mapBlock"> 

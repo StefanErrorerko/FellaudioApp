@@ -51,7 +51,7 @@
     margin: 10px 0px 0px 0px;
   }
 
-  .contentData div:last-child {
+  .contentData.contentDuration {
     text-align: right;
     margin-right: 5px;
   }
