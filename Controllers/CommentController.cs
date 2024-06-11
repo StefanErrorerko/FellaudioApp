@@ -78,7 +78,7 @@ namespace FellaudioApp.Controllers
             commentMap.User = _userRepository.GetUser(userId);
             commentMap.Content = _contentRepository.GetContent(contentId);
 
-            if (commentMap.CreatedAt == DateTime.MinValue)
+            if (commentMap.CreatedAt == DateTime.MinValue || commentMap.CreatedAt == null)
                 commentMap.CreatedAt = DateTime.UtcNow;
 
             if (!_commentRepository.CreateComment(commentMap))

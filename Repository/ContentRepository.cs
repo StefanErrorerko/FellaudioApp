@@ -25,6 +25,7 @@ namespace FellaudioApp.Repository
                 .Include(c => c.Points)
                 .Include(c => c.AudioFile)
                 .Include(c => c.Comments)
+                .ThenInclude(comment => comment.User)
                 .FirstOrDefault();
         }
         public ICollection<Content> GetContents()
@@ -34,6 +35,7 @@ namespace FellaudioApp.Repository
                 .Include(c => c.Points)
                 .Include(c => c.AudioFile)
                 .Include(c => c.Comments)
+                .ThenInclude(comment => comment.User) 
                 .OrderBy(c => c.Id)
                 .ToList();
         }
