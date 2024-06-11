@@ -4,9 +4,11 @@ export function formatDateTimeIntoDate(dateString) {
 }
 
 export function formatDateTimeIntoAgoDate(dateString) {
-  const now = new Date();
+  const now = new Date()
+  const nowUTC = new Date( now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), now.getUTCHours(), now.getUTCMinutes(), now.getUTCSeconds() );
   const date = new Date(dateString);
-  const diffInSeconds = Math.floor((now - date) / 1000);
+  
+  const diffInSeconds = Math.floor((nowUTC - date) / 1000);
 
   const secondsInMinute = 60;
   const secondsInHour = secondsInMinute * 60;
@@ -16,26 +18,24 @@ export function formatDateTimeIntoAgoDate(dateString) {
 
   if (diffInSeconds >= secondsInYear) {
     const years = Math.floor(diffInSeconds / secondsInYear);
-    return `${years}y. ago`;
+    return `${years} р. тому`;
   } else if (diffInSeconds >= secondsInMonth) {
     const months = Math.floor(diffInSeconds / secondsInMonth);
-    return `${months}m. ago`;
+    return `${months} міс. тому`;
   } else if (diffInSeconds >= secondsInDay) {
     const days = Math.floor(diffInSeconds / secondsInDay);
-    if (days === 1) {
-      return 'yesterday';
-    }
-    return `${days}d. ago`;
+    return days === 1 ? 'вчора' : `${days} д. тому`;
   } else if (diffInSeconds >= secondsInHour) {
     const hours = Math.floor(diffInSeconds / secondsInHour);
-    return `${hours}h. ago`;
+    return `${hours} год тому`;
   } else if (diffInSeconds >= secondsInMinute) {
     const minutes = Math.floor(diffInSeconds / secondsInMinute);
-    return `${minutes}min ago`;
+    return `${minutes} хв тому`;
   } else {
-    return `${diffInSeconds}sec ago`;
+    return `${diffInSeconds} сек тому`;
   }
 }
+
 
 export function formatDurationTime(timeInSeconds) {
   if(timeInSeconds){

@@ -1,21 +1,21 @@
 import React, {useState, useRef, useEffect, useContext} from 'react';
 import { useParams } from 'react-router-dom';
-import '../styles/Content.css';
-import tempAudio from '../assets/contentAudios/7.mp3'
+import '../../styles/Content.css';
 
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import ShareIcon from '@mui/icons-material/Share';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
-import DummyImage from '../assets/dummy.jpg'
+import DummyImage from '../../assets/dummy.jpg'
 
-import Waveform from "../components/Waveform";
-import GoogleMap from '../components/Map'
-import RecommenderContainer from '../components/RecommenderContainer';
-import { UserContext } from '../context/UserContext';
-import { FillContentWithImages, FillContentWithMedia, GetAudioFiles } from '../utils/tempUtil';
-import CommentBlock from '../components/Comment/CommentContainer';
-import CommentForm from '../components/Comment/CommentForm';
+import Waveform from "../../components/Waveform";
+import GoogleMap from '../../components/Map'
+import RecommenderContainer from '../../components/RecommenderContainer';
+import { UserContext } from '../../context/UserContext';
+import { FillContentWithImages, FillContentWithMedia, GetAudioFiles } from '../../utils/tempUtil';
+import CommentBlock from '../../components/Comment/CommentContainer';
+import CommentForm from '../../components/Comment/CommentForm';
+import { sortComments } from './utils/contentUtils';
 
 const ApiUrl = process.env.REACT_APP_API_URL
 
@@ -34,6 +34,8 @@ function Content() {
   const [isLiked, setIsLiked] = useState(false);
   const [isDownloaded, setIsDownloaded] = useState(false);
   const [audiofile, setAudiofile] = useState(null);
+
+  const commentsContainerRef = useRef(null);
 
   const handleLikeClick = async () => {
     if(isLiked)
@@ -125,7 +127,6 @@ function Content() {
         userId: user.id,
         contentId: content.id
       }
-      console.log("check", body)
 
       const response = await fetch(`${ApiUrl}/Comment`, {
         method: 'POST',
@@ -157,7 +158,6 @@ function Content() {
           signal: abortControllerRef.current.signal
         });
         const contentData = await response.json();
-        console.log(contentData.comments)
 
         const responsePoints = await fetch(`${ApiUrl}/Content/${contentId}/points`);
         const pointsData = await responsePoints.json();
@@ -184,6 +184,8 @@ function Content() {
       const contentsData = await contentResponse.json()
 
       setIsLiked(contentsData.some(c => c.id == contentData.id))
+
+      commentsContainerRef.current.scrollTop = commentsContainerRef.current.scrollHeight;
       } 
       catch (err) {
         if (err.name === 'AbortError') {
@@ -246,8 +248,8 @@ function Content() {
           <p>{content.description}</p>
         </div>
         <div className="detailsRow">
-          <div className="commentsContainer">
-          {content.comments?.map((comment, key) => (
+          <div className="commentsContainer" ref={commentsContainerRef}>
+          {sortComments(content.comments)?.map((comment, key) => (
              <CommentBlock 
               key={key}
               comment={comment}

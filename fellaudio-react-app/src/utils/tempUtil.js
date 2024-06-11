@@ -34,9 +34,7 @@ export function FillContentWithImages(contents) {
 export function FillProfileWithImages(profiles) {
     profiles.forEach(profile => {
         const image = getImageById(profile.id, profileImages);
-        if (image) {
             profile.image = image;
-        }
       });
     
       return profiles;

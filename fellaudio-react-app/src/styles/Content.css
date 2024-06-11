@@ -203,3 +203,22 @@
   #waveform:hover .hover {
     opacity: 1;
   }
+
+  .commentsContainer {
+    overflow: auto; /* Enable vertical scrolling */
+    max-height: 400px;
+  }
+
+  /* Ensure that the scroll position is at the bottom by default */
+.commentsContainer::-webkit-scrollbar {
+  width: 10px;
+}
+
+.commentsContainer::-webkit-scrollbar-thumb {
+  background: #888; 
+  border-radius: 5px;
+}
+
+.commentsContainer::-webkit-scrollbar-thumb:hover {
+  background: #555; 
+}

@@ -25,6 +25,7 @@
     border-radius: 50%;
     border: 0.1em solid #595959;
     cursor: pointer;
+    object-fit: cover; /* This will crop the image to fit the container */
   }
   
   .commentRightSide {

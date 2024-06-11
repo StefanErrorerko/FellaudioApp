@@ -10,7 +10,7 @@ import NavBar from './components/Navbar';
 import Home from './pages/Home';
 import About from './pages/About';
 import Login from './pages/Login';
-import Content from './pages/Content';
+import Content from './pages/content/Content';
 import Profile from './pages/Profile';
 import Library from './pages/Library';
 import ScrollToTop from './utils/ScrollToTop';
