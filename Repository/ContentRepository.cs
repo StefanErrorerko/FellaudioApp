@@ -23,6 +23,7 @@ namespace FellaudioApp.Repository
                 .Where(c => c.Id == id)
                 .Include(c => c.User)
                 .Include(c => c.Points)
+                .ThenInclude(comment => comment.Location)
                 .Include(c => c.AudioFile)
                 .Include(c => c.Comments)
                 .ThenInclude(comment => comment.User)
@@ -33,6 +34,7 @@ namespace FellaudioApp.Repository
             return _context.Contents
                 .Include(c => c.User)
                 .Include(c => c.Points)
+                .ThenInclude(comment => comment.Location)
                 .Include(c => c.AudioFile)
                 .Include(c => c.Comments)
                 .ThenInclude(comment => comment.User) 

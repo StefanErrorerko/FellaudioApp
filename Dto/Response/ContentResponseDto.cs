@@ -10,6 +10,7 @@ namespace FellaudioApp.Dto.Response
         public string Description { get; set; }
         public ContentStatus Status { get; set; }
         public DateTime CreatedAt { get; set; }
+        public string Area { get; set; }
         public UserResponseDto User { get; set; }
         public List<PointResponseDto> Points { get; set; }
         public List<CommentResponseDto> Comments { get; set; }

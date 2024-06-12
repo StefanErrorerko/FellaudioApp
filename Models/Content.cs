@@ -10,6 +10,7 @@ namespace FellaudioApp.Models
         public ContentStatus Status { get; set; }
         public DateTime CreatedAt { get; set; }
         public AudioFile AudioFile { get; set; }
+        public string Area { get; set; }
         public User User { get; set; }
         public ICollection<Point> Points { get; set; }
         public ICollection<Comment> Comments { get; set; }

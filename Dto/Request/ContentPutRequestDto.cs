@@ -7,6 +7,7 @@ namespace FellaudioApp.Dto.Request
     {
         public string? Title { get; set; }
         public string? Description { get; set; }
+        public string Area { get; set; }
         // чи треба?
         public ContentStatus? Status { get; set; }
     }
