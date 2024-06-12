@@ -15,7 +15,8 @@ import { UserContext } from '../../context/UserContext';
 import { FillContentWithImages, FillContentWithMedia, GetAudioFiles } from '../../utils/tempUtil';
 import CommentBlock from '../../components/Comment/CommentContainer';
 import CommentForm from '../../components/Comment/CommentForm';
-import { sortComments } from './utils/contentUtils';
+import { sortComments, likeContent, dislikeContent, sortPoints } from './utils/contentUtils';
+import CommentFormDisabled from '../../components/Comment/CommentFormDisabled';
 
 const ApiUrl = process.env.REACT_APP_API_URL
 
@@ -28,8 +29,12 @@ function Content() {
   const [content, setContent] = useState([])
   const [page, setPage] = useState(0)
   const [firstPoint, setFirstPoint] = useState({
-    latitude: 50.15,
-    longitude: 30.47
+    location: {
+      latitude: 50.15,
+      longitude: 30.47,
+      name: "default"
+    }
+    
   })
   const [isLiked, setIsLiked] = useState(false);
   const [isDownloaded, setIsDownloaded] = useState(false);
@@ -37,83 +42,16 @@ function Content() {
 
   const commentsContainerRef = useRef(null);
 
-  const handleLikeClick = async () => {
-    if(isLiked)
-      await dislikeContent()
-    if(!isLiked)
-      await likeContent()
-    setIsLiked(!isLiked)
-  }
-
-  const likeContent = async ( ) => {
-    try {
-      const playlistResponse = await fetch(`${ApiUrl}/User/${user.id}/playlist/saved`)
-      const playlistSaved =  await playlistResponse.json()
-
-      if(playlistSaved === null){
-
-        const playlistCreateResponse = await fetch(`${ApiUrl}/Playlist`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            description: 'Ваш плейлист вподобаного',
-            type: 'Saved',
-            userId: user.Id
-          })
-        })
-
-        playlistSaved = await playlistCreateResponse.json()
-      }
-      
-      const response = await fetch(`${ApiUrl}/Playlist/add/content`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          playlistId: playlistSaved.id,
-          contentId: content.id,
-        }),
-      })
-
-      if (response.status !== 204) {
-        throw new Error('Failed to update playlist')
-      }
-      
+  const handleLikeClick = async (user) => {
+    try {        
+      if(isLiked)
+        await dislikeContent(user, content)
+      if(!isLiked)
+        await likeContent(user, content)
     } catch (err) {
       setError(err)
     }
-  }
-
-  const dislikeContent = async () => {
-    try {
-      const playlistResponse = await fetch(`${ApiUrl}/User/${user.id}/playlist/saved`)
-      const playlistSaved =  await playlistResponse.json()
-
-      try {
-        const response = await fetch(`${ApiUrl}/Playlist/${playlistSaved.id}/content/${contentId}`, {
-          method: 'DELETE',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
-  
-        if (response.status !== 204) {
-          throw new Error('Failed to delete content from playlist');
-        }
-        console.log('Content successfully deleted from playlist');
-      } catch (err) {
-        if(err.name === 'AbortError'){
-          console.log("Aborted")
-          return
-        }
-        setError(err)
-      }
-    } catch(err) {
-      setError(err)
-    }
+    setIsLiked(!isLiked)
   }
 
   const handleDownloadClick = () => {
@@ -163,29 +101,31 @@ function Content() {
         const pointsData = await responsePoints.json();
         const contentsWithMedia = await FillContentWithMedia([contentData]);
         setContent(contentsWithMedia[0]);
-
-        const sortedPoints = pointsData
+        const sortedPoints = sortPoints(pointsData)
+        
         setContent(contentData)
+        console.log("yaaa", sortedPoints)
+        console.log("yaaaaa", sortedPoints[0])
         if (sortedPoints.length > 0) {
-          setFirstPoint({
-            latitude: sortedPoints[2].location.latitude,
-            longitude: sortedPoints[2].location.longitude,
-          });
+          setFirstPoint(sortedPoints[0]);
         }
 
-        const playlistResponse = await fetch(`${ApiUrl}/User/${user.id}/playlist/saved`, {
-          signal: abortControllerRef.current.signal
-        })
-      const playlistData = await playlistResponse.json()
-      
-      const contentResponse = await fetch(`${ApiUrl}/Playlist/${playlistData.id}/content`, {
-        signal: abortControllerRef.current.signal
-      })
-      const contentsData = await contentResponse.json()
+        // if user logged in
+        if(user) {
+          const playlistResponse = await fetch(`${ApiUrl}/User/${user.id}/playlist/saved`, {
+            signal: abortControllerRef.current.signal
+          })
+          const playlistData = await playlistResponse.json()
+        
+          const contentResponse = await fetch(`${ApiUrl}/Playlist/${playlistData.id}/content`, {
+            signal: abortControllerRef.current.signal
+          })
+          const contentsData = await contentResponse.json()
 
-      setIsLiked(contentsData.some(c => c.id == contentData.id))
+          setIsLiked(contentsData.some(c => c.id == contentData.id))
+        }
 
-      commentsContainerRef.current.scrollTop = commentsContainerRef.current.scrollHeight;
+        commentsContainerRef.current.scrollTop = commentsContainerRef.current.scrollHeight;
       } 
       catch (err) {
         if (err.name === 'AbortError') {
@@ -211,13 +151,15 @@ function Content() {
     console.log(error)
     return <div>Something went wrong. Please try again</div>
   }
-
-  console.log(content)
-
+  
   return (
     <div className="content">
       <div className="imageContainer">
-        <img src={content.image ? content.image : DummyImage} alt={content.name} className="contentImage" />
+        <img 
+          src={content.image ? content.image : DummyImage} 
+          alt={content.name} 
+          className="contentImage" 
+        />
       </div>
       <div className='contentTitleBackground'></div>
       <div className='contentTitle'>
@@ -235,16 +177,19 @@ function Content() {
               <div><ArrowDownwardIcon /><p>Завантажити</p></div>
             )}
           </button>
-          <button className={isLiked ? 'clickedButton' : 'unclickedButton'} onClick={() => handleLikeClick()}>
-            {isLiked ? (
-              <div><FavoriteIcon /><p>Збережено</p></div>
-            ) : (
-              <div><FavoriteBorderIcon /><p>Зберегти</p></div>
-            )}
-          </button>
+          {user &&(
+            <button className={isLiked ? 'clickedButton' : 'unclickedButton'} onClick={() => handleLikeClick(user)}>
+              {isLiked ? (
+                <div><FavoriteIcon /><p>Збережено</p></div>
+              ) : (
+                <div><FavoriteBorderIcon /><p>Зберегти</p></div>
+              )}
+            </button>
+          )}
           <button className='unclickedButton'><ShareIcon /><p>Поділитись</p></button>
         </div>
         <div className='contentDescription'>
+          <h2>Опис екскурсії:</h2>
           <p>{content.description}</p>
         </div>
         <div className="detailsRow">
@@ -255,19 +200,24 @@ function Content() {
               comment={comment}
              />
             ))}
-          <CommentForm 
-            onSubmit={handleCommentSubmit}
-          />
+          {user ? (
+            <CommentForm 
+              onSubmit={handleCommentSubmit}
+            />
+          ) : (
+            <CommentFormDisabled />
+          )}
           </div>
           <div className="divider"></div>
           <div className="mapBlock"> 
+            {console.log("first", firstPoint)}
             <GoogleMap 
             markers={[
               {
-                lat: firstPoint.latitude, 
-                lng: firstPoint.longitude,
-                title: content.title,
-                location: content.description,
+                lat: firstPoint.location.latitude, 
+                lng: firstPoint.location.longitude,
+                title: firstPoint.location.name === "default" ? content.title : firstPoint.location.name,
+                location: content.area,
                 time: content.audioFile !== null ? content.audioFile?.durationInSeconds : 0
               }
             ]}
@@ -278,7 +228,9 @@ function Content() {
       </div>
       <hr className="solid" />
       {user &&(
-        <RecommenderContainer />
+        <RecommenderContainer
+          currentContent = {content}
+        />
       )}
     </div>
   );

@@ -43,8 +43,6 @@ export default function Waveform({ audioFile }) {
   useEffect(() => {
     setPlay(false);
 
-    console.log("nue", audioFile)
-
     const options = formWaveSurferOptions(waveformRef.current);
     wavesurfer.current = WaveSurfer.create(options);
 

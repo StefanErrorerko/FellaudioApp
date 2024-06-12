@@ -152,6 +152,12 @@
 .contentDescription {
   text-align: left;
 }
+
+.contentDescription p {
+  font-family: 'AvantGardeGothicC';
+  letter-spacing: 1px;
+
+}
   
   
   

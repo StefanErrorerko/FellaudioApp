@@ -24,7 +24,6 @@ function NavBar({ isAuthenticated, toggleLoginPage, handleLogout }) {
   };
 
   useEffect(() => {
-    console.log("nu")
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);

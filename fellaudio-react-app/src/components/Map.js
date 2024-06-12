@@ -1,13 +1,14 @@
 import React, { useEffect, useRef, useState } from 'react';
-import ContentItemLittle from './ContentItemForMap';
+import ContentItemForMap from './ContentItemForMap';
 import { renderToString } from 'react-dom/server';
 import '../styles/Map.css'
 
 const apiKey = process.env.REACT_APP_MAP_API_KEY;
 
-const GoogleMap = ({ markers, height }) => {
+const GoogleMap = ({ contents, height }) => {
   const mapRef = useRef(null);
   const [infoWindows, setInfoWindows] = useState([]);
+  console.log(contents)
 
   useEffect(() => {
     const loadGoogleMapScript = () => {
@@ -22,18 +23,17 @@ const GoogleMap = ({ markers, height }) => {
     const initializeMap = () => {
       const map = new window.google.maps.Map(mapRef.current, {
         zoom: 14,
-        center: markers?.length ? { lat: markers[0].lat, lng: markers[0].lng } : { lat: 50.45, lng: 30.47 }
+        center: { lat: 50.450912, lng: 30.522621 }
       });
     
-      const newInfoWindows = markers?.map((marker, index) => {
+      const newInfoWindows = contents?.map((content, index) => {
         const infoWindow = new window.google.maps.InfoWindow({
           content: renderToString(
-            <ContentItemLittle
+            <ContentItemForMap
               key={index}
-              image={marker.image}
-              name={marker.title}
-              location={marker.location}
-              time={marker.time}
+              name={content.title}
+              location={content.area}
+              time={content.time}
             />
           )
         });
@@ -48,9 +48,12 @@ const GoogleMap = ({ markers, height }) => {
         };
     
         const googleMarker = new window.google.maps.Marker({
-          position: { lat: marker.lat, lng: marker.lng },
+          position: { 
+            lat: content.points[0].location.latitude, 
+            lng: content.points[0].location.longitude
+          },
           map: map,
-          title: marker.name,
+          title: content.title,
           icon: markerIcon
         });
     
@@ -77,7 +80,7 @@ const GoogleMap = ({ markers, height }) => {
     return () => {
       // Cleanup (if needed)
     };
-  }, [markers]);
+  }, [contents]);
 
   return (
     <div className='map'>

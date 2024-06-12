@@ -6,7 +6,7 @@ function getImageById(id, imageArray) {
   try {
     return imageArray(`./${id}.jpg`);
   } catch (err) {
-    console.error(`Image for id ${id} not found`);
+   // console.error(`Image for id ${id} not found`);
     return null;
   }
 }
@@ -15,7 +15,7 @@ function getAudioFileById(id, audioArray) {
     try {
       return audioArray(`./${id}.mp3`);
     } catch (err) {
-      console.error(`AudioFile for id ${id} not found`);
+      //console.error(`AudioFile for id ${id} not found`);
       return null;
     }
   }
@@ -92,7 +92,7 @@ export function FillContentWithMedia(contents) {
                     };
                 });
             } catch (error) {
-                console.error(`Error loading audio for content ${content.id}:`, error);
+               console.error(`Error loading audio for content ${content.id}:`, error);
             }
         }
         else{

@@ -3,6 +3,7 @@
     color: #262424;
     text-align: left;
     margin: 8px;
+    gap: 8px;
   }
   .contentItemLittle:hover {
     cursor: pointer;
@@ -16,13 +17,21 @@
 
   .contentTextLittle {
     letter-spacing: 1px;
-    max-width: calc(100% - 40px); /* Adjust margin */
+    max-width: calc(100% - 40px);
 
     font-size: 20px;
   }
 
   .contentDataLittle {
     font-size: 12px;
+  }
+
+  .contentDataLittle div {
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    gap: 2px;
+    margin: 4px 0px;
   }
 
 

@@ -5,7 +5,7 @@ import { FillContentWithImages } from '../utils/tempUtil';
 
 const ApiUrl = process.env.REACT_APP_API_URL
 
-function RecommenderContainer() {
+function RecommenderContainer({currentContent}) {
     const { user } = useContext(UserContext);
     const [contents, setContents] = useState([])
     const [isLoading, setIsLoading] = useState(false)
@@ -19,6 +19,8 @@ function RecommenderContainer() {
           try {
             const response = await fetch(`${ApiUrl}/User/${user.id}/recommendations`);    
             let contents = await response.json()
+            console.log("ot", currentContent.id)
+            contents = contents.filter(c => c.id != currentContent.id)
             contents = contents.slice(0, 3)
             FillContentWithImages(contents)
             setContents(contents)
@@ -37,7 +39,7 @@ function RecommenderContainer() {
         };
     
         fetchContent();
-      }, [user]); 
+      }, [user, currentContent]); 
 
       if (isLoading) {
         return <div>Loading...</div>
@@ -52,7 +54,7 @@ function RecommenderContainer() {
     <div className='recommenderContainer'>
         <span>Вам може сподобатися:</span>
         <ContentContainer
-        contents={contents}
+          contents={contents}
         />
     </div>
   )
