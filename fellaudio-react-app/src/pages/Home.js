@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react"
 import DummyImage from '../assets/dummy.jpg'
 import HomeFiller1 from '../assets/home_filler4.png'
 import ContentContainer from '../components/ContentContainer';
-import MapSwitch from '../components/Switch'
+import SwitchContentMap from '../components/SwitchContentMap'
 import GoogleMap from '../components/Map';
 import { FillContentWithImages, FillContentWithMedia } from '../utils/tempUtil';
 import { useNavigate } from 'react-router-dom';
@@ -88,7 +88,7 @@ function Home() {
       <div className='searchArea' ref={searchAreaRef}>
         <input type='text' placeholder='Уведіть запит...' />
         <button>ПОШУК</button>
-        <MapSwitch 
+        <SwitchContentMap 
           isSwitchOn={isSwitchOn}
           handleSwitchChange={handleSwitchChange}
         />

@@ -154,6 +154,7 @@ function App() {
             <Route path='/about' element={<About />} />
             <Route path='/login' element={<Login onLogin={handleLogin} />} />
             <Route path="/content/:contentId" element={<Content />} />
+            <Route path="/content" element={<Content />} />
             <Route path="/profile/:userId" element={<Profile />} />
             <Route path="/library" element={<Library />} />
             <Route path="/playlist/:playlistId" element={<Playlist />} />

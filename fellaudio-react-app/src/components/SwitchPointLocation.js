@@ -1,9 +1,10 @@
 import React from 'react'
 import Switch from 'react-switch';
-import MapIcon from '@mui/icons-material/Map';
-import GridViewIcon from '@mui/icons-material/GridView';
+import EditLocationAltIcon from '@mui/icons-material/EditLocationAlt';
+import AddLocationAltIcon from '@mui/icons-material/AddLocationAlt';
+import Add from '@mui/icons-material/Add';
 
-function MapSwitch({isSwitchOn, handleSwitchChange}) {
+function SwitchPointLocation({isSwitchOn, handleSwitchChange}) {
   return (
     <div className="switchContainer">
           <label>
@@ -15,9 +16,10 @@ function MapSwitch({isSwitchOn, handleSwitchChange}) {
               offHandleColor="#4F6F52"
               onHandleColor="#4F6F52"
               box-shadow='inset 0 2px 5px rgba(0, 0, 0, 0.3)'
-              height={40} 
-              width={80} 
+              height={30} 
+              width={60} 
               activeBoxShadow='0 0 2px 3px #aaaaaa'
+              handleDiameter={25}
               
               uncheckedIcon={
                 <div style={{
@@ -29,7 +31,7 @@ function MapSwitch({isSwitchOn, handleSwitchChange}) {
                   color: '#4F6F52',
                   paddingRight: 2
                 }}>
-                  <MapIcon />
+                  <EditLocationAltIcon />
                 </div>
               }
               checkedIcon={
@@ -42,7 +44,7 @@ function MapSwitch({isSwitchOn, handleSwitchChange}) {
                   color: '#4F6F52',
                   paddingRight: 2
                 }}>
-                  <GridViewIcon />
+                  <AddLocationAltIcon />
                 </div>
               }
             />
@@ -51,4 +53,4 @@ function MapSwitch({isSwitchOn, handleSwitchChange}) {
   )
 }
 
-export default MapSwitch
+export default SwitchPointLocation
