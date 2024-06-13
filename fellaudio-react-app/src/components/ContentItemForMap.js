@@ -4,21 +4,21 @@ import PlaceIcon from '@mui/icons-material/Place';
 import '../styles/ContentItemForMap.css'
 import { formatDurationTime } from '../utils/timeFormat';
 
-function ContentItemForMap({ name, location, time }) {
+function ContentItemForMap({ content, isClickable=false }) {
     return (
-        <div className='contentItemLittle'>    
+        <div className={`contentItemLittle ${isClickable && "clickable"}`}>    
           <div className='contentTextLittle'>
-            {name}
+            {content.title}
             <div className='contentDataLittle'>
               <div>
                 <PlaceIcon />
-                <span>{location}</span>
+                <span>{content.area}</span>
               </div>
-              {time && (
+              {content.audioFile.durationInSeconds && (
                 <div>
                   <AccessTimeIcon /> 
                   <span>
-                    {formatDurationTime(time)}
+                    {formatDurationTime(content.audioFile.durationInSeconds)}
                   </span>
                 </div>
               )}

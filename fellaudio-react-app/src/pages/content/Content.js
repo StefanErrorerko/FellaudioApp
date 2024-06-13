@@ -210,19 +210,14 @@ function Content() {
           </div>
           <div className="divider"></div>
           <div className="mapBlock"> 
-            {console.log("first", firstPoint)}
-            <GoogleMap 
-            markers={[
-              {
-                lat: firstPoint.location.latitude, 
-                lng: firstPoint.location.longitude,
-                title: firstPoint.location.name === "default" ? content.title : firstPoint.location.name,
-                location: content.area,
-                time: content.audioFile !== null ? content.audioFile?.durationInSeconds : 0
-              }
-            ]}
-            height="400px"
-            />        
+            {content.length !== 0 && (
+              <GoogleMap 
+                contents={[content]}
+                height="400px"
+                center={content.points[0].location}
+                />  
+            )}
+                  
           </div>
         </div>
       </div>

@@ -7,6 +7,7 @@ import ContentContainer from '../components/ContentContainer';
 import MapSwitch from '../components/Switch'
 import GoogleMap from '../components/Map';
 import { FillContentWithImages, FillContentWithMedia } from '../utils/tempUtil';
+import { useNavigate } from 'react-router-dom';
 
 const ApiUrl = process.env.REACT_APP_API_URL
 
@@ -17,6 +18,7 @@ function Home() {
   const [page, setPage] = useState(0)
   const searchAreaRef = useRef(null);
   const [isSwitchOn, setIsSwitchOn] = useState(true);
+  const navigate = useNavigate()
     
   const abortControllerRef = useRef(null)
 
@@ -28,6 +30,11 @@ function Home() {
   const handleSwitchChange = (checked) => {
     setIsSwitchOn(checked);
   }
+
+  const handleContentItemClick = (contentId) => {
+    console.log("popab")
+    navigate(`/content/${contentId}`);
+  };
 
   useEffect(() => {
     const fetchContents = async () => {
@@ -93,8 +100,10 @@ function Home() {
       ) : (
         <div className="mapContainer">
           <GoogleMap 
-          contents={contents}
-          height="800px"
+            contents={contents}
+            height="800px"
+            isClickableWindows={true}
+            onItemClick={handleContentItemClick}
           />
         </div>
       )}

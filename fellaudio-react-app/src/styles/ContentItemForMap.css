@@ -5,7 +5,7 @@
     margin: 8px;
     gap: 8px;
   }
-  .contentItemLittle:hover {
+  .contentItemLittle.clickable:hover {
     cursor: pointer;
   }
   

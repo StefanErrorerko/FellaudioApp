@@ -4,11 +4,11 @@ import { renderToString } from 'react-dom/server';
 import '../styles/Map.css'
 
 const apiKey = process.env.REACT_APP_MAP_API_KEY;
+const defaultPoint = { latitude: 50.450912, longitude: 30.522621 }
 
-const GoogleMap = ({ contents, height }) => {
+const GoogleMap = ({ contents, height, center, isClickableWindows=false, onItemClick= null }) => {
   const mapRef = useRef(null);
-  const [infoWindows, setInfoWindows] = useState([]);
-  console.log(contents)
+  const [infoWindows, setInfoWindows] = useState([])
 
   useEffect(() => {
     const loadGoogleMapScript = () => {
@@ -20,20 +20,25 @@ const GoogleMap = ({ contents, height }) => {
       document.head.appendChild(script);
     };
 
+    console.log("nu", center)
+
     const initializeMap = () => {
       const map = new window.google.maps.Map(mapRef.current, {
         zoom: 14,
-        center: { lat: 50.450912, lng: 30.522621 }
+        center: { 
+          lat: center ? center.latitude : defaultPoint.latitude, 
+          lng: center ? center.longitude : defaultPoint.longitude
+        }
       });
-    
+      console.log("otake", onItemClick)
+
       const newInfoWindows = contents?.map((content, index) => {
         const infoWindow = new window.google.maps.InfoWindow({
           content: renderToString(
             <ContentItemForMap
               key={index}
-              name={content.title}
-              location={content.area}
-              time={content.time}
+              content={content}
+              isClickable={isClickableWindows}
             />
           )
         });
