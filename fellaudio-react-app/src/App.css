@@ -37,6 +37,13 @@ body.no-scroll {
   pointer-events: none;
 }
 
+input::placeholder {
+  color: #999999;
+  font-style: italic; /* Placeholder text style */
+  font-family: 'AvantGardeGothicC';
+  font-weight: normal;
+}
+
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-spin infinite 20s linear;
@@ -86,3 +93,5 @@ body {
     transform: rotate(360deg);
   }
 }
+
+

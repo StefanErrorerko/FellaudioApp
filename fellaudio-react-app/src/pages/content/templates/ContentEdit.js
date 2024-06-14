@@ -233,8 +233,8 @@ function ContentEdit() {
   }, []);
 
   return (
-    <div className="contentEdit">
-      <form onSubmit={handleSubmit}>
+
+      <form onSubmit={handleSubmit} className="contentEdit">
         <div className="imageContainer">
           <h1>Новий контент</h1>
           <span>Завантажте обкладинку:</span>
@@ -291,14 +291,12 @@ function ContentEdit() {
                   placeholder="Широта"
                   pattern="(\d*\.?\d+)?"
                   onInput={handleFloatInput}
-                  
                 />
                 <input
                   type="text"
                   placeholder="Довгота"
                   pattern="(\d*\.?\d+)?"
                   onInput={handleFloatInput}
-                  
                 />
               </div>
               <select
@@ -324,7 +322,6 @@ function ContentEdit() {
           {isLoading ? 'Створення...' : 'Створити контент'}
         </button>
       </form>
-    </div>
   );
 }
 

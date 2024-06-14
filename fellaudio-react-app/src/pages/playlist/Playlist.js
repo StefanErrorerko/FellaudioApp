@@ -137,7 +137,7 @@ function Playlist() {
                 <p className='playlistAuthor'>{playlist.user?.firstname} {playlist.user?.lastname}</p>
             </div>
             <div className='rightSide'>
-                <p>Створено {formatDateTimeIntoDate("2024-03-27T19:00:46.7244978")}</p>
+                <p>Створено {formatDateTimeIntoDate(playlist.createdAt)}</p>
             </div>
         </div>
         <div className='secondRow'>
@@ -155,12 +155,17 @@ function Playlist() {
         </div>
       </div>
       <hr className="solid" />
-      <ContentContainer 
-        contents={contents}
-        isEdited={isEditing}
-        playlist={playlist}
-        onEditAction={deleteContent}
-      />
+      {contents.length === 0 ? (
+        <div>Тут ще нічого немає</div>
+      ) : (
+        <ContentContainer 
+          contents={contents}
+          isEdited={isEditing}
+          playlist={playlist}
+          onEditAction={deleteContent}
+        />        
+      )}
+
 
       <FloatingEditButton 
         handleOnClick={handleEditClick}

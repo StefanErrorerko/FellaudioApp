@@ -49,6 +49,8 @@ function App() {
     //CryptoJS.SHA256(password).toString(CryptoJS.enc.Hex);
     password
 
+    console.log("priinav", `${email} ${password}/`)
+
     const fetchContents = async () => {
       abortControllerRef.current?.abort();
       abortControllerRef.current = new AbortController();
@@ -77,15 +79,39 @@ function App() {
         console.log("response", responseUser);
         setUser(user);
         console.log("user", user)
-        const responsePlaylist = await fetch(`${ApiUrl}/User/${user?.id}/playlist/saved`, {
+
+        const responsePlaylist = await fetch(`${ApiUrl}/User/${user.id}/playlist/saved`, {
           signal: abortControllerRef.current.signal
-        })
+        });
+        let playlistSaved
+        if (responsePlaylist.ok) {
+            playlistSaved = responsePlaylist.json()
+        }
+          console.log("kkk", playlistSaved)
+
+          if(!playlistSaved){
+              const playlistCreateResponse = await fetch(`${ApiUrl}/Playlist`, {
+                  method: 'POST',
+                  headers: {
+                      'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({
+                      description: 'Ваш плейлист вподобаного',
+                      type: 'Saved',
+                      userId: user.id
+                  }),
+                  signal: abortControllerRef.current.signal
+              });
+              playlistSaved = await playlistCreateResponse.json();
+              console.log("mmm", playlistSaved)
+
+          }
 
         if (!responsePlaylist.ok) {
           throw new Error(`Error: ${responsePlaylist.status} ${responsePlaylist.statusText}`);
         }
 
-        const playlist = await responsePlaylist.json()
+        const playlist = playlistSaved
         setPlaylistSaved(playlist)
 
         setIsAuthenticated(true);
@@ -102,7 +128,7 @@ function App() {
         setError(err.message);
       }
       finally{
-        window.location.reload()
+        //window.location.reload()
       }
     };
 

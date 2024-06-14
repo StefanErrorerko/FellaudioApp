@@ -20,12 +20,13 @@ export const sortPoints = (points) => {
 }
 
 export async function likeContent(user, content) {
-    console.log("check", user, content);
-
     const playlistResponse = await fetch(`${ApiUrl}/User/${user.id}/playlist/saved`);
-    let playlistSaved = await playlistResponse.json();
+    let playlistSaved
+    if (response.ok) {
+        playlistSaved = playlistResponse.json()
+    }
 
-    if(playlistSaved === null){
+    if(!playlistSaved){
         const playlistCreateResponse = await fetch(`${ApiUrl}/Playlist`, {
             method: 'POST',
             headers: {
