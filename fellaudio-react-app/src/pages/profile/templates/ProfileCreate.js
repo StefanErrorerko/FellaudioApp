@@ -69,9 +69,9 @@ function ProfileCreate({onRegister=null}) {
             formData.append('password', password);
 
             const body = {
-                firstname: firstname,
-                lastname: lastname,
-                email: email,
+                firstname: firstname.trim(),
+                lastname: lastname.trim(),
+                email: email.trim(),
                 hashedPassword: password
             }
 
@@ -101,7 +101,7 @@ function ProfileCreate({onRegister=null}) {
             navigate('/')
         } catch (error) {
             console.error('Error creating user:', error);
-            toast.error('Не вдалося створити користувача');
+            toast.error('Щось пішло не так під час реєстрації');
         } finally {
             setIsLoading(false);
         }

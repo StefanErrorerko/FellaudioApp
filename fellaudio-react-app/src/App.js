@@ -16,6 +16,7 @@ import Profile from './pages/profile/Profile';
 import Library from './pages/Library';
 import ScrollToTop from './utils/ScrollToTop';
 import Playlist from './pages/playlist/Playlist';
+import { removeContext, updateContext } from './context/UserContext';
 
 const ApiUrl = process.env.REACT_APP_API_URL
 
@@ -114,9 +115,7 @@ function App() {
 
         setIsAuthenticated(true);
         setIsLoginPageVisible(false);
-        localStorage.setItem('token', 'mockToken');
-        localStorage.setItem('user', JSON.stringify(user));
-        localStorage.setItem('playlistSaved', JSON.stringify(playlist));
+        updateContext(user, playlist)
       } catch (err) {
         if (err.name === 'AbortError') {
           console.log("Aborted");
@@ -206,9 +205,7 @@ function App() {
   }
 
   const handleLogout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    localStorage.removeItem('playlistSaved');
+    removeContext()
     setIsAuthenticated(false);
     setUser(null);
     setPlaylistSaved(null)

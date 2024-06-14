@@ -103,6 +103,26 @@
     margin-top: 20px;
   }
 
+  .contentUnderAudioRow {
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+  }
+
+  .contentAuthor {
+    display: flex;
+    gap: 10px;
+  }
+
+  .contentAuthorDetails {
+    display: grid;
+    text-align: left; /* Align text to the left */
+  }
+
+  .contentAuthorDetails :first-child:hover {
+    text-decoration: underline;
+    cursor: pointer;
+  }
+
   .contentActions{
     display: flex;
     justify-content: flex-end; /* Align all elements to the right */

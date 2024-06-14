@@ -22,3 +22,16 @@ export const UserProvider = ({ children }) => {
     </UserContext.Provider>
   );
 };
+
+export const updateContext = (user, playlist=null) => {
+  localStorage.setItem('token', 'mockToken');
+  localStorage.setItem('user', JSON.stringify(user));
+  if(playlist)
+    localStorage.setItem('playlistSaved', JSON.stringify(playlist));
+}
+
+export const removeContext = () => {  
+  localStorage.removeItem('token');
+  localStorage.removeItem('user');
+  localStorage.removeItem('playlistSaved');
+}

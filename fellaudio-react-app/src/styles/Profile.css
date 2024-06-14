@@ -1,3 +1,4 @@
+.profileEdit,
 .profileContainer {
     width: 80%; /* Fill 80% of the available width */
     margin: 0 auto; /* Center the container */
@@ -90,7 +91,7 @@
     flex-wrap: wrap;
     align-items: flex-start;
   }
-  
+
   .profileCreate {
     margin: 0 auto; /* Center the container */
     padding: 0px;
@@ -143,12 +144,12 @@
     gap: 10px;
 }
 
+.profileEdit .passwordRow,
 .profileCreate .passwordRow {
     display: grid;
     gap: 10px;
 }
 
-.profileEdit button,
 .profileCreate button {
     width: 230px;
     padding: 8px 20px;
@@ -164,7 +165,6 @@
     margin-bottom: 25px;
 }
 
-.profileEdit button:hover,
 .profileCreate button:hover {
   background-color: #ECE3CE; /* Background color changes to light */
   color: #4F6F52; /* Text color changes to green */

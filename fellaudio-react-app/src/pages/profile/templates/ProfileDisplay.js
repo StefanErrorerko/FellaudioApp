@@ -1,37 +1,31 @@
-import {useRef, useState, useEffect} from 'react';
-import { useParams } from 'react-router-dom';
+import {useRef, useState, useEffect, useContext} from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import '../../../styles/Profile.css';
 import ProfileDummyImage from '../../../assets/profile-dummy.jpg'
 import ContentContainer from '../../../components/ContentContainer';
 import { FillContentWithMedia, FillProfileWithImages } from '../../../utils/tempUtil';
+import FloatingEditButton from '../../../components/FloatingEditButton';
+import { UserContext } from '../../../context/UserContext';
+import { formatInfoAboutContent } from '../utils/profileUtils';
 
 const ApiUrl = process.env.REACT_APP_API_URL
 
 function ProfileDisplay() {
   const { userId } = useParams()
+  const {user} = useContext(UserContext)
 
   const [error, setError] = useState()
   const [isLoading, setIsLoading] = useState(false)
-  const [user, setUser] = useState([])
+  const [userDisplay, setUserDisplay] = useState([])
   const [contents, setContents] = useState([])
+
+  const navigate = useNavigate()
   
   const abortControllerRef = useRef(null)
 
-  const formatInfoAboutContent = (contents) => {
-    let outputMessage = 'Ще не створено жодного контенту'
-
-    if(contents === null || contents === undefined || contents.length === 0)
-      return outputMessage
-
-    outputMessage = `Створено ${contents.length} `
-
-    if(contents.length === 1)
-      return outputMessage + 'контент'
-
-    if([2, 3, 4].includes(contents.length))
-      return outputMessage + 'контенти'
-
-    return outputMessage + 'контентів'
+  const handleEditClick = () => {
+    navigate(`/profile/${userId}?edit=true`)
+    window.location.reload();        
   }
 
   useEffect(() => {
@@ -49,10 +43,10 @@ function ProfileDisplay() {
         FillProfileWithImages([userData])
 
         const responseContents = await fetch(`${ApiUrl}/User/${userId}/contents`);
-        const contentData = await responseContents.json();
+        let contentData = await responseContents.json();
 
-        setUser({ ...userData, contents: contentData });
-        FillContentWithMedia(contentData)
+        setUserDisplay({ ...userData, contents: contentData });
+        contentData = await FillContentWithMedia(contentData)
         setContents(contentData)
         console.log(contentData)
       } 
@@ -70,13 +64,14 @@ function ProfileDisplay() {
     };
 
     fetchContent();
-  }, [userId]);  
+  }, [userId, user]);  
 
   if (isLoading) {
     return <div>Loading...</div>
   }
 
   if (error) {
+    console.log(error)
     return <div>Something went wrong. Please try again</div>
   }  
 
@@ -86,19 +81,19 @@ function ProfileDisplay() {
       <div className="profileRow">
         {/* Profile image block (square, empty) */}
         <div className="profileImage">
-          <img src={user.image ? user.image : ProfileDummyImage} alt='Profile Image' />
+          <img src={userDisplay.image ? userDisplay.image : ProfileDummyImage} alt='Profile Image' />
         </div>
         {/* Details block */}
         <div className="detailsBlock">
           <div className="fullnameRow">
-            <h1>{user.firstname} {user.lastname}</h1>
+            <h1>{userDisplay.firstname} {userDisplay.lastname}</h1>
           </div>
           <div className="descriptionRow">
-            <p>{user.description}</p>
+            <p>{userDisplay.description}</p>
           </div>
           <div className="emailRow">
             <p>Пошта:</p>
-            <span>{user.email}</span>
+            <span>{userDisplay.email}</span>
           </div>
           <div className='contentDetailsRow'>
             <p>{formatInfoAboutContent(contents)}</p>
@@ -112,6 +107,13 @@ function ProfileDisplay() {
           contents = {contents}
         />
       </div>
+
+      {user?.id == userId && (
+        <FloatingEditButton 
+          handleOnClick={handleEditClick}
+          isEditing={false}
+        />
+      )}
     </div>
   );
 }

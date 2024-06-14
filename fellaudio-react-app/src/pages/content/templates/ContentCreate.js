@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 
 const ApiUrl = process.env.REACT_APP_API_URL;
 
-function ContentEdit() {
+function ContentCreate() {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [imageFile, setImageFile] = useState(null);
@@ -325,4 +325,4 @@ function ContentEdit() {
   );
 }
 
-export default ContentEdit;
+export default ContentCreate;

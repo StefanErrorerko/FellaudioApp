@@ -1,5 +1,5 @@
 import React, {useState, useRef, useEffect, useContext} from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import '../../../styles/Content.css';
 
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
@@ -12,13 +12,14 @@ import Waveform from "../../../components/Waveform";
 import GoogleMap from '../../../components/Map'
 import RecommenderContainer from '../../../components/RecommenderContainer';
 import { UserContext } from '../../../context/UserContext';
-import { FillContentWithImages, FillContentWithMedia, GetAudioFiles } from '../../../utils/tempUtil';
+import {  FillContentWithMedia } from '../../../utils/tempUtil';
 import CommentBlock from '../../../components/Comment/CommentContainer';
 import CommentForm from '../../../components/Comment/CommentForm';
 import { sortComments, likeContent, dislikeContent, sortPoints } from './../utils/contentUtils';
 import CommentFormDisabled from '../../../components/Comment/CommentFormDisabled';
-import { Slide, ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import ProfileDummyImage from '../../../assets/profile-dummy.jpg'
 
 const ApiUrl = process.env.REACT_APP_API_URL
 
@@ -42,8 +43,14 @@ function ContentDisplay() {
   const [isLiked, setIsLiked] = useState(false);
   const [isDownloaded, setIsDownloaded] = useState(false);
   const [audiofile, setAudiofile] = useState(null);
+  const navigate = useNavigate()
 
   const commentsContainerRef = useRef(null);
+
+  const handleUserClick = (userId) => {
+    if(userId !== undefined)
+      navigate(`/profile/${userId}`)
+  }
 
   const handleLikeClick = async (user) => {
     try {        
@@ -185,28 +192,43 @@ function ContentDisplay() {
         <div className='contentAudio'>
         {content.audioFile && <Waveform audioFile={content.audioFile.data} />}
         </div>
-        <div className='contentActions'>
-          {content.audioFile?.data &&( 
-            <button className={isDownloaded ? 'clickedButton' : 'unclickedButton'} onClick={() => handleDownloadClick()}>
-              {isDownloaded ? (
-                <div><ArrowDownwardIcon /><p>Завантажено</p></div>
-              ) : (
-                <div><ArrowDownwardIcon /><p>Завантажити</p></div>
-              )}
+        <div className='contentUnderAudioRow'>
+          <div className='contentAuthor'>
+            <img className='profileImageSmall' 
+              src={content.user && content.user.image ? content.user.image : ProfileDummyImage} 
+              alt='User Profile Image' 
+              onClick={() => handleUserClick(content.user?.id)}
+            />
+            <div className="contentAuthorDetails">
+                <span onClick={() => handleUserClick(content.user?.id)}>
+                  {content.user ? content.user.firstname : 'Deleted User'} {content.user?.lastname}
+                </span>
+                <span>Автор</span>
+            </div>
+          </div>
+          <div className='contentActions'>
+            {content.audioFile?.data &&( 
+              <button className={isDownloaded ? 'clickedButton' : 'unclickedButton'} onClick={() => handleDownloadClick()}>
+                {isDownloaded ? (
+                  <div><ArrowDownwardIcon /><p>Завантажено</p></div>
+                ) : (
+                  <div><ArrowDownwardIcon /><p>Завантажити</p></div>
+                )}
+              </button>
+            )}
+            {user &&(
+              <button className={isLiked ? 'clickedButton' : 'unclickedButton'} onClick={() => handleLikeClick(user)}>
+                {isLiked ? (
+                  <div><FavoriteIcon /><p>Збережено</p></div>
+                ) : (
+                  <div><FavoriteBorderIcon /><p>Зберегти</p></div>
+                )}
+              </button>
+            )}
+            <button className='unclickedButton' onClick={handleShareClick}>
+              <ShareIcon /><p>Поділитись</p>
             </button>
-          )}
-          {user &&(
-            <button className={isLiked ? 'clickedButton' : 'unclickedButton'} onClick={() => handleLikeClick(user)}>
-              {isLiked ? (
-                <div><FavoriteIcon /><p>Збережено</p></div>
-              ) : (
-                <div><FavoriteBorderIcon /><p>Зберегти</p></div>
-              )}
-            </button>
-          )}
-          <button className='unclickedButton' onClick={handleShareClick}>
-            <ShareIcon /><p>Поділитись</p>
-          </button>
+          </div>
         </div>
         <div className='contentDescription'>
           <h2>Опис екскурсії:</h2>

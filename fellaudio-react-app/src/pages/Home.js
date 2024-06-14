@@ -47,8 +47,8 @@ function Home() {
         const response = await fetch(`${ApiUrl}/Content`, {
           signal: abortControllerRef.current.signal
         })
-        const contentsData = await response.json()
-        await FillContentWithMedia(contentsData)
+        let contentsData = await response.json()
+        contentsData = await FillContentWithMedia(contentsData)
         setContents(contentsData)
       } 
       catch (err) {

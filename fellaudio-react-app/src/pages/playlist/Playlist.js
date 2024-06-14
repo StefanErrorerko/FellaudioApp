@@ -5,8 +5,6 @@ import { FillContentWithImages } from '../../utils/tempUtil'
 import '../../styles/Playlist.css'
 import { formatDateTimeIntoDate } from '../../utils/timeFormat'
 import FloatingEditButton from '../../components/FloatingEditButton'
-import PlaylistDisplay from './templates/PlaylistDisplay'
-import PlaylistEdit from './templates/PlaylistEdit'
 
 const ApiUrl = process.env.REACT_APP_API_URL
 
@@ -36,8 +34,6 @@ function Playlist() {
         }
         if(playlist.name !== "Saved")
           body.name = editableName
-
-        console.log(body)
 
         const response = await fetch(`${ApiUrl}/Playlist/${playlistId}`, {
           method: 'PUT',
@@ -101,7 +97,6 @@ function Playlist() {
             setPlaylist(playlistData)
             setEditableName(playlistData.name)
             setEditableDescription(playlistData.description)
-            console.log("a:", playlistData)
             setContents(contentsData)
           } 
           catch (err) {
@@ -165,7 +160,6 @@ function Playlist() {
           onEditAction={deleteContent}
         />        
       )}
-
 
       <FloatingEditButton 
         handleOnClick={handleEditClick}

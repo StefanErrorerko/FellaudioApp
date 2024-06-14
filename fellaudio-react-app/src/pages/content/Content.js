@@ -1,32 +1,37 @@
 import React, { useState, useEffect } from 'react';
 import '../../styles/Content.css';
 import ContentDisplay from './templates/ContentDisplay';
-import ContentEdit from './templates/ContentEdit'; // Assuming ContentCreate component exists
+import ContentCreate from './templates/ContentCreate'; // Assuming ContentCreate component exists
+import ContentEdit from './templates/ContentEdit';
 
 function Content() {
   // State to determine which component to render
-  const [shouldRenderCreate, setShouldRenderCreate] = useState(false);
+  const [shouldRender, setShouldRender] = useState(false);
 
   useEffect(() => {
     // Parse URL search params
     const params = new URLSearchParams(window.location.search);
-    const createParam = params.get('edit');
+    const editParam = params.get('edit');
+    const createParam = params.get('create');
 
-    // Update state based on the query parameter
-    if (createParam === 'true') {
-      setShouldRenderCreate(true);
+    if (editParam === 'true') {
+      setShouldRender("edit");
+    } else if (createParam === 'true') {
+      setShouldRender("create");
     } else {
-      setShouldRenderCreate(false);
+      setShouldRender("display")
     }
   }, []);
 
   return (
     <div>
-      {shouldRenderCreate ? (
+      {shouldRender === 'edit' ? (
         <ContentEdit />
+      ) : (shouldRender === 'create' ? (
+        <ContentCreate />
       ) : (
         <ContentDisplay />
-      )}
+      ))}
     </div>
   );
 }

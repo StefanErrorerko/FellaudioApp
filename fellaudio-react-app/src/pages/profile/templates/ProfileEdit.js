@@ -1,12 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext, useRef } from 'react';
 import ProfileDummyImage from '../../../assets/profile-dummy.jpg';
 import '../../../styles/Profile.css';
 import { toast } from 'react-toastify';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import FloatingEditButton from '../../../components/FloatingEditButton';
+import { UserContext, updateContext } from '../../../context/UserContext';
+import { xor } from '../../../utils/LogicalOperations';
 
 const ApiUrl = process.env.REACT_APP_API_URL;
 
-function ProfileEdit({onRegister=null}) {
+function ProfileEdit() {
+    const {user} = useContext(UserContext)
+
     const [firstname, setFirstname] = useState('');
     const [lastname, setLastname] = useState('');
     const [email, setEmail] = useState('');
@@ -15,8 +20,11 @@ function ProfileEdit({onRegister=null}) {
     const [confirmPassword, setConfirmPassword] = useState('');
     const [error, setError] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
+    const abortControllerRef = useRef(null)
 
     const navigate = useNavigate()
+
+    const { userId } = useParams()
 
     const handlePasswordChange = (e) => {
         setPassword(e.target.value);
@@ -44,11 +52,10 @@ function ProfileEdit({onRegister=null}) {
         reader.readAsDataURL(file);
     };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+    const handleEditClick = async () => {
 
-        if (!firstname || !lastname || !email || !password || !confirmPassword) {
-            setError('Заповніть усі необхідні поля');
+        if (!firstname || !lastname || !email || xor(password, confirmPassword)) {
+            toast.error('Заповніть усі необхідні поля');
             return;
         }
 
@@ -61,62 +68,78 @@ function ProfileEdit({onRegister=null}) {
         setError('');
 
         try {
-            const formData = new FormData();
-            formData.append('firstname', firstname);
-            formData.append('lastname', lastname);
-            formData.append('email', email);
-            formData.append('image', imageFile);
-            formData.append('password', password);
+            let body = {}
+            body.firstname = firstname.trim()
+            body.lastname = lastname.trim()
+            body.email = email.trim()
 
-            const body = {
-                firstname: firstname,
-                lastname: lastname,
-                email: email,
-                hashedPassword: password
-            }
+            if(password !== '' && confirmPassword !== '')
+                body.hashedPassword = password
 
-            const response = await fetch(`${ApiUrl}/User`, {
-                method: 'POST',
+            const response = await fetch(`${ApiUrl}/User/${userId}`, {
+                method: 'PUT',
                 headers: {
-                    'Content-Type': 'application/json',
-                    },
+                  'Content-Type': 'application/json',
+                },
                 body: JSON.stringify(body),
-            });
+              })
 
-            if (response.status === 422) {
-                setError('Користувач з такою поштою вже існує');
-                toast.error('Користувач з такою поштою вже існує');
-                throw new Error(`HTTP error! Status: ${response.status}`);
-            } else if (!response.ok) {
+            if (!response.ok) {
                 throw new Error(`HTTP error! Status: ${response.status}`);
             }
 
-            const user = await response.json()
-            console.log("peredano", response)
-            console.log("2", user)
-            
-            onRegister(user)
+            const updatedUser = await response.json()
 
-            toast.success('Ви успішно зареєструвались');
-            navigate('/')
+            updateContext(updatedUser)
+
+            navigate(`/profile/${userId}`)
+            window.location.reload();        
         } catch (error) {
             console.error('Error creating user:', error);
-            toast.error('Не вдалося створити користувача');
+            toast.error('Не вдалося оновити дані');
         } finally {
             setIsLoading(false);
         }
     };
 
+    useEffect(() => {
+        const fetchContents = async () => {
+          try{
+            if(user){
+                setEmail(user.email)
+                setFirstname(user.firstname)
+                setLastname(user.lastname)
+            }
+          } 
+          catch (err) {
+            setError(err)
+          } 
+          finally {
+            setIsLoading(false)
+          }
+        }
+    
+        fetchContents()
+      }, [user])  
+    
+      if (isLoading) {
+        return <div>Loading...</div>
+      }
+    
+      if (error) {
+        console.log(error)
+        return <div>Something went wrong. Please try again</div>
+      }
+
     return (
-        <form onSubmit={handleSubmit} className="profileEdit">
+        <div className="profileEdit">
             <div className="profileRow">
                 <div className="profileImage">
                     <img src={imageFile || ProfileDummyImage} alt='Profile' />
                     <input type="file" accept="image/*" onChange={handleImageChange} />
-                    {error && <p className="error">{error}</p>}
                 </div>
                 <div className="detailsBlock">
-                    <h2>Введіть ваше ім'я та прізвище:</h2>
+                    <h2>Змініть ваше ім'я/прізвище</h2>
                     <div className="fullnameRow">
                         <input
                             type="text"
@@ -133,7 +156,7 @@ function ProfileEdit({onRegister=null}) {
                             required
                         />
                     </div>
-                    <h2>Введіть вашу пошту:</h2>
+                    <h2>Введіть нову поштову адресу:</h2>
                     <div className="emailRow">
                         <input
                             type="email"
@@ -164,10 +187,12 @@ function ProfileEdit({onRegister=null}) {
                     </div>
                 </div>
             </div>
-            <button type="submit" disabled={isLoading}>
-                {isLoading ? 'Реєстрація...' : 'Зареєструватись'}
-            </button>
-        </form>
+
+            <FloatingEditButton 
+                handleOnClick={handleEditClick}
+                isEditing={true}
+            />
+        </div>
     );
 }
 
