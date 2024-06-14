@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import '../styles/Login.css'; // Add necessary styles
+import { Link } from 'react-router-dom';
 
-const Login = ({ onLogin }) => {
+const Login = ({ onLogin, onExitLoginPopup }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -37,6 +38,7 @@ const Login = ({ onLogin }) => {
         </div>
         {error && <div className="error">{error}</div>}
         <button type="submit">Увійти</button>
+        <Link to="profile?create=true" onClick={onExitLoginPopup}>Створіть акаунт зараз!</Link>
       </form>
     </div>
   );

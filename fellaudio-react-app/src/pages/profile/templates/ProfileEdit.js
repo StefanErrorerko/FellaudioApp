@@ -5,7 +5,7 @@ import { toast } from 'react-toastify';
 
 const ApiUrl = process.env.REACT_APP_API_URL;
 
-function ProfileEdit() {
+function ProfileEdit({onRegister=null}) {
     const [firstname, setFirstname] = useState('');
     const [lastname, setLastname] = useState('');
     const [email, setEmail] = useState('');
@@ -87,7 +87,11 @@ function ProfileEdit() {
                 throw new Error(`HTTP error! Status: ${response.status}`);
             }
 
-            toast.success('Користувач успішно створений');
+            const user = await response.json()
+            
+            onRegister(user)
+
+            toast.success('Ви успішно зареєструвались');
         } catch (error) {
             console.error('Error creating user:', error);
             toast.error('Не вдалося створити користувача');
@@ -154,7 +158,7 @@ function ProfileEdit() {
                 </div>
             </div>
             <button type="submit" disabled={isLoading}>
-                {isLoading ? 'Створення...' : 'Створити користувача'}
+                {isLoading ? 'Реєстрація...' : 'Зареєструватись'}
             </button>
         </form>
     );

@@ -3,27 +3,32 @@ import '../../styles/Profile.css';
 import ProfileDisplay from './templates/ProfileDisplay';
 import ProfileEdit from './templates/ProfileEdit'; // Assuming ContentCreate component exists
 
-function Profile() {
-  const [shouldRenderCreate, setShouldRenderCreate] = useState(false);
+function Profile({onRegister}) {
+  const [shouldRender, setShouldRender] = useState();
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    const createParam = params.get('edit');
+    const editParam = params.get('edit');
+    const createParam = params.get('create');
 
-    if (createParam === 'true') {
-      setShouldRenderCreate(true);
+    if (editParam === 'true') {
+      setShouldRender("edit");
+    } else if (createParam === 'true') {
+      setShouldRender("create");
     } else {
-      setShouldRenderCreate(false);
+      setShouldRender("display")
     }
   }, []);
 
   return (
     <div>
-      {shouldRenderCreate ? (
+      {shouldRender === 'edit' ? (
         <ProfileEdit />
+      ) : (shouldRender === 'create' ? (
+        <ProfileEdit onRegister={onRegister} />
       ) : (
         <ProfileDisplay />
-      )}
+      ))}
     </div>
   );
 }

@@ -2,7 +2,7 @@ import './App.css';
 import {
   BrowserRouter as Router,
   Route,
-  Routes
+  Routes,
 } from 'react-router-dom';
 import React, { useState, useEffect, useRef } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
@@ -128,7 +128,7 @@ function App() {
         setError(err.message);
       }
       finally{
-        //window.location.reload()
+        window.location.reload()
       }
     };
 
@@ -145,6 +145,68 @@ function App() {
     }
     return false;
   };
+
+  const handleRegister = async user => {
+    const fetchContents = async () => {
+      abortControllerRef.current?.abort();
+      abortControllerRef.current = new AbortController();
+    try{
+        const responsePlaylist = await fetch(`${ApiUrl}/User/${user.id}/playlist/saved`, {
+          signal: abortControllerRef.current.signal
+        });
+        let playlistSaved
+        if (responsePlaylist.ok) {
+            playlistSaved = responsePlaylist.json()
+        }
+          console.log("kkk", playlistSaved)
+
+          if(!playlistSaved){
+              const playlistCreateResponse = await fetch(`${ApiUrl}/Playlist`, {
+                  method: 'POST',
+                  headers: {
+                      'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({
+                      description: 'Ваш плейлист вподобаного',
+                      type: 'Saved',
+                      userId: user.id
+                  }),
+                  signal: abortControllerRef.current.signal
+              });
+              playlistSaved = await playlistCreateResponse.json();
+              console.log("mmm", playlistSaved)
+
+          }
+
+        if (!responsePlaylist.ok) {
+          throw new Error(`Error: ${responsePlaylist.status} ${responsePlaylist.statusText}`);
+        }
+
+        const playlist = playlistSaved
+        setPlaylistSaved(playlist)
+
+        setIsAuthenticated(true);
+        setIsLoginPageVisible(false);
+        localStorage.setItem('token', 'mockToken');
+        localStorage.setItem('user', JSON.stringify(user));
+        localStorage.setItem('playlistSaved', JSON.stringify(playlist));
+      } catch (err) {
+        if (err.name === 'AbortError') {
+          console.log("Aborted");
+          return;
+        }
+        console.error("Fetch error: ", err);
+        setError(err.message);
+      }
+    };
+
+    fetchContents()
+    return false;
+  }
+
+  const handleExitLoginPopup = () => {
+    setIsLoginPageVisible(false)
+  }
 
   const handleLogout = () => {
     localStorage.removeItem('token');
@@ -183,18 +245,20 @@ function App() {
             <Route path="/content/:contentId" element={<Content />} />
             <Route path="/content" element={<Content />} />
             <Route path="/profile/:userId" element={<Profile />} />
+            <Route path="/profile" element={<Profile onRegister={handleRegister}/>} />
             <Route path="/library" element={<Library />} />
             <Route path="/playlist/:playlistId" element={<Playlist />} />
           </Routes>
         </div>
-      </Router>
-     
-      {isLoginPageVisible && (
+        {isLoginPageVisible && (
         <div className="login-page" onClick={handleOverlayClick}>
-            <Login onLogin={handleLogin} />
+            <Login 
+              onLogin={handleLogin}
+              onExitLoginPopup={handleExitLoginPopup}
+            />
         </div>
       )}
-      
+      </Router>
     </div>
   );
 }
