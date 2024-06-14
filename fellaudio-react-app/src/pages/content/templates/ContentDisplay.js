@@ -17,6 +17,8 @@ import CommentBlock from '../../../components/Comment/CommentContainer';
 import CommentForm from '../../../components/Comment/CommentForm';
 import { sortComments, likeContent, dislikeContent, sortPoints } from './../utils/contentUtils';
 import CommentFormDisabled from '../../../components/Comment/CommentFormDisabled';
+import { Slide, ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const ApiUrl = process.env.REACT_APP_API_URL
 
@@ -56,8 +58,16 @@ function ContentDisplay() {
   }
 
   const handleDownloadClick = () => {
-    setIsDownloaded(!isDownloaded)
-  }
+    if (content.audioFile && content.audioFile.data) {
+      const link = document.createElement('a');
+      link.href = content.audioFile.data;
+      link.download = `${content.name}_audio.mp3`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      setIsDownloaded(true);
+    }
+  };
 
   const handleCommentSubmit = async (text) => {
     try {
@@ -84,6 +94,11 @@ function ContentDisplay() {
       setError(err)
     }
   };
+
+  const handleShareClick = () => {
+    navigator.clipboard.writeText(window.location.href)
+      .then(() => toast('Посилання скопійовано!'))
+  }
   
   const abortControllerRef = useRef(null)
 
@@ -171,13 +186,15 @@ function ContentDisplay() {
         {content.audioFile && <Waveform audioFile={content.audioFile.data} />}
         </div>
         <div className='contentActions'>
-          <button className={isDownloaded ? 'clickedButton' : 'unclickedButton'} onClick={() => handleDownloadClick()}>
-            {isDownloaded ? (
-              <div><ArrowDownwardIcon /><p>Завантажено</p></div>
-            ) : (
-              <div><ArrowDownwardIcon /><p>Завантажити</p></div>
-            )}
-          </button>
+          {content.audioFile?.data &&( 
+            <button className={isDownloaded ? 'clickedButton' : 'unclickedButton'} onClick={() => handleDownloadClick()}>
+              {isDownloaded ? (
+                <div><ArrowDownwardIcon /><p>Завантажено</p></div>
+              ) : (
+                <div><ArrowDownwardIcon /><p>Завантажити</p></div>
+              )}
+            </button>
+          )}
           {user &&(
             <button className={isLiked ? 'clickedButton' : 'unclickedButton'} onClick={() => handleLikeClick(user)}>
               {isLiked ? (
@@ -187,7 +204,9 @@ function ContentDisplay() {
               )}
             </button>
           )}
-          <button className='unclickedButton'><ShareIcon /><p>Поділитись</p></button>
+          <button className='unclickedButton' onClick={handleShareClick}>
+            <ShareIcon /><p>Поділитись</p>
+          </button>
         </div>
         <div className='contentDescription'>
           <h2>Опис екскурсії:</h2>
@@ -228,6 +247,7 @@ function ContentDisplay() {
           currentContent = {content}
         />
       )}
+      
     </div>
   );
 }

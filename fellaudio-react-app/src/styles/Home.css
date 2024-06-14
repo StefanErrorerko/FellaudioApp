@@ -1,166 +1,157 @@
-
-
-@font-face {
-  font-family: 'FuturaDemiC';
-  src: url('/public/fonts/FuturaDemiC.ttf') format('truetype');
-  font-weight: normal;
-  font-style: normal;
+.home {
+  width: 100%;
+  height: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 }
 
-.home {
-    width: 100%;
-    height: auto;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-  }
-
-  .topContainer {
-    width: 100%;
+.topContainer {
+  width: 100%;
   flex: 1; /* Allow the image to take up remaining space */
   display: flex;
   position: relative; /* Add relative positioning to the container */
-  }
+}
 
-  .topContainer img {
-    width: 100%;
+.topContainer img {
+  width: 100%;
   height: 620px; /* Fixed height for demonstration purposes */
   object-fit: cover; /* Ensure the image covers the area */
   flex: 1;
-  }
+}
 
+.textOverlay {
+  position: absolute;
+  top: 80px; /* Adjust as needed */
+  left: 50px; /* Adjust as needed */
+  right: 50%;
+  text-align: left;
+  color: #ffedd5; /* Tailwind color for text-orange-100 */
+  font-size: 2.25rem; /* Equivalent to text-4xl */
+  font-weight: 600; /* Equivalent to font-semibold */
+  max-width: 100%; /* Equivalent to max-md:max-w-full */
+}
+
+@media (min-width: 768px) {
   .textOverlay {
-    position: absolute;
-    top: 80px; /* Adjust as needed */
-    left: 50px; /* Adjust as needed */
-    right: 50%;
-    text-align: left;
-    color: #ffedd5; /* Tailwind color for text-orange-100 */
-    font-size: 2.25rem; /* Equivalent to text-4xl */
-    font-weight: 600; /* Equivalent to font-semibold */
-    max-width: 100%; /* Equivalent to max-md:max-w-full */
-    @media (min-width: 768px) {
-      font-size: 4.5rem; /* Equivalent to text-7xl for larger screens */
-    }
+    font-size: 4.5rem; /* Equivalent to text-7xl for larger screens */
   }
-  
-  .buttonOverlay {
-    position: absolute;
-    font-size: x-large;
-    font-weight: bold;
-    color: #3A4D39;
-    bottom: 50px; /* Adjust as needed */
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    justify-content: center;
-    padding: 1.0rem 4rem; /* Equivalent to py-5 pr-20 pl-20 */
-    background-color: #ffedd5; /* Tailwind color for bg-orange-100 */
-    border-radius: 33.419px;
-    cursor: pointer;
-    box-shadow: 0px 3px 15px rgba(0, 0, 0, 0.2);
-    transition: background-color 0.3s, color 0.3s; /* Smooth transition for background and color */
-    border-color: transparent;
-    @media (max-width: 768px) {
-      padding: 1.25rem 2rem; /* Equivalent to max-md:px-8 for smaller screens */
-    }
-  }
+}
 
-  .buttonOverlay:hover {
-    color: #ECE3CE; /* Background color changes to light */
-    background-color: #4F6F52; /* Text color changes to green */
-  }
-  
-  .searchArea {
-    margin-bottom: 20px;
-    display: flex;
-    margin-top: 20px;
-  }
-  
-  .searchArea input {
-    padding: 10px;
-    padding-left: 20px;
-    margin-right: 10px;
-    border-radius: 50px;
-    border: 1px black solid;
-    width: 820px;
-    background-color: transparent;
-    font-family: 'FuturaDemiC', sans-serif;
-    font-size: 22px;
-  }
+.buttonOverlay {
+  position: absolute;
+  font-size: x-large;
+  font-weight: bold;
+  color: #3A4D39;
+  bottom: 50px; /* Adjust as needed */
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  justify-content: center;
+  padding: 1.0rem 4rem; /* Equivalent to py-5 pr-20 pl-20 */
+  background-color: #ffedd5; /* Tailwind color for bg-orange-100 */
+  border-radius: 33.419px;
+  cursor: pointer;
+  box-shadow: 0px 3px 15px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.3s, color 0.3s; /* Smooth transition for background and color */
+  border-color: transparent;
+}
 
-  .switchContainer {
-    display: flex;
-    align-items: center;
-    margin-left: 10px;
-  }
-  
-  .switchContainer label {
-    display: flex;
-    align-items: center;
+.buttonOverlay:hover {
+  color: #ECE3CE; /* Background color changes to light */
+  background-color: #4F6F52; /* Text color changes to green */
+}
 
-  }
-  
-  .switchContainer .react-switch-handle {
-    outline: none;
-    box-shadow: none;
-  }
-  
-  .switchContainer .react-switch-handle:focus {
-    outline: none;
-    box-shadow: none;
-  }
-  
+.searchArea {
+  margin-bottom: 20px;
+  display: flex;
+  margin-top: 20px;
+  width: 90%; /* Make the width adaptive */
+  max-width: 1200px; /* Max width to prevent it from stretching too far on large screens */
+  flex-wrap: wrap; /* Allow the items to wrap */
+  justify-content: space-between; /* Distribute items with space between */
+}
 
-  .switchState {
-    
-  }
-  
-  .searchArea button {
-    padding: 8px 20px;
-    background-color: #4F6F52;
-    color: #ECE3CE;
-    border: none;
-    border-radius: 50px;
-    cursor: pointer;
-    padding: 10px 45px 10px 45px;
-    font-size: 22px;
-    font-family: 'FuturaDemiC', sans-serif;   
-    transition: background-color 0.3s, color 0.3s; /* Smooth transition for background and color */
-  }
+.searchArea input {
+  padding: 10px;
+  padding-left: 20px;
+  margin-right: 10px;
+  border-radius: 50px;
+  border: 1px black solid;
+  background-color: transparent;
+  font-family: 'FuturaDemiC', sans-serif;
+  font-size: 22px;
+  flex-grow: 1; /* Allow input to grow */
+  min-width: 250px; /* Minimum width for the input */
+}
 
-  .searchArea button:hover {
-    background-color: #ECE3CE; /* Background color changes to light */
-    color: #4F6F52; /* Text color changes to green */
-    border: 1px solid #4F6F52;
-    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3);
-  }
-  
+.switchContainer {
+  display: flex;
+  align-items: center;
+  margin-left: 10px;
+}
+
+.switchContainer label {
+  display: flex;
+  align-items: center;
+}
+
+.switchContainer .react-switch-handle {
+  outline: none;
+  box-shadow: none;
+}
+
+.switchContainer .react-switch-handle:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+.switchState {}
+
+.searchArea button {
+  padding: 8px 20px;
+  background-color: #4F6F52;
+  color: #ECE3CE;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  font-size: 22px;
+  font-family: 'FuturaDemiC', sans-serif;
+  transition: background-color 0.3s, color 0.3s; /* Smooth transition for background and color */
+}
+
+.searchArea button:hover {
+  background-color: #ECE3CE; /* Background color changes to light */
+  color: #4F6F52; /* Text color changes to green */
+  border: 1px solid #4F6F52;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.blocksContainer {
+  width: calc(100% - 40px);
+  max-width: 100%;
+  margin: 20px;
+  flex-wrap: wrap; /* Allow items to wrap to the next line */
+  justify-content: space-between; /* Distribute items along the main axis with equal space between them */
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  place-items: center;
+}
+
+.mapContainer .map {
+  width: 80%;
+  height: 100px;
+}
+
+@media only screen and (max-width: 1300px) {
   .blocksContainer {
-    width: calc(100% - 40px);
-    max-width: 100%;
-    margin: 20px;
-    flex-wrap: wrap; /* Allow items to wrap to the next line */
-    justify-content: space-between; /* Distribute items along the main axis with equal space between them */
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    place-items: center;
+    grid-template-columns: 1fr 1fr;
   }
-  
-  .mapContainer .map {
-    width: 80%;
-    height: 100px;
+}
+
+@media only screen and (max-width: 800px) {
+  .blocksContainer {
+    grid-template-columns: 1fr;
   }
-  
-  @media only screen and (max-width: 1300px) {
-    .blocksContainer {
-      grid-template-columns: 1fr 1fr;
-    }
-  }
-  
-  @media only screen and (max-width: 800px) {
-    .blocksContainer {
-      grid-template-columns: 1fr;
-    }
-  }
+}

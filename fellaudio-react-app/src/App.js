@@ -5,13 +5,14 @@ import {
   Routes
 } from 'react-router-dom';
 import React, { useState, useEffect, useRef } from 'react';
+import { ToastContainer, toast } from 'react-toastify';
 
 import NavBar from './components/Navbar';
 import Home from './pages/Home';
 import About from './pages/About';
 import Login from './pages/Login';
 import Content from './pages/content/Content';
-import Profile from './pages/Profile';
+import Profile from './pages/profile/Profile';
 import Library from './pages/Library';
 import ScrollToTop from './utils/ScrollToTop';
 import Playlist from './pages/playlist/Playlist';
@@ -161,11 +162,13 @@ function App() {
           </Routes>
         </div>
       </Router>
+     
       {isLoginPageVisible && (
         <div className="login-page" onClick={handleOverlayClick}>
             <Login onLogin={handleLogin} />
         </div>
       )}
+      
     </div>
   );
 }

@@ -15,17 +15,23 @@
     display: grid;
     gap: 10px; /* Adjust gap between elements */
     text-align: center;
+    grid-template-rows: 5fr 1fr 8fr;
   }
 
-.contentEdit .imageContainer span {
+.contentEdit .imageContainer span,
+.contentEdit .imageContainer h1 {
     text-align: left; /* Left-align the text */
-
+    margin-left: 100px;
 }
 
 .contentEdit .imageContainer input {
   font-size: 16px;
   justify-self: center; /* Center the input horizontally */
-
+  
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 }
 
 .contentEdit .contentTitleBackground {

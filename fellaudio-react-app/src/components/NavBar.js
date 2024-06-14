@@ -7,6 +7,7 @@ import AddIcon from '@mui/icons-material/Add';
 import VideoLibraryIcon from '@mui/icons-material/VideoLibrary';
 import { UserContext } from '../context/UserContext';
 import "../styles/NavBar.css"
+import { Slide, ToastContainer } from 'react-toastify';
 
 function NavBar({ isAuthenticated, toggleLoginPage, handleLogout }) {
   const [isMenuVisible, setIsMenuVisible] = useState(false);
@@ -56,7 +57,7 @@ function NavBar({ isAuthenticated, toggleLoginPage, handleLogout }) {
               <Link to={`profile/${user?.id}`} className='floatingMenuTabButton'>
                 <PersonOutlineIcon />
               </Link>
-              <Link to={`content?create=true`} className='floatingMenuTabButton'>
+              <Link to={`content?edit=true`} className='floatingMenuTabButton'>
                 <AddIcon />
               </Link>
               <Link to={`library`} className='floatingMenuTabButton'>
@@ -65,6 +66,21 @@ function NavBar({ isAuthenticated, toggleLoginPage, handleLogout }) {
             </div>
         </div>
         )}
+
+      <ToastContainer
+        position="bottom-center"
+        autoClose={5000}
+        limit={1}
+        hideProgressBar
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="dark"
+        transition={Slide}
+        />
     </div>
   )
 }

@@ -236,6 +236,7 @@ function ContentEdit() {
     <div className="contentEdit">
       <form onSubmit={handleSubmit}>
         <div className="imageContainer">
+          <h1>Новий контент</h1>
           <span>Завантажте обкладинку:</span>
           <input type="file" accept="image/*" onChange={handleImageChange} />
         </div>

@@ -3,21 +3,27 @@ const contentAudios = require.context('../assets/contentAudios', false, /\.(mp3|
 const profileImages = require.context('../assets/profileImages', false, /\.(jpg|jpeg|png|webp)$/);
 
 function getImageById(id, imageArray) {
-  try {
-    return imageArray(`./${id}.jpg`);
-  } catch (err) {
-   // console.error(`Image for id ${id} not found`);
+    const extensions = ['jpg', 'jpeg', 'png', 'webp'];
+    for (let ext of extensions) {
+        try {
+            return imageArray(`./${id}.${ext}`);
+        } catch (err) {
+            // continue to the next extension
+        }
+    }
     return null;
-  }
 }
 
 function getAudioFileById(id, audioArray) {
-    try {
-      return audioArray(`./${id}.mp3`);
-    } catch (err) {
-      //console.error(`AudioFile for id ${id} not found`);
-      return null;
+    const extensions = ['mp3', 'wav', 'm4a'];
+    for (let ext of extensions) {
+        try {
+            return audioArray(`./${id}.${ext}`);
+        } catch (err) {
+            // continue to the next extension
+        }
     }
+    return null;
   }
 
 export function FillContentWithImages(contents) {
@@ -44,6 +50,7 @@ export async function GetAudioFiles(contents) {
     let audiofiles = []
     await Promise.all(contents.map(async content => {
         const audioPath = getAudioFileById(content.id, contentAudios);
+        console.log("audioPath", audioPath)
 
         if (audioPath) {
             try {

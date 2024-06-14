@@ -20,6 +20,7 @@
     "react-router-dom": "^6.23.0",
     "react-scripts": "^5.0.1",
     "react-switch": "^7.0.0",
+    "react-toastify": "^10.0.5",
     "wavesurfer.js": "^7.7.13",
     "web-vitals": "^2.1.4"
   },

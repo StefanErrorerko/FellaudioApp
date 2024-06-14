@@ -10,7 +10,7 @@ function Content() {
   useEffect(() => {
     // Parse URL search params
     const params = new URLSearchParams(window.location.search);
-    const createParam = params.get('create');
+    const createParam = params.get('edit');
 
     // Update state based on the query parameter
     if (createParam === 'true') {
