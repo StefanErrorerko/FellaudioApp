@@ -141,7 +141,7 @@ namespace FellaudioApp.Controllers
                 return StatusCode(500, ModelState);
             }
 
-            return Ok("Succesfully created");
+            return Ok(_mapper.Map<ContentResponseDto>(contentMap));
         }
 
         [HttpPut("{id}")]

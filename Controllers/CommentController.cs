@@ -87,7 +87,7 @@ namespace FellaudioApp.Controllers
                 return StatusCode(500, ModelState);
             }
 
-            return Ok("Successfully created");
+            return Ok(_mapper.Map<CommentResponseDto>(commentMap);
         }
 
         [HttpPut("{id}")]
