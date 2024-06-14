@@ -27,6 +27,7 @@ function ContentDisplay() {
   const [error, setError] = useState()
   const [isLoading, setIsLoading] = useState(false)
   const [content, setContent] = useState([])
+  const [comments, setComments] = useState([])
   const [page, setPage] = useState(0)
   const [firstPoint, setFirstPoint] = useState({
     location: {
@@ -77,6 +78,8 @@ function ContentDisplay() {
       if (!response.ok) {
         throw new Error('Failed to POST comment')
       }
+
+      setComments()
     } catch (err) {
       setError(err)
     }
@@ -103,9 +106,6 @@ function ContentDisplay() {
         setContent(contentsWithMedia[0]);
         const sortedPoints = sortPoints(pointsData)
         
-        setContent(contentData)
-        console.log("yaaa", sortedPoints)
-        console.log("yaaaaa", sortedPoints[0])
         if (sortedPoints.length > 0) {
           setFirstPoint(sortedPoints[0]);
         }
@@ -124,8 +124,9 @@ function ContentDisplay() {
 
           setIsLiked(contentsData.some(c => c.id == contentData.id))
         }
-
-        commentsContainerRef.current.scrollTop = commentsContainerRef.current.scrollHeight;
+        
+        if(commentsContainerRef.current)
+            commentsContainerRef.current.scrollTop = commentsContainerRef.current.scrollHeight;
       } 
       catch (err) {
         if (err.name === 'AbortError') {

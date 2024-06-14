@@ -4,9 +4,9 @@ import DummyImage from '../../../assets/dummy.jpg';
 import SwitchPointLocation from '../../../components/SwitchPointLocation';
 import { getAreas } from '../../../assets/Area';
 import { UserContext } from '../../../context/UserContext';
+import { useNavigate } from 'react-router-dom';
 
 const ApiUrl = process.env.REACT_APP_API_URL;
-const defaultUserId = 'default_user_id'; // You can change this default user ID as needed
 
 function ContentEdit() {
   const [title, setTitle] = useState('');
@@ -19,11 +19,23 @@ function ContentEdit() {
   const [selectedLocation, setSelectedLocation] = useState(''); // State for selected option
   const [locations, setLocations] = useState([]);
   const [error, setError] = useState('');
+
+  const navigate = useNavigate();
   const {user} = useContext(UserContext)
 
   const abortControllerRef = useRef(null);
 
   const areas = getAreas();
+
+  const isPointInput = (latitude, longitude) =>{
+    if(showCoordinates && (latitude.trim() === '' || longitude.trim() === '' || latitude.trim() === ' ' || longitude.trim() === ' '))
+        return false
+
+    if(!showCoordinates && (selectedLocation === '' || selectedLocation === ' ' || selectedLocation === '(жодна)' || !selectedLocation))
+        return false
+
+    return true
+  }
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -34,10 +46,19 @@ function ContentEdit() {
     setImageFile(file);
   };
 
+
+  const handleAreaChange = (e) => {
+    setSelectedArea(e.target.value);
+  };
+
+  const handleLocationChange = (e) => {
+    setSelectedLocation(locations.find(l => l.name === e.target.value));
+  };
+
   const handleAudioChange = (e) => {
     const file = e.target.files[0];
     if (file && file.size > 100 * 1024 * 1024) {
-      setError('Аудіофайл має бути менший за 100МБайт.');
+      setError('Аудіофайл має бути менший за 100 МБайт.');
       return;
     }
     setAudioFile(file);
@@ -46,7 +67,10 @@ function ContentEdit() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!title || !description || !selectedArea || (!showCoordinates && !selectedLocation)) {
+    const latitude = document.querySelector('input[placeholder="Широта"]').value;
+    const longitude = document.querySelector('input[placeholder="Довгота"]').value;
+
+    if (!title || !description || !selectedArea || !isPointInput(latitude, longitude)) {
       setError('Заповніть усі необхідні поля');
       return;
     }
@@ -62,9 +86,6 @@ function ContentEdit() {
       formData.append('area', selectedArea);
 
       if (showCoordinates) {
-        const latitude = document.querySelector('input[placeholder="Широта"]').value;
-        const longitude = document.querySelector('input[placeholder="Довгота"]').value;
-
         if (!latitude || !longitude || !isValidFloat(latitude) || !isValidFloat(longitude)) {
           setError('Широта та довгота зазначаються у форматі числа з плаваючою точкою');
           setIsLoading(false);
@@ -76,32 +97,92 @@ function ContentEdit() {
         formData.append('location', selectedLocation);
       }
 
+      const body = {
+        "title": title,
+        "description": description,
+        "area": selectedArea,
+        "userId": user.id,
+        "status": "Published"
+      }
+
       const response = await fetch(`${ApiUrl}/Content`, {
         method: 'POST',
-        body: formData,
+        headers: {
+            'Content-Type': 'application/json',
+            },
+        body: JSON.stringify(body),
       });
 
-      if (!response.ok) {
+      if (response.status === 422) {
+        setError('Контент з такою назвою уже існує');
+      }
+      else if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
 
-      const responseData = await response.json();
-      const contentId = responseData.id; // Assuming the API returns the ID of the newly created content
+      const contentData = await response.json();
+      const contentId = contentData.id; // Assuming the API returns the ID of the newly created content
 
+      console.log("imageFile", imageFile)
       if (imageFile) {
         saveFile(imageFile, `${contentId}.${imageFile.name.split('.').pop()}`, '../../../assets/contentImages/');
       }
 
+      console.log("audioFile", audioFile)
       if (audioFile) {
         saveFile(audioFile, `${contentId}.${audioFile.name.split('.').pop()}`, '../../../assets/contentAudios/');
       }
 
-      console.log('Content created:', responseData);
+      console.log('Content created:', contentData);
+
+      let point
+      if(showCoordinates)
+        point = {latitude: latitude, longitude: longitude, name: "default"}
+      else
+        point = {latitude: selectedLocation.latitude, longitude: selectedLocation.longitude, name: selectedLocation.name}
+
+        let locationToPoint
+
+        if(showCoordinates){
+            const responseLocation = await fetch(`${ApiUrl}/Location`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    },
+                body: JSON.stringify(point),
+            });
+
+            if (!responseLocation.ok) {
+                throw new Error(`HTTP error! Status: ${responseLocation.status}`);
+            }
+
+            locationToPoint = await responseLocation.json()
+        }
+
+      if(!locationToPoint)
+        locationToPoint = selectedLocation
+
+      const responsePoint = await fetch(`${ApiUrl}/Point`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            },
+        body: JSON.stringify({
+            contentId: contentId,
+            locationId: locationToPoint.id
+        }),
+      });
+
+      if (!responsePoint.ok) {
+        throw new Error(`HTTP error! Status: ${responsePoint.status}`);
+      }
+
     } catch (error) {
       console.error('Error creating content:', error);
-      setError('Error creating content. Please try again.');
+      setError('Не вдалося створити контент');
     } finally {
       setIsLoading(false);
+      navigate('/')
     }
   };
 
@@ -185,7 +266,7 @@ function ContentEdit() {
           <div className='contentAreaBlock'>
             <div className='areaSelect'>
               <span>Виберіть місцевість, де відбувається ваша екскурсія</span>
-              <select className="" size="4" required>
+              <select className="" size="4" onChange={handleAreaChange} required>
                 {areas.map((area, index) => (
                   <option key={index} value={area.name}>
                     {area.name}
@@ -207,27 +288,32 @@ function ContentEdit() {
                 <input
                   type="text"
                   placeholder="Широта"
-                  pattern="\d*\.?\d*" // Allows only numbers and dot
+                  pattern="(\d*\.?\d+)?"
                   onInput={handleFloatInput}
-                  required
+                  
                 />
                 <input
                   type="text"
                   placeholder="Довгота"
-                  pattern="\d*\.?\d*" // Allows only numbers and dot
+                  pattern="(\d*\.?\d+)?"
                   onInput={handleFloatInput}
-                  required
+                  
                 />
               </div>
-              <select className={`locationSelect ${showCoordinates && 'hidden'}`} size="4" required>
-                <option value="" disabled selected>(жодна)</option>
+              <select
+                className={`locationSelect ${showCoordinates && 'hidden'}`}
+                size="4"
+                onChange={handleLocationChange}
+                required
+                >
+                <option value="жодна">(жодна)</option>
                 {locations.map((location, index) => (
-                  location.name !== 'default' && (
+                    location.name !== 'default' && (
                     <option key={index} value={location.name}>
-                      {location.name}: {location.latitude}, {location.longitude}
+                        {location.name}: {location.latitude}, {location.longitude}
                     </option>
-                  )
-                ))}
+                    )
+                ))}   
               </select>
             </div>
           </div>

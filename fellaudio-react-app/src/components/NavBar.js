@@ -56,7 +56,7 @@ function NavBar({ isAuthenticated, toggleLoginPage, handleLogout }) {
               <Link to={`profile/${user?.id}`} className='floatingMenuTabButton'>
                 <PersonOutlineIcon />
               </Link>
-              <Link to={`profile/${user?.id}`} className='floatingMenuTabButton'>
+              <Link to={`content?create=true`} className='floatingMenuTabButton'>
                 <AddIcon />
               </Link>
               <Link to={`library`} className='floatingMenuTabButton'>

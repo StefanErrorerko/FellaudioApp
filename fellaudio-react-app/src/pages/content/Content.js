@@ -12,8 +12,6 @@ function Content() {
     const params = new URLSearchParams(window.location.search);
     const createParam = params.get('create');
 
-    console.log("createParam", createParam)
-
     // Update state based on the query parameter
     if (createParam === 'true') {
       setShouldRenderCreate(true);

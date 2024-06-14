@@ -1,7 +1,7 @@
 import React, {useContext, useState, useEffect} from 'react'
 import ContentContainer from './ContentContainer'
 import { UserContext } from '../context/UserContext'
-import { FillContentWithImages } from '../utils/tempUtil';
+import { FillContentWithMedia } from '../utils/tempUtil';
 
 const ApiUrl = process.env.REACT_APP_API_URL
 
@@ -19,10 +19,9 @@ function RecommenderContainer({currentContent}) {
           try {
             const response = await fetch(`${ApiUrl}/User/${user.id}/recommendations`);    
             let contents = await response.json()
-            console.log("ot", currentContent.id)
             contents = contents.filter(c => c.id != currentContent.id)
             contents = contents.slice(0, 3)
-            FillContentWithImages(contents)
+            contents = await FillContentWithMedia(contents)
             setContents(contents)
           } 
           catch (err) {
