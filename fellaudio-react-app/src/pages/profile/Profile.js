@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import '../../styles/Profile.css';
 import ProfileDisplay from './templates/ProfileDisplay';
-import ProfileEdit from './templates/ProfileEdit'; // Assuming ContentCreate component exists
+import ProfileCreate from './templates/ProfileCreate'; // Assuming ContentCreate component exists
+import ProfileEdit from './templates/ProfileEdit';
 
 function Profile({onRegister}) {
   const [shouldRender, setShouldRender] = useState();
@@ -25,7 +26,7 @@ function Profile({onRegister}) {
       {shouldRender === 'edit' ? (
         <ProfileEdit />
       ) : (shouldRender === 'create' ? (
-        <ProfileEdit onRegister={onRegister} />
+        <ProfileCreate onRegister={onRegister} />
       ) : (
         <ProfileDisplay />
       ))}

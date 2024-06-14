@@ -48,7 +48,7 @@ form {
     color: white; /* Set link text color to black for better contrast with the background */
     width: 140px; /* Set the width of the buttons */
     height: 50px; /* Set the height of the buttons */
-    background: #5d5c5c; /* Set the background color */
+    background: #4F6F52; /* Set the background color */
     border-radius: 33.419px;
     display: flex;
     align-items: center; /* Center items vertically */
@@ -58,4 +58,8 @@ form {
     font-size: 18px;
     font-family: 'FuturaDemiC', sans-serif;
     cursor: pointer;
+  }
+
+  .registerText p {
+    margin: 0px;
   }

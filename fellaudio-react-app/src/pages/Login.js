@@ -38,7 +38,10 @@ const Login = ({ onLogin, onExitLoginPopup }) => {
         </div>
         {error && <div className="error">{error}</div>}
         <button type="submit">Увійти</button>
-        <Link to="profile?create=true" onClick={onExitLoginPopup}>Створіть акаунт зараз!</Link>
+        <div className='registerText'>
+          <p>Не маєте акаунта?</p>
+          <Link to="profile?create=true" onClick={onExitLoginPopup}>Зареєструйтесь зараз!</Link>
+        </div>
       </form>
     </div>
   );

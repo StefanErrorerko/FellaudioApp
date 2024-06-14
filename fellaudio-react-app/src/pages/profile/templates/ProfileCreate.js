@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import ProfileDummyImage from '../../../assets/profile-dummy.jpg';
 import '../../../styles/Profile.css';
 import { toast } from 'react-toastify';
@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 
 const ApiUrl = process.env.REACT_APP_API_URL;
 
-function ProfileEdit({onRegister=null}) {
+function ProfileCreate({onRegister=null}) {
     const [firstname, setFirstname] = useState('');
     const [lastname, setLastname] = useState('');
     const [email, setEmail] = useState('');
@@ -108,12 +108,15 @@ function ProfileEdit({onRegister=null}) {
     };
 
     return (
-        <form onSubmit={handleSubmit} className="profileEdit">
+        <form onSubmit={handleSubmit} className="profileCreate">
             <div className="profileRow">
                 <div className="profileImage">
                     <img src={imageFile || ProfileDummyImage} alt='Profile' />
                     <input type="file" accept="image/*" onChange={handleImageChange} />
                     {error && <p className="error">{error}</p>}
+                    <button type="submit" disabled={isLoading}>
+                        {isLoading ? 'Реєстрація...' : 'Зареєструватись'}
+                    </button>
                 </div>
                 <div className="detailsBlock">
                     <h2>Введіть ваше ім'я та прізвище:</h2>
@@ -164,11 +167,8 @@ function ProfileEdit({onRegister=null}) {
                     </div>
                 </div>
             </div>
-            <button type="submit" disabled={isLoading}>
-                {isLoading ? 'Реєстрація...' : 'Зареєструватись'}
-            </button>
         </form>
     );
 }
 
-export default ProfileEdit;
+export default ProfileCreate;

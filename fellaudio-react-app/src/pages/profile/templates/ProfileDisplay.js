@@ -1,9 +1,9 @@
 import {useRef, useState, useEffect} from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import '../../../styles/Profile.css';
 import ProfileDummyImage from '../../../assets/profile-dummy.jpg'
 import ContentContainer from '../../../components/ContentContainer';
-import { FillContentWithImages, FillContentWithMedia, FillProfileWithImages } from '../../../utils/tempUtil';
+import { FillContentWithMedia, FillProfileWithImages } from '../../../utils/tempUtil';
 
 const ApiUrl = process.env.REACT_APP_API_URL
 

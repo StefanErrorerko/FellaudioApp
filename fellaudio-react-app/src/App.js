@@ -49,8 +49,6 @@ function App() {
     //CryptoJS.SHA256(password).toString(CryptoJS.enc.Hex);
     password
 
-    console.log("priinav", `${email} ${password}/`)
-
     const fetchContents = async () => {
       abortControllerRef.current?.abort();
       abortControllerRef.current = new AbortController();
@@ -148,6 +146,7 @@ function App() {
 
   const handleRegister = async user => {
     const fetchContents = async () => {
+      console.log("e", user)
       abortControllerRef.current?.abort();
       abortControllerRef.current = new AbortController();
     try{
@@ -155,10 +154,8 @@ function App() {
           signal: abortControllerRef.current.signal
         });
         let playlistSaved
-        if (responsePlaylist.ok) {
+        if (responsePlaylist.ok)
             playlistSaved = responsePlaylist.json()
-        }
-          console.log("kkk", playlistSaved)
 
           if(!playlistSaved){
               const playlistCreateResponse = await fetch(`${ApiUrl}/Playlist`, {
@@ -177,19 +174,19 @@ function App() {
               console.log("mmm", playlistSaved)
 
           }
-
-        if (!responsePlaylist.ok) {
-          throw new Error(`Error: ${responsePlaylist.status} ${responsePlaylist.statusText}`);
-        }
-
+        
+        console.log("e tut?")
         const playlist = playlistSaved
         setPlaylistSaved(playlist)
+        console.log("a tut?")
 
         setIsAuthenticated(true);
         setIsLoginPageVisible(false);
         localStorage.setItem('token', 'mockToken');
         localStorage.setItem('user', JSON.stringify(user));
         localStorage.setItem('playlistSaved', JSON.stringify(playlist));
+        console.log("aaaatut?")
+
       } catch (err) {
         if (err.name === 'AbortError') {
           console.log("Aborted");

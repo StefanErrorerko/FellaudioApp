@@ -39,7 +39,6 @@ body.no-scroll {
 
 input::placeholder {
   color: #999999;
-  font-style: italic; /* Placeholder text style */
   font-family: 'AvantGardeGothicC';
   font-weight: normal;
 }

@@ -7,6 +7,11 @@
   flex-direction: column;
 }
 
+.home input::placeholder {
+  font-family: 'AvantGardeGothicC';
+  font-weight: normal;
+}
+
 .topContainer {
   width: 100%;
   flex: 1; /* Allow the image to take up remaining space */
