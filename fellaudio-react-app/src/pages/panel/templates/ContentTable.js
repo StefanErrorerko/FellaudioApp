@@ -120,7 +120,7 @@ function ContentTable() {
             showHidden={true}
         />
         ) : (
-            <div>Завнтаження...</div>
+            <div>Завантаження...</div>
         )}
     </div>
   );

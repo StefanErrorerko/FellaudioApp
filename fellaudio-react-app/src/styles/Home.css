@@ -85,7 +85,7 @@
   border-radius: 50px;
   border: 1px black solid;
   background-color: transparent;
-  font-family: 'FuturaDemiC', sans-serif;
+  font-family: 'AvantGardeGothicC';
   font-size: 22px;
   flex-grow: 1; /* Allow input to grow */
   min-width: 250px; /* Minimum width for the input */

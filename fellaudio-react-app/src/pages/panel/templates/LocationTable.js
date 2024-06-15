@@ -3,6 +3,7 @@ import { isValidFloat } from '../../content/utils/contentUtils';
 import { toast } from 'react-toastify'; // Import toast module for notifications
 import 'react-toastify/dist/ReactToastify.css'; // Import CSS for toast notifications
 import '../../../styles/Panel.css'; 
+import CancelIcon from '@mui/icons-material/Cancel';
 
 const ApiUrl = process.env.REACT_APP_API_URL;
 
@@ -85,6 +86,25 @@ function LocationTable() {
     }
   };
 
+  const deleteLocation = async (locationId) => {
+    try {
+      const response = await fetch(`${ApiUrl}/Location/${locationId}`, {
+        method: 'DELETE',
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      // Update the user list after successful deletion
+      setLocations(locations.filter(l => l.id !== locationId));
+      toast.success('Локацію видалено');
+    } catch (error) {
+      console.error('Error deleting user:', error);
+      toast.error('Не вдалося видалити локацію');
+    }
+  };
+
   return (
     <div className="locationTableContainer">
       <div className="coordinatesInput">
@@ -122,12 +142,13 @@ function LocationTable() {
               <th>Назва</th>
               <th>Широта</th>
               <th>Довгота</th>
+              <th>Видалити</th>
             </tr>
           </thead>
           <tbody>
             {isLoading ? (
               <tr>
-                <td colSpan="3">Loading...</td>
+                <td colSpan="3">Завантаження...</td>
               </tr>
             ) : (
               locations.map((location) => (
@@ -136,6 +157,14 @@ function LocationTable() {
                   <td>{location.name}</td>
                   <td>{location.latitude}</td>
                   <td>{location.longitude}</td>
+                  <td>
+                    <button
+                      className="deleteUserButton"
+                      onClick={() => deleteLocation(location.id)}
+                    >
+                      <CancelIcon />
+                    </button>
+                  </td>
                 </tr>
                 )
               ))

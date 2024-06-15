@@ -122,6 +122,7 @@ html, body {
   .locationTableContainer {
     width: 80%; /* Table container width */
     margin: 0 auto; /* Center align horizontally */
+    font-family: 'AvantGardeGothicC';
   }
   
   .coordinatesInput {
@@ -181,3 +182,58 @@ html, body {
     font-size: 16px; /* Increase font size for data cells */
   }
   
+  .userTableContainer {
+    padding: 20px;
+  }
+  
+  .tableContainer {
+    width: 80%;
+    margin: 0 auto;
+  }
+  
+  .userTable {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: 'AvantGardeGothicC';
+  }
+  
+  .userTable th, .userTable td {
+    border: 1px solid #bdbdbd;
+    padding: 8px;
+    text-align: center;
+  }
+  
+  .userTable th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    background-color: #739072;
+  }
+
+  .userTable tr td {
+    cursor: pointer;
+    
+  }
+  .userTable tr td:hover {
+    text-decoration: underline;
+  }
+  
+  .adminPanel .deleteUserButton {
+    position:unset;
+    width: 30px;
+    height: 30px;
+    background-color: red;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3);
+    font-size: 18px;
+    padding: 0px;
+  }
+
+  .adminPanel .deleteUserButton:hover {
+    background-color: darkred;
+  }
