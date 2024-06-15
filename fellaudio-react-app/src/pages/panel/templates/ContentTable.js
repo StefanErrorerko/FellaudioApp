@@ -102,22 +102,26 @@ function ContentTable() {
   }
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <div>Завантаження...</div>;
   }
 
   if (error) {
     console.log(error)
-    return <div>Something went wrong. Please try again</div>;
+    return <div>Щось пішло не так</div>;
   }
 
   return (
     <div>
-      <ContentContainer
-        isEdited={true}
-        contents={contents}
-        onEditAction={handleBlockContent}
-        showHidden={true}
-      />
+        {contents.length > 0 ? (
+        <ContentContainer
+            isEdited={true}
+            contents={contents}
+            onEditAction={handleBlockContent}
+            showHidden={true}
+        />
+        ) : (
+            <div>Завнтаження...</div>
+        )}
     </div>
   );
 }

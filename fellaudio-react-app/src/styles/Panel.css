@@ -81,4 +81,103 @@ html, body {
       grid-template-columns: 1fr; /* 1 column for small screens */
     }
   }
+
+  .adminPanel .coordinatesInput {
+    display: flex;
+    gap: 10px; /* Gap between items */
+    align-items: center;
+  }
+  
+  .adminPanel .coordinatesInput input {
+    background-color: transparent;
+    border-radius: 10px;
+    border: 1px solid black;
+    padding: 0px 10px;
+    font-family: 'AvantGardeGothicC';
+    height: 40px;
+    font-size: 15px;
+    width: 150px; /* Adjust width as needed */
+  }
+  
+  .adminPanel .coordinatesInput .createLocation {
+    background-color: #4F6F52;
+    color: #ECE3CE;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    font-size: 18px;
+    width: 280px;
+    font-family: 'FuturaDemiC', sans-serif;
+    transition: background-color 0.3s, color 0.3s;
+    padding: 10px 20px;
+  }
+  
+  .adminPanel .coordinatesInput .createLocation:hover {
+    background-color: #ECE3CE;
+    color: #4F6F52;
+    border: 1px solid #4F6F52;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3);
+  }
+  
+  .locationTableContainer {
+    width: 80%; /* Table container width */
+    margin: 0 auto; /* Center align horizontally */
+  }
+  
+  .coordinatesInput {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px; /* Space between inputs and table */
+  }
+  
+  .coordinatesInput input {
+    width: 150px; /* Adjust input width as needed */
+    height: 40px;
+    padding: 0px 10px;
+    font-family: 'AvantGardeGothicC';
+    font-size: 15px;
+    border-radius: 10px;
+    border: 1px solid black;
+    background-color: transparent;
+  }
+  
+  .createLocation {
+    background-color: #4f6f52;
+    color: #ece3ce;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    font-size: 18px;
+    font-family: 'FuturaDemiC', sans-serif;
+    padding: 10px 20px;
+    transition: background-color 0.3s, color 0.3s;
+  }
+  
+  .createLocation:hover {
+    background-color: #ece3ce;
+    color: #4f6f52;
+    border: 1px solid #4f6f52;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3);
+  }
+  
+  .locationTable {
+    width: 100%;
+    border-collapse: collapse; /* Collapse table borders */
+    text-align: center; /* Center align text within cells */
+  }
+  
+  .locationTable th,
+  .locationTable td {
+    padding: 12px; /* Padding inside cells */
+    border: 1px solid #bdbdbd; /* Border for table cells */
+  }
+  
+  .locationTable th {
+    background-color: #739072; /* Header background color */
+    font-size: 18px; /* Increase font size for header */
+  }
+  
+  .locationTable td {
+    font-size: 16px; /* Increase font size for data cells */
+  }
   

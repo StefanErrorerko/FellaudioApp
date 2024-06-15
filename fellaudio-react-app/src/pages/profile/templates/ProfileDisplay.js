@@ -67,12 +67,12 @@ function ProfileDisplay() {
   }, [userId, user]);  
 
   if (isLoading) {
-    return <div>Loading...</div>
+    return <div>Завантаження...</div>
   }
 
   if (error) {
     console.log(error)
-    return <div>Something went wrong. Please try again</div>
+    return <div>Щось пішло не так</div>
   }  
 
   return (

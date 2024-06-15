@@ -41,11 +41,11 @@ function RecommenderContainer({currentContent}) {
       }, [user, currentContent]); 
 
       if (isLoading) {
-        return <div>Loading...</div>
+        return <div>Завантаження...</div>
       }
     
       if (error) {
-        return <div>Something went wrong. Please try again</div>
+        return <div>Щось пішло не так</div>
       }
     
 
