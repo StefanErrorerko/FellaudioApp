@@ -78,6 +78,12 @@
   justify-content: space-between; /* Distribute items with space between */
 }
 
+.home input::placeholder {
+  color: #5d5c5c;
+  font-family: 'FuturaDemiC', sans-serif;
+  font-weight: normal;
+}
+
 .searchArea input {
   padding: 10px;
   padding-left: 20px;
