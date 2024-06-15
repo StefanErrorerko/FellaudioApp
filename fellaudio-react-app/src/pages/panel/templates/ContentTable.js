@@ -116,6 +116,7 @@ function ContentTable() {
         isEdited={true}
         contents={contents}
         onEditAction={handleBlockContent}
+        showHidden={true}
       />
     </div>
   );

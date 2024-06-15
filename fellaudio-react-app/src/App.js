@@ -86,8 +86,6 @@ function App() {
         if (responsePlaylist.ok) {
             playlistSaved = responsePlaylist.json()
         }
-          console.log("kkk", playlistSaved)
-
           if(!playlistSaved){
               const playlistCreateResponse = await fetch(`${ApiUrl}/Playlist`, {
                   method: 'POST',
@@ -102,8 +100,6 @@ function App() {
                   signal: abortControllerRef.current.signal
               });
               playlistSaved = await playlistCreateResponse.json();
-              console.log("mmm", playlistSaved)
-
           }
 
         if (!responsePlaylist.ok) {
@@ -131,14 +127,14 @@ function App() {
 
     fetchContents()
 
-    if (email === 'test@mail.com' && password === 'password') {
-      const userData = { email, userId: 1 };
+    if (email === 'test@mail.com' && password === 'string') {
+      const userData = { email, userId: 0, admin: true };
       localStorage.setItem('token', 'mockToken');
       localStorage.setItem('user', JSON.stringify(userData));
       setIsAuthenticated(true);
       setUser(userData);
       setIsLoginPageVisible(false);
-      return true;
+      return userData;
     }
     return false;
   };

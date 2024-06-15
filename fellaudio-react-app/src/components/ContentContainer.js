@@ -3,7 +3,7 @@ import ContentItem from "./ContentItem";
 import { useNavigate } from "react-router-dom";
 import DummyImage from '../assets/dummy.jpg'
 
-const ContentContainer = ({ contents, isEdited = false, playlist = null, onEditAction = null}) => {
+const ContentContainer = ({ contents, isEdited = false, playlist = null, onEditAction = null, showHidden=false}) => {
   const navigate = useNavigate();
 
   const handleContentItemClick = (contentId) => {
@@ -13,18 +13,20 @@ const ContentContainer = ({ contents, isEdited = false, playlist = null, onEditA
   return (
     <div className='blocksContainer'>
       {contents.map((contentItem) => (
-        <div key={contentItem.id} onClick={() => handleContentItemClick(contentItem.id)}>
-          <ContentItem
-            contentId={contentItem.id}
-            image={contentItem.image ? contentItem.image : DummyImage}
-            name={contentItem.title}
-            location={contentItem.area}
-            time={contentItem.audioFile !== null ? contentItem.audioFile.durationInSeconds : 0}
-            isEdited={isEdited}
-            onEditAction={onEditAction}
-            isHidden={contentItem.status === "Banned"}            
-          />
-        </div>
+        (showHidden || contentItem.status !== "Banned") && (
+          <div key={contentItem.id} onClick={() => handleContentItemClick(contentItem.id)}>
+            <ContentItem
+              contentId={contentItem.id}
+              image={contentItem.image ? contentItem.image : DummyImage}
+              name={contentItem.title}
+              location={contentItem.area}
+              time={contentItem.audioFile !== null ? contentItem.audioFile.durationInSeconds : 0}
+              isEdited={isEdited}
+              onEditAction={onEditAction}
+              isHidden={contentItem.status === "Banned"}            
+            />
+          </div>
+        )
       ))}
     </div>
   );

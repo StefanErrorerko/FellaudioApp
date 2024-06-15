@@ -1,6 +1,6 @@
 import React, {useState, useRef, useEffect, useContext} from 'react'
 import Logo from '../assets/logo.jpg'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import ReorderIcon from '@mui/icons-material/Reorder';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 import AddIcon from '@mui/icons-material/Add';
@@ -13,6 +13,12 @@ function NavBar({ isAuthenticated, toggleLoginPage, handleLogout }) {
   const [isMenuVisible, setIsMenuVisible] = useState(false);
   const { user } = useContext(UserContext);
   const menuRef = useRef(null);
+  const navigate = useNavigate()
+
+  const onLogoutClick = () => {
+    navigate('/')
+    handleLogout()
+  }
 
   const toggleVisibility = () => {
     setIsMenuVisible(!isMenuVisible); 
@@ -42,7 +48,7 @@ function NavBar({ isAuthenticated, toggleLoginPage, handleLogout }) {
             <div className='hiddenLinks'>
               <Link to="/about"> ПРО НАС </Link>
               {isAuthenticated ? (
-                <button onClick={handleLogout}> ВИЙТИ </button>
+                <button onClick={onLogoutClick}> ВИЙТИ </button>
               ) : (
                 <button onClick={toggleLoginPage}> УВІЙТИ </button>
               )}

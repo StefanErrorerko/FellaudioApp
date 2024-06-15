@@ -105,6 +105,7 @@ function ProfileDisplay() {
       <div className="contentsRow">
         <ContentContainer
           contents = {contents}
+          showHidden={true}
         />
       </div>
 

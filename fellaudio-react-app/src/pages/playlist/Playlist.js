@@ -158,6 +158,7 @@ function Playlist() {
           isEdited={isEditing}
           playlist={playlist}
           onEditAction={deleteContent}
+          showHidden={true}
         />        
       )}
 

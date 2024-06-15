@@ -1,11 +1,13 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import '../styles/Login.css'; // Add necessary styles
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { UserContext } from '../context/UserContext';
 
 const Login = ({ onLogin, onExitLoginPopup }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const navigate = useNavigate()
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -13,6 +15,11 @@ const Login = ({ onLogin, onExitLoginPopup }) => {
     if (!success) {
       setError('Invalid email or password');
     }
+    console.log(success)
+    if(success?.admin)
+      navigate('/admin/panel')
+    else
+      navigate('/')
   };
 
   return (
