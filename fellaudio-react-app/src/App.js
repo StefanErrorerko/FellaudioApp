@@ -5,7 +5,6 @@ import {
   Routes,
 } from 'react-router-dom';
 import React, { useState, useEffect, useRef } from 'react';
-import { ToastContainer, toast } from 'react-toastify';
 
 import NavBar from './components/Navbar';
 import Home from './pages/Home';
@@ -17,6 +16,7 @@ import Library from './pages/Library';
 import ScrollToTop from './utils/ScrollToTop';
 import Playlist from './pages/playlist/Playlist';
 import { removeContext, updateContext } from './context/UserContext';
+import Panel from './pages/panel/Panel';
 
 const ApiUrl = process.env.REACT_APP_API_URL
 
@@ -242,6 +242,7 @@ function App() {
             <Route path="/profile" element={<Profile onRegister={handleRegister}/>} />
             <Route path="/library" element={<Library />} />
             <Route path="/playlist/:playlistId" element={<Playlist />} />
+            <Route path='/admin/panel' element={<Panel />} />
           </Routes>
         </div>
         {isLoginPageVisible && (

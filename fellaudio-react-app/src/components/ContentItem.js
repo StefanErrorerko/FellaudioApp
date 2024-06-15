@@ -2,10 +2,11 @@ import React, { useState } from 'react';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import PlaceIcon from '@mui/icons-material/Place';
 import CancelIcon from '@mui/icons-material/Cancel';
+import Done from '@mui/icons-material/Done'
 import '../styles/ContentItem.css'
 import { formatDurationTime } from '../utils/timeFormat';
 
-function ContentItem({ contentId=null, image, name, location, time, isEdited=false, onEditAction=null }) {
+function ContentItem({ contentId=null, image, name, location, time, isEdited=false, onEditAction=null, isHidden=false }) {
   const [isDeleted, setIsDeleted] = useState(false)
 
   const handleDeleteClick = async (e) => {
@@ -13,6 +14,14 @@ function ContentItem({ contentId=null, image, name, location, time, isEdited=fal
     if (onEditAction && contentId) {
       onEditAction(contentId);
       setIsDeleted(true)
+    }
+  }
+
+  const handleHideClick = async e => {
+    e.stopPropagation();
+    if (onEditAction && contentId) {
+      onEditAction(contentId);
+      setIsDeleted(false)
     }
   }
 
@@ -35,9 +44,15 @@ function ContentItem({ contentId=null, image, name, location, time, isEdited=fal
       </button>
       )}
 
-      <div className={`contentDeletedArea ${isDeleted ? "visible" : "hidden"}`}>
+      <div className={`contentDeletedArea ${isDeleted || isHidden ? "visible" : "hidden"}`}>
         Контент видалено
       </div>
+
+      {isEdited && isHidden &&(
+        <button className='unbanButton' onClick={handleHideClick}>
+          <Done />
+      </button>
+      )}
     </div>
   );
 }

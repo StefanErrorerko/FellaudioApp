@@ -1,0 +1,84 @@
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+  }
+  
+  #root {
+    height: 100%;
+  }
+  
+  .adminPanel {
+    display: flex;
+    height: 100%;
+    border: 1px solid #bdbdbd; /* Border around the entire panel */
+  }
+  
+  .adminPanel .leftPanel {
+    width: 20%; /* Adjust width as necessary */
+    border-right: 1px solid #bdbdbd; /* Border between aside and main */
+    display: flex;
+    flex-direction: column;
+    font-family: 'AvantGardeGothicC';
+    font-size: x-large;
+    color: #5d5c5c;
+  }
+  
+  .adminPanel .panelContent {
+    width: 80%; /* Adjust width as necessary */
+    padding: 20px;
+    box-sizing: border-box; /* Ensures padding is included in the element's total width and height */
+  }
+  
+  .adminPanel .leftPanel table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .adminPanel .leftPanel th, .adminPanel .leftPanel td {
+    padding: 8px;
+    padding-left: 25px;
+    text-align: left;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    gap: 8px;
+  }
+  
+  .adminPanel .leftPanel th {
+    background-color: #f2f2f2;
+  }
+  
+  .adminPanel .leftPanel tr {
+    height: 50px; /* Adjust height as necessary */
+    border: 1px solid #bdbdbd; /* Border between table cells */
+  }
+  
+  .adminPanel .leftPanel tr:hover {
+    background-color: #f1f1f1;
+  }
+
+  .adminPanel .panelContent {
+    min-height: calc(100vh - 90px - 2px);
+    height: calc(100% - 90px - 2px);
+    padding: 20px 50px;
+  }
+  
+  .adminPanel .panelContent h1 {
+    margin-bottom: 20px;
+    text-align: left;
+  }
+
+  @media only screen and (max-width: 2000px) {
+    .adminPanel .panelContent .blocksContainer {
+      grid-template-columns: repeat(2, 1fr); /* 2 columns for smaller screens */
+    }
+  }
+  
+  @media only screen and (max-width: 1250px) {
+    .adminPanel .panelContent .blocksContainer {
+      grid-template-columns: 1fr; /* 1 column for small screens */
+    }
+  }
+  
