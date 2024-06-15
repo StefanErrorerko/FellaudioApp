@@ -20,6 +20,7 @@ import CommentFormDisabled from '../../../components/Comment/CommentFormDisabled
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import ProfileDummyImage from '../../../assets/profile-dummy.jpg'
+import FloatingEditButton from '../../../components/FloatingEditButton';
 
 const ApiUrl = process.env.REACT_APP_API_URL
 
@@ -64,11 +65,16 @@ function ContentDisplay() {
     setIsLiked(!isLiked)
   }
 
+  const handleEditClick = () => {
+    navigate(`/content/${content.id}?edit=true`)
+    window.location.reload();   
+  }
+
   const handleDownloadClick = () => {
     if (content.audioFile && content.audioFile.data) {
       const link = document.createElement('a');
       link.href = content.audioFile.data;
-      link.download = `${content.name}_audio.mp3`;
+      link.download = `${content.title}_audio.mp3`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -269,7 +275,13 @@ function ContentDisplay() {
           currentContent = {content}
         />
       )}
-      
+
+      {content.user?.id == user?.id && (
+        <FloatingEditButton 
+          handleOnClick={handleEditClick}
+          isEditing={false}
+        />
+      )}      
     </div>
   );
 }

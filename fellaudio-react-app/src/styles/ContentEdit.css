@@ -1,9 +1,14 @@
-.contentCreate {
+.contentEdit .contentImage {
+    object-fit: cover;
+    height: calc(70vh - 110px); /* Adjust height as needed */
+  }
+
+  .contentEdit {
     position: relative;
     padding: 0px;
 }
 
-.contentCreate form {
+.contentEdit form {
     padding: 0px;
     position: relative;
 }
@@ -13,7 +18,7 @@
   height: calc(70vh - 110px); /* Adjust height as needed */
 }
 
-.contentCreate .imageContainer {
+.contentEdit .imageContainer {
     position: relative;
     width: 100%;
     height: calc(70vh - 110px); /* Adjust height as needed */
@@ -25,13 +30,13 @@
     
   }
 
-.contentCreate .imageContainer span,
-.contentCreate .imageContainer h1 {
+.contentEdit .imageContainer span,
+.contentEdit .imageContainer h1 {
     text-align: left; /* Left-align the text */
     margin-left: 100px;
 }
 
-.contentCreate .imageContainer input {
+.contentEdit .imageContainer input {
   font-size: 16px;
   justify-self: center; /* Center the input horizontally */
   
@@ -41,7 +46,7 @@
   flex-direction: column;
 }
 
-.contentCreate .contentTitleBackground {
+.contentEdit .contentTitleBackground {
     position: absolute;
     top: calc(70vh - 110px);
     width: 100%;
@@ -49,27 +54,27 @@
     height: 135px; /* Fixed height for the background */
   }
 
-.contentCreate .contentTitle {
+.contentEdit .contentTitle {
     position: absolute;
     top: calc(70vh - 60px);
     width: 100%;
 }
 
-.contentCreate .contentTitle input {
+.contentEdit .contentTitle input {
     background-color: transparent;
     font-size: 25px;
 }
 
-.contentCreate .contentContainer {
+.contentEdit .contentContainer {
     width: 100%;
     text-align: left;
 }
 
-.contentCreate .contentContainer span {
+.contentEdit .contentContainer span {
     margin-left: 40px;
 }
 
-.contentCreate .contentContainer .contentAudio {
+.contentEdit .contentContainer .contentAudio {
     height: 100%;  
     display: flex;
     justify-content: center; /* Center horizontally */
@@ -80,16 +85,16 @@
     margin: 10px 20px;
 }
 
-.contentCreate .contentContainer .contentAudio input {
+.contentEdit .contentContainer .contentAudio input {
     font-size: 16px;
 }
 
-.contentCreate .contentContainer .contentDescription {
+.contentEdit .contentContainer .contentDescription {
     text-align: center;
     margin: 10px 20px;
 }
 
-.contentCreate .contentContainer textarea {
+.contentEdit .contentContainer textarea {
     width: calc(100% - 35px);
     min-height: 90px;
     padding: 10px;
@@ -103,32 +108,32 @@
     resize: none; /* Disable manual resizing */
 }
 
-.contentCreate .areaSelect {
+.contentEdit .areaSelect {
     margin: 0px 20px;
     display: grid;
     
 }
 
-.contentCreate .areaSelect span {
+.contentEdit .areaSelect span {
     margin: 25px;
 }
 
-.contentCreate .pointsBlock {
+.contentEdit .pointsBlock {
     margin: 10px 20px;
 }
 
-.contentCreate .pointsBlock .pointsBlockInformation {
+.contentEdit .pointsBlock .pointsBlockInformation {
     display: flex;
   align-items: center; /* Align items vertically centered */
   gap: 20px;
   margin: 10px -20px;
 }
 
-.contentCreate .pointsBlock .pointsBlockInformation .switchContainer label{
+.contentEdit .pointsBlock .pointsBlockInformation .switchContainer label{
     margin: 0px;
 }
 
-.contentCreate .pointsBlock .pointsBlockData {
+.contentEdit .pointsBlock .pointsBlockData {
     display: grid;
     grid-template-columns: 1fr 1fr;
 }
@@ -172,7 +177,7 @@
     opacity: 0;
   }
 
-.contentCreate button {
+.contentEdit button {
     width: 280px;
     padding: 8px 20px;
     background-color: #4F6F52;
@@ -187,7 +192,7 @@
     margin-bottom: 25px;
   }
 
-  .contentCreate button:hover {
+  .contentEdit button:hover {
     background-color: #ECE3CE; /* Background color changes to light */
     color: #4F6F52; /* Text color changes to green */
     border: 1px solid #4F6F52;

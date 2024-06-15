@@ -77,3 +77,8 @@ export async function dislikeContent(user, content) {
         throw err;
     }
 }
+
+export const isValidFloat = (value) => {
+    const floatRegex = /^(?!0\.00$)(?!0*$)\d*\.?\d*$/;
+    return floatRegex.test(value);
+  };

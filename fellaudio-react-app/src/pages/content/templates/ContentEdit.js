@@ -1,10 +1,13 @@
 import React, { useState, useRef, useEffect, useContext } from 'react';
-import '../../../styles/ContentCreate.css';
+import '../../../styles/ContentEdit.css';
 import DummyImage from '../../../assets/dummy.jpg';
 import SwitchPointLocation from '../../../components/SwitchPointLocation';
 import { getAreas } from '../../../assets/Area';
 import { UserContext } from '../../../context/UserContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import { isValidFloat } from '../utils/contentUtils';
+import { FillContentWithMedia } from '../../../utils/tempUtil';
+import { toast } from 'react-toastify';
 
 const ApiUrl = process.env.REACT_APP_API_URL;
 
@@ -18,10 +21,13 @@ function ContentEdit() {
   const [selectedArea, setSelectedArea] = useState(''); // State for selected option
   const [selectedLocation, setSelectedLocation] = useState(''); // State for selected option
   const [locations, setLocations] = useState([]);
+  const [contents, setContents] = useState()
   const [error, setError] = useState('');
+  const [point, setPoint] = useState({ latitude: '', longitude: '' }); // Initialize with default values
 
   const navigate = useNavigate();
   const {user} = useContext(UserContext)
+  const { contentId } = useParams()
 
   const abortControllerRef = useRef(null);
 
@@ -45,7 +51,6 @@ function ContentEdit() {
     }
     setImageFile(file);
   };
-
 
   const handleAreaChange = (e) => {
     setSelectedArea(e.target.value);
@@ -79,11 +84,6 @@ function ContentEdit() {
     setError('');
 
     try {
-      const formData = new FormData();
-      formData.append('title', title);
-      formData.append('description', description);
-      formData.append('userId', user.id);
-      formData.append('area', selectedArea);
 
       if (showCoordinates) {
         if (!latitude || !longitude || !isValidFloat(latitude) || !isValidFloat(longitude)) {
@@ -91,110 +91,106 @@ function ContentEdit() {
           setIsLoading(false);
           return;
         }
-
-        formData.append('points', JSON.stringify({ latitude, longitude }));
-      } else {
-        formData.append('location', selectedLocation);
       }
 
       const body = {
         "title": title,
         "description": description,
         "area": selectedArea,
-        "userId": user.id,
         "status": "Published"
       }
 
-      const response = await fetch(`${ApiUrl}/Content`, {
-        method: 'POST',
+      const response = await fetch(`${ApiUrl}/Content/${contentId}`, {
+        method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
             },
         body: JSON.stringify(body),
       });
 
-      if (response.status === 422) {
-        setError('Контент з такою назвою уже існує');
-      }
-      else if (!response.ok) {
+      if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
 
-      const contentData = await response.json();
-      const contentId = contentData.id; // Assuming the API returns the ID of the newly created content
+      let contentData = await response.json();
+      contentData = (await FillContentWithMedia([contentData]))[0]
+      setContents(contentData)
 
-      console.log("imageFile", imageFile)
-      if (imageFile) {
-        saveFile(imageFile, `${contentId}.${imageFile.name.split('.').pop()}`, '../../../assets/contentImages/');
-      }
+      console.log('Content updated:', contentData);
 
-      console.log("audioFile", audioFile)
-      if (audioFile) {
-        saveFile(audioFile, `${contentId}.${audioFile.name.split('.').pop()}`, '../../../assets/contentAudios/');
-      }
+      if(showCoordinates) {
+        if(contentData.points[0].location.name === "default"){
+            const contentPoint = {latitude: latitude, longitude: longitude, name: "default"}
+            console.log(contentData)
+            const responseLocation = await fetch(`${ApiUrl}/Location/${contentData.points[0].location.id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    },
+                body: JSON.stringify(contentPoint),
+            });
 
-      console.log('Content created:', contentData);
-
-      let point
-      if(showCoordinates)
-        point = {latitude: latitude, longitude: longitude, name: "default"}
-      else
-        point = {latitude: selectedLocation.latitude, longitude: selectedLocation.longitude, name: selectedLocation.name}
-
-        let locationToPoint
-
-        if(showCoordinates){
+            if (!responseLocation.ok) {
+                throw new Error(`HTTP error! Status: ${responseLocation.status}`);
+            }
+        }
+        else {
+            const contentPoint = {latitude: latitude, longitude: longitude, name: "default"}
             const responseLocation = await fetch(`${ApiUrl}/Location`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     },
-                body: JSON.stringify(point),
+                body: JSON.stringify(contentPoint),
             });
 
             if (!responseLocation.ok) {
                 throw new Error(`HTTP error! Status: ${responseLocation.status}`);
             }
 
-            locationToPoint = await responseLocation.json()
+            const locationToPoint = await responseLocation.json()
+
+            const responsePoint = await fetch(`${ApiUrl}/Point/${contentData.points[0].id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    },
+                body: JSON.stringify({
+                    locationId: locationToPoint.id
+                }),
+            });
+    
+            if (!responsePoint.ok) {
+                throw new Error(`HTTP error! Status: ${responsePoint.status}`);
+            }
         }
-
-      if(!locationToPoint)
-        locationToPoint = selectedLocation
-
-      const responsePoint = await fetch(`${ApiUrl}/Point`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            },
-        body: JSON.stringify({
-            contentId: contentId,
-            locationId: locationToPoint.id
-        }),
-      });
-
-      if (!responsePoint.ok) {
-        throw new Error(`HTTP error! Status: ${responsePoint.status}`);
       }
+      else {
+        const responsePoint = await fetch(`${ApiUrl}/Point/${contentData.points[0].id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                },
+            body: JSON.stringify({
+                locationId: selectedLocation.id
+            }),
+        });
 
+        if (!responsePoint.ok) {
+            throw new Error(`HTTP error! Status: ${responsePoint.status}`);
+        }
+      }
     } catch (error) {
       console.error('Error creating content:', error);
-      setError('Не вдалося створити контент');
+      setError('Не вдалося оновити контент');
+      toast.error('Не вдалося оновити контент');
     } finally {
       setIsLoading(false);
-      navigate('/')
+      navigate(`/content/${contentId}`)
+      window.location.reload();        
     }
   };
 
-  const saveFile = (file, fileName, path) => {
-    // Logic to save the file
-    console.log(`Saving file: ${fileName} to path: ${path}`);
-  };
-
-  const isValidFloat = (value) => {
-    const floatRegex = /^(?!0\.00$)(?!0*$)\d*\.?\d*$/;
-    return floatRegex.test(value);
-  };
 
   const handleFloatInput = (e) => {
     const value = e.target.value;
@@ -213,17 +209,43 @@ function ContentEdit() {
       setIsLoading(true);
 
       try {
-        const response = await fetch(`${ApiUrl}/Location`, {
+        const responseLocations = await fetch(`${ApiUrl}/Location`, {
           signal: abortControllerRef.current.signal,
         });
-        const locationsData = await response.json();
+        const locationsData = await responseLocations.json();
         setLocations(locationsData);
+
+        const responseContent = await fetch(`${ApiUrl}/Content/${contentId}`, {
+            signal: abortControllerRef.current.signal,
+          });
+          let contentData = await responseContent.json();
+          contentData = (await FillContentWithMedia([contentData]))[0]
+          setContents(contentData);
+          if(contentData){
+            setTitle(contentData.title)
+            setDescription(contentData.description)
+            setImageFile(contentData.image)
+            setAudioFile(contentData.audioFile)
+            setSelectedArea(contentData.area)
+            if(contentData.points[0].location.name !== "default"){
+                setShowCoordinates(false)
+                setSelectedLocation(contentData.points[0].location)
+            }
+            else {
+                setShowCoordinates(true)
+                setPoint({
+                    latitude: contentData.points[0].location.latitude,
+                    longitude: contentData.points[0].location.longitude
+                })
+            }
+          }
       } catch (err) {
         if (err.name === 'AbortError') {
           console.log('Aborted');
           return;
         }
-        setError(err);
+        toast.error('Щось пішло не так');
+        setError(err.message); // Set the error message instead of the whole error object
       } finally {
         setIsLoading(false);
       }
@@ -233,12 +255,13 @@ function ContentEdit() {
   }, []);
 
   return (
-
-      <form onSubmit={handleSubmit} className="contentCreate">
+      <form onSubmit={handleSubmit} className="contentEdit">
         <div className="imageContainer">
-          <h1>Новий контент</h1>
-          <span>Завантажте обкладинку:</span>
-          <input type="file" accept="image/*" onChange={handleImageChange} />
+          <img 
+            src={imageFile ? imageFile : DummyImage} 
+            alt={title} 
+            className="contentImage" 
+            />
         </div>
         <div className='contentTitleBackground'></div>
         <div className='contentTitle'>
@@ -249,12 +272,13 @@ function ContentEdit() {
             placeholder="Введіть назву вашого контенту..."
             required
           />
+          <input type="file" accept="image/*" onChange={handleImageChange} />
         </div>
         <div className='contentContainer'>
           <span>Завантажте аудіофайл:</span>
-          <div className='contentAudio'>
-            <input type="file" accept="audio/*" onChange={handleAudioChange} />
-          </div>
+            <div className='contentAudio'>
+                <input type="file" accept="audio/*" onChange={handleAudioChange} />
+            </div>
           <div className='contentDescription'>
             <textarea
               value={description}
@@ -267,7 +291,7 @@ function ContentEdit() {
           <div className='contentAreaBlock'>
             <div className='areaSelect'>
               <span>Виберіть місцевість, де відбувається ваша екскурсія</span>
-              <select className="" size="4" onChange={handleAreaChange} required>
+              <select className="" size="4" onChange={handleAreaChange} value={selectedArea || ''} required>
                 {areas.map((area, index) => (
                   <option key={index} value={area.name}>
                     {area.name}
@@ -291,18 +315,21 @@ function ContentEdit() {
                   placeholder="Широта"
                   pattern="(\d*\.?\d+)?"
                   onInput={handleFloatInput}
-                />
+                  defaultValue={point && point.latitude !== undefined ? point.latitude : ''}
+                  />
                 <input
                   type="text"
                   placeholder="Довгота"
                   pattern="(\d*\.?\d+)?"
                   onInput={handleFloatInput}
-                />
+                  defaultValue={point && point.longitude !== undefined ? point.longitude : ''}
+                  />
               </div>
               <select
                 className={`locationSelect ${showCoordinates && 'hidden'}`}
                 size="4"
                 onChange={handleLocationChange}
+                value={selectedLocation.name || ''}
                 required
                 >
                 <option value="жодна">(жодна)</option>
@@ -317,9 +344,8 @@ function ContentEdit() {
             </div>
           </div>
         </div>
-        {error && <div className="error">{error}</div>}
         <button type="submit" disabled={isLoading}>
-          {isLoading ? 'Створення...' : 'Створити контент'}
+          {isLoading ? 'Оновлення...' : 'Оновити'}
         </button>
       </form>
   );

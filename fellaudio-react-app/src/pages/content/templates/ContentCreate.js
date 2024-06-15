@@ -5,6 +5,7 @@ import SwitchPointLocation from '../../../components/SwitchPointLocation';
 import { getAreas } from '../../../assets/Area';
 import { UserContext } from '../../../context/UserContext';
 import { useNavigate } from 'react-router-dom';
+import { isValidFloat } from '../utils/contentUtils';
 
 const ApiUrl = process.env.REACT_APP_API_URL;
 
@@ -189,11 +190,6 @@ function ContentCreate() {
   const saveFile = (file, fileName, path) => {
     // Logic to save the file
     console.log(`Saving file: ${fileName} to path: ${path}`);
-  };
-
-  const isValidFloat = (value) => {
-    const floatRegex = /^(?!0\.00$)(?!0*$)\d*\.?\d*$/;
-    return floatRegex.test(value);
   };
 
   const handleFloatInput = (e) => {
