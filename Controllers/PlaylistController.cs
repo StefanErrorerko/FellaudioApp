@@ -73,8 +73,8 @@ namespace FellaudioApp.Controllers
         }
 
         [HttpPost]
-        [ProducesResponseType(204)]
-        [ProducesResponseType(400)]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(200, Type = typeof(PlaylistResponseDto))]
         [ProducesResponseType(422)]
         public IActionResult CreatePlaylist([FromBody] PlaylistPostRequestDto playlistCreate)
         {
@@ -86,25 +86,12 @@ namespace FellaudioApp.Controllers
             if (!_userRepository.UserExists(userId))
                 return NotFound();
 
-            var playlist = _playlistRepository.GetPlaylists()
-                .Where(p => p.User.Id == userId && p.Name == playlistCreate.Name)
-                .FirstOrDefault();
-
-            if (playlist != null)
+            if (playlistCreate.Type != Models.Enums.ListType.Saved && playlistCreate.Name == null)
             {
-                ModelState.AddModelError("", $"Playlist with name {playlist.Name} already exists");
+                ModelState.AddModelError("", "Cannot create custom playlist with no name");
                 return StatusCode(422, ModelState);
             }
 
-            playlist = _playlistRepository.GetPlaylists()
-                .Where(p => p.User.Id == userId && p.Type == Models.Enums.ListType.Saved)
-                .FirstOrDefault();
-
-            if (playlist != null && playlistCreate.Type == Models.Enums.ListType.Saved)
-            {
-                ModelState.AddModelError("", "Cannot create one more Saved playlist");
-                return StatusCode(422, ModelState);
-            }
 
             if (playlistCreate.Type == Models.Enums.ListType.Saved)
             {
@@ -114,6 +101,25 @@ namespace FellaudioApp.Controllers
                     return StatusCode(422, ModelState);
                 }
                 playlistCreate.Name = "Saved";
+            }
+
+            var playlist = _playlistRepository.GetPlaylists()
+                .Where(p => p.User.Id == userId && p.Type == Models.Enums.ListType.Saved)
+                .FirstOrDefault();
+
+            if (playlist != null && playlistCreate.Type == Models.Enums.ListType.Saved)
+            {
+                ModelState.AddModelError("", "Cannot create one more Saved playlist");
+                return StatusCode(422, ModelState);
+            }
+
+            playlist = _playlistRepository.GetPlaylists()
+                .Where(p => p.User.Id == userId && p.Name == playlistCreate.Name)
+                .FirstOrDefault();
+            if (playlist != null)
+            {
+                ModelState.AddModelError("", $"Playlist with name {playlist.Name} already exists");
+                return StatusCode(422, ModelState);
             }
 
             if (!ModelState.IsValid)
@@ -131,7 +137,7 @@ namespace FellaudioApp.Controllers
                 return StatusCode(500, ModelState);
             }
 
-            return Ok("Successfully Created");
+            return Ok(_mapper.Map<PlaylistResponseDto> (playlistMap));
         }
 
         [HttpPut("add/content")]

@@ -97,6 +97,9 @@ namespace FellaudioApp.Controllers
 
             var playlistSaved = _mapper.Map<PlaylistResponseDto>(_userRepository.GetPlaylistSavedByUser(userId));
 
+            if (playlistSaved == null)
+                return NotFound();
+            
             if (!ModelState.IsValid)
                 return BadRequest();
 
@@ -136,7 +139,7 @@ namespace FellaudioApp.Controllers
         }
 
         [HttpPost]
-        [ProducesResponseType(204)]
+        [ProducesResponseType(200, Type = typeof(UserResponseDto))]
         [ProducesResponseType(400)]
         public IActionResult CreateUser([FromBody] UserPostRequestDto userCreate)
         {
@@ -167,12 +170,12 @@ namespace FellaudioApp.Controllers
                 return StatusCode(500, ModelState);
             }
 
-            return Ok("Successfully created");
+            return Ok(_mapper.Map<UserResponseDto>(userMap));
         }
 
         [HttpPut("{id}")]
         [ProducesResponseType(400)]
-        [ProducesResponseType(204)]
+        [ProducesResponseType(200, Type = typeof(UserResponseDto))]
         [ProducesResponseType(404)]
         public IActionResult UpdateUser(int id, [FromBody] UserPutRequestDto updatedUser)
         {
@@ -185,7 +188,9 @@ namespace FellaudioApp.Controllers
             if(!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var userToUpdate = _userRepository.GetUser(id);
+            var userToUpdate = _userRepository.GetUser(id);    
+            // make mapping, ignoring nulls on updatedUser
+            updatedUser.HashedPassword ??= userToUpdate.HashedPassword;
             var userMap = _mapper.Map(updatedUser, userToUpdate);
 
             if (!_userRepository.UpdateUser(userMap))
@@ -194,7 +199,7 @@ namespace FellaudioApp.Controllers
                 return StatusCode(500, ModelState);
             }
 
-            return NoContent();
+            return Ok(_mapper.Map<UserResponseDto>(userMap));
         }
 
         [HttpDelete("{id}")]

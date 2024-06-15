@@ -55,7 +55,7 @@ namespace FellaudioApp.Controllers
             if (locationCreate == null)
                 return BadRequest(ModelState);
 
-            var location = _locationRepository.GetLocations()
+            /*var location = _locationRepository.GetLocations()
                 .Where(l => l.Latitude == locationCreate.Latitude && l.Longitude == locationCreate.Longitude)
                 .FirstOrDefault();
 
@@ -63,7 +63,7 @@ namespace FellaudioApp.Controllers
             {
                 ModelState.AddModelError("", "Location is already exists");
                 return StatusCode(422, ModelState);
-            }
+            }*/
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);

@@ -85,7 +85,7 @@ namespace FellaudioApp.Controllers
         }
 
         [HttpGet("{contentId}/comments")]
-        [ProducesResponseType(200, Type = typeof(CommentResponseDto))]
+        [ProducesResponseType(200, Type = typeof(IEnumerable<CommentResponseDto>))]
         [ProducesResponseType(400)]
         public IActionResult GetCommentsByContent(int contentId)
         {
@@ -101,7 +101,7 @@ namespace FellaudioApp.Controllers
         }
 
         [HttpPost]
-        [ProducesResponseType(204)]
+        [ProducesResponseType(200, Type = typeof(ContentResponseDto))]
         [ProducesResponseType(400)]
         public IActionResult CreateContent([FromBody] ContentPostRequestDto contentCreate)
         {
@@ -146,7 +146,7 @@ namespace FellaudioApp.Controllers
 
         [HttpPut("{id}")]
         [ProducesResponseType(400)]
-        [ProducesResponseType(204)]
+        [ProducesResponseType(200, Type = typeof(ContentResponseDto))]
         [ProducesResponseType(404)]
         public IActionResult UpdateContent(int id, [FromBody] ContentPutRequestDto updatedContent)
         {
@@ -169,7 +169,7 @@ namespace FellaudioApp.Controllers
                 return StatusCode(500, ModelState);
             }
 
-            return NoContent();
+            return Ok(_mapper.Map<ContentResponseDto>(contentMap));
         }
 
         [HttpDelete("{id}")]

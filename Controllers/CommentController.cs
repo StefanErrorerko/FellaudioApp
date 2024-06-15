@@ -54,7 +54,7 @@ namespace FellaudioApp.Controllers
         }
 
         [HttpPost]
-        [ProducesResponseType(204)]
+        [ProducesResponseType(200, Type = typeof(CommentResponseDto))]
         [ProducesResponseType(400)]
         public IActionResult CreateComment([FromBody] CommentPostRequestDto commentCreate)
         {
@@ -87,7 +87,7 @@ namespace FellaudioApp.Controllers
                 return StatusCode(500, ModelState);
             }
 
-            return Ok(_mapper.Map<CommentResponseDto>(commentMap);
+            return Ok(_mapper.Map<CommentResponseDto>(commentMap));
         }
 
         [HttpPut("{id}")]
