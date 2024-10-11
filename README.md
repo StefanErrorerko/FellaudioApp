@@ -1,4 +1,4 @@
-# FellaudioApp
+# Fellaudio (ASP.NET API x React.js UI)
 
 ## Overview
 **Fellaudio** is a web application designed to simplify the process of creating, publishing, and exploring multimedia tours and city guides. It allows users to upload tours with audio tracks, descriptions, and visual elements, making it easy to share personalized content. The platform integrates Google Maps for location-based routes. Also, it provides a **recommendation system** that suggests tours based on user preferences using **collaborative filtering**.
